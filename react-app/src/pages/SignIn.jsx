@@ -38,23 +38,23 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    axios.post('백엔드 주소', {
-      email: data.get('email'),
-      password: data.get('password'),
+    axios.post('http://localhost:8080/login', {
+      id: data.get('id'),
+      passwd: data.get('passwd'),
     }).then((response) => {
-      if (response.responseText === 'success') {
+      if (response.data.indexOf('ok') > -1) { // response.responseText.indexOf('ok') > -1) {
         // 로그인 성공
         navigate('/main');
-      }
+      } else alert('로그인 실패');
       console.log(response);
     }).catch((error) => {
       console.log(error);
     });
     console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+      id: data.get('id'),
+      passwd: data.get('passwd'),
     });
-    navigate('/main');
+    //navigate('/main');
   };
 
   return (
@@ -80,21 +80,21 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="id"
+              label="id"
+              name="id"
+              autoComplete="id"
               autoFocus
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
+              name="passwd"
+              label="Passwd"
+              type="passwd"
+              id="passwd"
+              autoComplete="current-passwd"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
