@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Copyright(props) {
   return (
@@ -37,6 +38,18 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    axios.post('백엔드 주소', {
+      email: data.get('email'),
+      password: data.get('password'),
+    }).then((response) => {
+      if (response.responseText === 'success') {
+        // 로그인 성공
+        navigate('/main');
+      }
+      console.log(response);
+    }).catch((error) => {
+      console.log(error);
+    });
     console.log({
       email: data.get('email'),
       password: data.get('password'),
