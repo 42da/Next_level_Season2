@@ -8,6 +8,9 @@ public class Absence {
   private String code;
   private Date start;   // java.sql.Date?
   private Date end;     // java.sql.Date?
+
+  private String name;
+
   private String empId;
 
   public int getIdx() {
@@ -40,6 +43,14 @@ public class Absence {
 
   public void setEnd(Date end) {
     this.end = end;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getEmpId() {
