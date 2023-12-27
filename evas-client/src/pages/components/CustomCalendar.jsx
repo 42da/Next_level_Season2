@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/locale/ko'; // For moment's locale settings
@@ -7,8 +7,6 @@ import 'moment/locale/ko'; // For moment's locale settings
 moment.locale('ko');
 const localizer = momentLocalizer(moment);
 
-
-
 const CustomCalendar = () => {
   const [events, setEvents] = useState([
     {
@@ -16,8 +14,31 @@ const CustomCalendar = () => {
       end: moment().add(1, 'days').toDate(),   // 언제까지 불러올지
       title: 'Some title',
     },
+    {
+      start: moment().toDate(), // date 불러오기
+      end: moment().add(2, 'days').toDate(),   // 언제까지 불러올지
+      title: 'Some title2',
+    },
+    {
+      start: moment().toDate(), // date 불러오기
+      end: moment().add(3, 'days').toDate(),   // 언제까지 불러올지
+      title: 'Some title3',
+    }
     // ... more events ...
   ]);
+
+  const handleSelect = useCallback(({ start, end }) => {
+    const title = window.prompt('New Event name');
+    if (title)
+      setEvents([
+        ...events,
+        {
+          start,
+          end,
+          title,
+        },
+      ]);
+  });
 // Custom event style getter
 const eventStyleGetter = (event, start, end, isSelected) => {
     let style = {
@@ -49,11 +70,13 @@ const eventStyleGetter = (event, start, end, isSelected) => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 500 }}
+        style={{ height: 600 }}
         eventPropGetter={eventStyleGetter}
         components={{
             dayCellWrapper: CustomDayCellWrapper,
           }}
+        popup // +숫자 클릭시 팝업으로 띄워줌. 아니면 week 로 감.
+        onSelectSlot={handleSelect}
       />
     </div>
   );
