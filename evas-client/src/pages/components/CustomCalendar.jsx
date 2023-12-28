@@ -30,15 +30,15 @@ const CustomCalendar = () => {
   const handleSelect = useCallback(({ start, end }) => {
     const title = window.prompt('New Event name');
     if (title)
-      setEvents([
-        ...events,
+      setEvents(prev => [
+        ...prev,
         {
           start,
           end,
           title,
         },
       ]);
-  });
+  }, [setEvents]);
 // Custom event style getter
 const eventStyleGetter = (event, start, end, isSelected) => {
     let style = {
@@ -76,6 +76,7 @@ const eventStyleGetter = (event, start, end, isSelected) => {
             dayCellWrapper: CustomDayCellWrapper,
           }}
         popup // +숫자 클릭시 팝업으로 띄워줌. 아니면 week 로 감.
+        selectable  // 각 날짜 slot 선택 가능
         onSelectSlot={handleSelect}
       />
     </div>
