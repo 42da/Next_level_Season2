@@ -7,11 +7,14 @@ import 'moment/locale/ko'; // For moment's locale settings
 moment.locale('ko');
 const localizer = momentLocalizer(moment);
 
+
 const CustomCalendar = () => {
+  
+  
   const [events, setEvents] = useState([
     {
-      start: moment().toDate(), // date 불러오기
-      end: moment().add(1, 'days').toDate(),   // 언제까지 불러올지
+      start: new Date(2023, 11, 28, 9, 0, 0), // date 불러오기
+      end: new Date(2023, 11, 28, 18, 0, 0),   // 언제까지 불러올지
       title: 'Some title',
     },
     {
