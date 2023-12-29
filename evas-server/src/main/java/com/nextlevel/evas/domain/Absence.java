@@ -1,17 +1,17 @@
 package com.nextlevel.evas.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+// 사원 연차
 public class Absence {
 
   private int idx;
   private String code;
-  private Date start;   // java.sql.Date?
-  private Date end;     // java.sql.Date?
-
+  private LocalDateTime start;
+  private LocalDateTime end;
   private String name;
-
   private String empId;
+  private String status;
 
   public int getIdx() {
     return idx;
@@ -29,19 +29,19 @@ public class Absence {
     this.code = code;
   }
 
-  public Date getStart() {
+  public LocalDateTime getStart() {
     return start;
   }
 
-  public void setStart(Date start) {
+  public void setStart(LocalDateTime start) {
     this.start = start;
   }
 
-  public Date getEnd() {
+  public LocalDateTime getEnd() {
     return end;
   }
 
-  public void setEnd(Date end) {
+  public void setEnd(LocalDateTime end) {
     this.end = end;
   }
 
@@ -59,6 +59,14 @@ public class Absence {
 
   public void setEmpId(String empId) {
     this.empId = empId;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 
 }

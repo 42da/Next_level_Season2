@@ -11,7 +11,10 @@ public interface AnnualRepository {
 
   void updateTotal(String empId);
   void updateReservation(int idx);
-  Annual findByEmpId(String empId);
+  void updateStatus(int idx);
+
+  Annual findByIdx(int idx);
   List<Annual> findAllByEmpId(String empId);
+  List<Annual> findAll();
 
 }

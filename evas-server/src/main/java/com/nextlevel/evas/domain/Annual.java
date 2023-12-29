@@ -1,19 +1,19 @@
 package com.nextlevel.evas.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+// 관리자 연차
 public class Annual {
 
   private int idx;
   private float total;          // 반차일 경우 고려
-  private Date resetTime;       // java.sql.Date?
-
+  private LocalDateTime resetTime;
   private float period;         // 반차일 경우 고려
-  private Date date;            // java.sql.Date?
-  private Date cP;              // C : 전체 연차, P : 개인 연차
+  private LocalDateTime date;
+  private LocalDateTime cP;     // C : 전체 연차, P : 개인 연차
   private String reservation;   // U : 사용, R : 미사용
-
   private String empId;
+  private String status;
 
   public int getIdx() {
     return idx;
@@ -31,11 +31,11 @@ public class Annual {
     this.total = total;
   }
 
-  public Date getResetTime() {
+  public LocalDateTime getResetTime() {
     return resetTime;
   }
 
-  public void setResetTime(Date resetTime) {
+  public void setResetTime(LocalDateTime resetTime) {
     this.resetTime = resetTime;
   }
 
@@ -47,19 +47,19 @@ public class Annual {
     this.period = period;
   }
 
-  public Date getDate() {
+  public LocalDateTime getDate() {
     return date;
   }
 
-  public void setDate(Date date) {
+  public void setDate(LocalDateTime date) {
     this.date = date;
   }
 
-  public Date getcP() {
+  public LocalDateTime getcP() {
     return cP;
   }
 
-  public void setcP(Date cP) {
+  public void setcP(LocalDateTime cP) {
     this.cP = cP;
   }
 
@@ -77,6 +77,14 @@ public class Annual {
 
   public void setEmpId(String empId) {
     this.empId = empId;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 
 }
