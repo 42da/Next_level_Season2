@@ -38,17 +38,15 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    /*
+    
     axios.post('http://localhost:8080/login', {
       id: data.get('id'),
       passwd: data.get('passwd'),
     }).then((response) => {
-      
       if (response.data.indexOf('ok') > -1) { // response.responseText.indexOf('ok') > -1) {
         // 로그인 성공
         navigate('/main');
       } else alert('로그인 실패');
-      console.log(response);
     }).catch((error) => {
       console.log(error);
     });
@@ -56,8 +54,7 @@ export default function SignIn() {
       id: data.get('id'),
       passwd: data.get('passwd'),
     });
-    */
-    navigate('/main');
+    //navigate('/main');
   };
 
   return (
