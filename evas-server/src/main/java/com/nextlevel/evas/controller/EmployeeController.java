@@ -19,7 +19,7 @@ public class EmployeeController {
 
   @PostMapping("login")
   @ResponseBody
-  // jason 형태이기 때문에 @RequestBody 필요
+  // json 형태이기 때문에 @RequestBody 필요
   public String login(@RequestBody EmployeeLoginForm form) {
     return employeeService.login(form.getId(), form.getPasswd());
   }
