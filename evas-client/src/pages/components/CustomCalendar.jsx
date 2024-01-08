@@ -73,7 +73,7 @@ const eventStyleGetter = (event, start, end, isSelected) => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 600 }}
+        style={{ height: 700, padding: '20px' }}
         eventPropGetter={eventStyleGetter}
         components={{
             dayCellWrapper: CustomDayCellWrapper,
