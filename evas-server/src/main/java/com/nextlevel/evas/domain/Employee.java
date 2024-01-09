@@ -4,37 +4,37 @@ import java.time.LocalDate;
 
 public class Employee {
 
-  private String logId;
-  private String pw;
+  private String loginId;
+  private String password;
 
-  private String empId;
+  private String employeeId;
   private String name;
 
   private LocalDate resetVacationDate;
   private Float totalVacation;
 
-  public String getLogId() {
-    return logId;
+  public String getLoginId() {
+    return loginId;
   }
 
-  public void setLogId(String logId) {
-    this.logId = logId;
+  public void setLoginId(String loginId) {
+    this.loginId = loginId;
   }
 
-  public String getPw() {
-    return pw;
+  public String getPassword() {
+    return password;
   }
 
-  public void setPw(String pw) {
-    this.pw = pw;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
-  public String getEmpId() {
-    return empId;
+  public String getEmployeeId() {
+    return employeeId;
   }
 
-  public void setEmpId(String empId) {
-    this.empId = empId;
+  public void setEmployeeId(String employeeId) {
+    this.employeeId = employeeId;
   }
 
   public String getName() {
