@@ -12,18 +12,10 @@ public class EmployeeService {
 
   @Autowired
   public EmployeeService(EmployeeRepository employeeRepository) {
-    this.employeeRepository = employeeRepository; // 인터페이스가 아닌 구현체 등록
+    this.employeeRepository = employeeRepository;
   }
 
   public Employee login(String loginId, String password) {
-    //    String result = "";
-    //
-    //    if (id.equals("admin") && password.equals("admin")) {
-    //      result = "ok";
-    //    }
-    //
-    //    return result;
-
     return employeeRepository.findByLoginId(loginId, password);
   }
 }

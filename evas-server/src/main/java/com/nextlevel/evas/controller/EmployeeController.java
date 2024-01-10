@@ -19,8 +19,10 @@ public class EmployeeController {
   }
 
   @PostMapping("login")
+  // json 형태이기 때문에 @ResponseBody, @RequestBody 필요
   @ResponseBody
-  // json 형태이기 때문에 @RequestBody 필요
+  // EmployeeLoginForm 과 같이 파라미터 타입이 자바 객체라면 자바 객체로 변환해줌
+  // 단, passWd와 같이 자바 객체에 json의 key에 해당하는 값의 변수와 getter가 있어야 함
   public Employee login(@RequestBody EmployeeLoginForm form) {
     return employeeService.login(form.getId(), form.getPasswd());
   }
