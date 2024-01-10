@@ -1,27 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-
-import DrawerAppBar from "./components/DrawerAppBar";
-import SimpleContainer from "./components/SimpleContainer";
-
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
 
-import CustomTabPanel from "./components/CustomTabPanel";
+import DrawerAppBar from "../components/DrawerAppBar";
+import CustomTabPanel from "../components/CustomTabPanel";
+import CustomCalendar from '../components/CustomCalendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+import axios from "axios";
 
 function Main() {
   const [value, setValue] = useState(1);
-  const onChange = (event, newValue) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  useEffect(() => {
+    // 데이터 요청
+    // 신청 현황, 연차 목록, calander 에 뿌려줄 데이터
+  }, []);
   return (
     <div>
       <DrawerAppBar />
       <Grid container spacing={2} sx={{pl: 2}}>
         <Grid item xs={6} >
-          <Tabs variant="fullWidth" value={value} onChange={onChange} sx={{ borderBottom: 1, borderColor: 'divider' }} centered>
+          <Tabs variant="fullWidth" value={value} onChange={handleChange} sx={{ borderBottom: 1, borderColor: 'divider' }} centered>
             <Tab label="연차 신청" />
             <Tab label="신청 현황" />
             <Tab label="연차 목록" />
@@ -31,7 +35,7 @@ function Main() {
           <CustomTabPanel value={value} index={2} />
         </Grid>
         <Grid item xs={6}>
-          <SimpleContainer />
+          <CustomCalendar />
         </Grid>
       </Grid>
 

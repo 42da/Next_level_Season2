@@ -1,17 +1,8 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import { Grid } from "@mui/material";
-import { Typography } from "@mui/material";
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import axios from "axios";
 
+import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -24,9 +15,9 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import ResetTv from '@mui/icons-material/ResetTv';
-
-import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+
+import ApplicationForm from "./ApplicationForm";
 
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
@@ -47,6 +38,9 @@ function CustomTabPanel(props) {
     const resetHandler = () => {
         setReset(true);
     }
+    const submit = () => {
+        // 신청
+    }
     return (
         <div
             role="tabpanel"
@@ -57,9 +51,9 @@ function CustomTabPanel(props) {
             {props.value === 0 && (
                 <>
                     <Box sx={{ pt: 3 }}>
-                        <BasicSelect reset={reset} setReset={setReset} />
+                        <ApplicationForm reset={reset} setReset={setReset} />
                     </Box>
-                    <Stack direction="row" spacing={2} justifyContent="flex-end">
+                    <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ pt: 3 }}>
                         <Button onClick={resetHandler} variant="outlined" startIcon={<ResetTv />}>
                             초기화
                         </Button>
@@ -89,7 +83,7 @@ function CustomTabPanel(props) {
                                         key={row.name}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell align="center" component="th" scope="row">
+                                        <TableCell align="center" scope="row">
                                             {row.name}
                                         </TableCell>
                                         <TableCell align="center">{row.calories}</TableCell>
@@ -106,50 +100,40 @@ function CustomTabPanel(props) {
                     </TableContainer>
                 </Box>
             )}
-
+            {props.value === 2 && (
+                <Box sx={{ pt: 3 }}>
+                    <TableContainer component={Paper}>
+                        <Table sx={{ width: '100%' }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="center">연차 종류</TableCell>
+                                    <TableCell align="center">기간</TableCell>
+                                    <TableCell align="center">사유</TableCell>
+                                    <TableCell align="center">상태</TableCell>
+                                    <TableCell align="center">사용 유무</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <TableRow
+                                        key={row.name}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell align="center" scope="row">
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="center">{row.calories}</TableCell>
+                                        <TableCell align="center">{row.fat}</TableCell>
+                                        <TableCell align="center">{row.carbs}</TableCell>
+                                        <TableCell align="center">{row.protein}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+            )}
         </div>
-    );
-}
-
-function BasicSelect({ reset, setReset }) {
-    const [vacation, setVacation] = useState('');
-    const [vactionReason, setVactionReason] = useState('');
-
-    const handleChange = (event) => {
-        setVacation(event.target.value);
-    };
-    const handleChangeReason = (event) => {
-        setVactionReason(event.target.value);
-    };
-    useEffect(() => {
-        if (reset) {
-            setVacation('');
-            setVactionReason('');
-            setReset(false);
-        }
-    }, [reset]);
-    return (
-        <>
-            <FormControl fullWidth sx={{ pb: 3 }}>
-                <InputLabel id="demo-simple-select-label">연차 종류</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={vacation}
-                    label="연차 종류"
-                    onChange={handleChange}
-                >
-                    <MenuItem value={10}>연차</MenuItem>
-                    <MenuItem value={20}>연차)오전반차</MenuItem>
-                    <MenuItem value={30}>연차)오후반차</MenuItem>
-                    <MenuItem value={30}>대체휴가</MenuItem>
-                    <MenuItem value={30}>경조휴가</MenuItem>
-                    <MenuItem value={30}>출산육아휴가</MenuItem>
-                    <MenuItem value={30}>기타</MenuItem>
-                </Select>
-            </FormControl>
-            <TextField value={vactionReason} onChange={handleChangeReason} sx={{ pb: 3, width: '100%' }} id="outlined-basic" label="연차 사유" variant="outlined" />
-        </>
     );
 }
 

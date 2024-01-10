@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import SignIn from "./pages/SignIn";
-import Main from "./pages/MainPage";
+import Main from "./pages/Main";
 
 function App() {
   return (
