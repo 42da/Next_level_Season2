@@ -40,6 +40,15 @@ function CustomTabPanel(props) {
     }
     const submit = () => {
         // 신청
+        axios.post('http://localhost:8080/main/application', {
+            id: "test",
+            passwd: "test",
+        }).then((response) => {
+
+
+        }).catch((error) => {
+            console.log(error);
+        });
     }
     return (
         <div
@@ -57,7 +66,7 @@ function CustomTabPanel(props) {
                         <Button onClick={resetHandler} variant="outlined" startIcon={<ResetTv />}>
                             초기화
                         </Button>
-                        <Button variant="contained" endIcon={<SendIcon />}>
+                        <Button onClick={submit} variant="contained" endIcon={<SendIcon />}>
                             신청
                         </Button>
                     </Stack>
@@ -87,7 +96,7 @@ function CustomTabPanel(props) {
                                             {row.name}
                                         </TableCell>
                                         <TableCell align="center">{row.calories}</TableCell>
-                                        <TableCell align="center">{row.fat}</TableCell>
+                                        <TableCell align="center">{props.content}</TableCell>
                                         <TableCell align="center">{row.carbs}</TableCell>
                                         <TableCell align="center">{row.protein}</TableCell>
                                         <TableCell align="center">

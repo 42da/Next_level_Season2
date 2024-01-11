@@ -13,12 +13,33 @@ import axios from "axios";
 
 function Main() {
   const [value, setValue] = useState(1);
+  const [content, setContent] = useState('');
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  
+  const refresh = () => {
+    axios.post('http://localhost:8080/main/vacationList', {
+      id: "test",
+      passwd: "test",
+    }).then((response) => {
+      
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
   useEffect(() => {
     // 데이터 요청
     // 신청 현황, 연차 목록, calander 에 뿌려줄 데이터
+    axios.post('http://localhost:8080/main', {
+      empolyeeId: "R20220202",
+    }).then((response) => {
+      
+    }).catch((error) => {
+      console.log(error);
+    });
   }, []);
   return (
     <div>
@@ -31,7 +52,7 @@ function Main() {
             <Tab label="연차 목록" />
           </Tabs>
           <CustomTabPanel value={value} index={0} />
-          <CustomTabPanel value={value} index={1} />
+          <CustomTabPanel value={value} content={content} index={1} />
           <CustomTabPanel value={value} index={2} />
         </Grid>
         <Grid item xs={6}>
