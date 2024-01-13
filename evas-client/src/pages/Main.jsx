@@ -21,8 +21,7 @@ function Main() {
   
   const refresh = () => {
     axios.post('http://localhost:8080/main/vacationList', {
-      id: "test",
-      passwd: "test",
+      empolyeeId: "R20220202"
     }).then((response) => {
       
     }).catch((error) => {
