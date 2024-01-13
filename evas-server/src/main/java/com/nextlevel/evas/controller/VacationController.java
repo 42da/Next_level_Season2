@@ -1,6 +1,7 @@
 package com.nextlevel.evas.controller;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +22,8 @@ public class VacationController {
 
   @PostMapping("main")
   @ResponseBody
-  public List<Vacation> findAllByEmployeeId(@RequestBody EmployeeForm form) {
-    // 연차 목록
-    return vacationService.findAllByEmployeeId(form.getEmployeeId());
+  public Map<String, List<Vacation>> findAllVacation(@RequestBody EmployeeForm form) {
+    return vacationService.findAllVacation(form.getEmployeeId());
   }
 
 }

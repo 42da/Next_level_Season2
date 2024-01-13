@@ -4,11 +4,30 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nextlevel.evas.repository.VacationRepository">
-  <select id="findAllByEmployeeId" resultType="Vacation">
+  <select id="findAllApplicationByEmployeeId" resultType="Vacation">
     select idx, code, start, end, content,
-    period, type, approval_status, use_status, application_date,
-    employee_id
+      period, type, approval_status, use_status, application_date,
+      employee_id
     from vacation
     where employee_id = #{employeeId}
+      and DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) > 0
+  </select>
+  
+  <select id="findAllVacationByEmployeeId" resultType="Vacation">
+    select idx, code, start, end, content,
+      period, type, approval_status, use_status, application_date,
+      employee_id
+    from vacation
+    where employee_id = #{employeeId}
+      and approval_status = 'A'
+      and DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) &lt; 1
+  </select>
+  
+  <select id="findAllCalendar" resultType="Vacation">
+    select idx, code, start, end, content,
+      period, type, approval_status, use_status, application_date,
+      employee_id
+    from vacation
+    where approval_status = 'A'
   </select>
 </mapper>

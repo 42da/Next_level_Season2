@@ -15,7 +15,8 @@ public interface VacationRepository {
   void updateUseStatus(int idx);
 
   Vacation findByIdx(int idx);
-  List<Vacation> findAllByEmployeeId(String employeeId);
-  List<Vacation> findAll();
+  List<Vacation> findAllApplicationByEmployeeId(String employeeId);
+  List<Vacation> findAllVacationByEmployeeId(String employeeId);
+  List<Vacation> findAllCalendar();
 
 }
