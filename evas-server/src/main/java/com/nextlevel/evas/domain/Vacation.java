@@ -1,21 +1,22 @@
 package com.nextlevel.evas.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Vacation {
 
   private int idx;
   private String code;
-  private LocalDateTime start;
-  private LocalDateTime end;
+  private LocalDate start;
+  private LocalDate end;
   private String content;
 
-  private String type;
   private Float period;
-  private String approvalStatus;
-  private String useStatus;
+  private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
+  private String approvalStatus;    // 기본 값 : 대기 중 (W), 승인 (A), 거절 (R)
+  private String useStatus;         // 기본 값 : 미사용 (R), 사용 (U)
+  private LocalDate applicationDate;
 
-  private String empId;
+  private String employeeId;
 
   public int getIdx() {
     return idx;
@@ -33,19 +34,19 @@ public class Vacation {
     this.code = code;
   }
 
-  public LocalDateTime getStart() {
+  public LocalDate getStart() {
     return start;
   }
 
-  public void setStart(LocalDateTime start) {
+  public void setStart(LocalDate start) {
     this.start = start;
   }
 
-  public LocalDateTime getEnd() {
+  public LocalDate getEnd() {
     return end;
   }
 
-  public void setEnd(LocalDateTime end) {
+  public void setEnd(LocalDate end) {
     this.end = end;
   }
 
@@ -57,20 +58,20 @@ public class Vacation {
     this.content = content;
   }
 
-  public Float getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Float period) {
-    this.period = period;
-  }
-
   public String getType() {
     return type;
   }
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public Float getPeriod() {
+    return period;
+  }
+
+  public void setPeriod(Float period) {
+    this.period = period;
   }
 
   public String getApprovalStatus() {
@@ -89,12 +90,20 @@ public class Vacation {
     this.useStatus = useStatus;
   }
 
-  public String getEmpId() {
-    return empId;
+  public LocalDate getApplicationDate() {
+    return applicationDate;
   }
 
-  public void setEmpId(String empId) {
-    this.empId = empId;
+  public void setApplicationDate(LocalDate applicationDate) {
+    this.applicationDate = applicationDate;
+  }
+
+  public String getEmployeeId() {
+    return employeeId;
+  }
+
+  public void setEmployeeId(String employeeId) {
+    this.employeeId = employeeId;
   }
 
 }

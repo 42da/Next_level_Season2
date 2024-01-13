@@ -12,6 +12,13 @@
     "index.html": "/index.html",
     "precache-manifest.7d93ae557b85993e7bde4cbb9502e141.js": "/precache-manifest.7d93ae557b85993e7bde4cbb9502e141.js",
     "service-worker.js": "/service-worker.js",
-    "static/css/2.3031115d.chunk.css.map": "/static/css/2.3031115d.chunk.css.map"
-  }
+    "static/css/2.3031115d.chunk.css.map": "/static/css/2.3031115d.chunk.css.map",
+    "static/js/2.554b5ac8.chunk.js.LICENSE.txt": "/static/js/2.554b5ac8.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a4c7a420.js",
+    "static/css/2.3031115d.chunk.css",
+    "static/js/2.554b5ac8.chunk.js",
+    "static/js/main.002f2245.chunk.js"
+  ]
 }

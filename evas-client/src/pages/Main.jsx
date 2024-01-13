@@ -21,7 +21,7 @@ function Main() {
   
   const refresh = () => {
     axios.post('http://localhost:8080/main/vacationList', {
-      empolyeeId: "R20220202"
+      employeeId: "R20220202",
     }).then((response) => {
       
     }).catch((error) => {
@@ -33,9 +33,9 @@ function Main() {
     // 데이터 요청
     // 신청 현황, 연차 목록, calander 에 뿌려줄 데이터
     axios.post('http://localhost:8080/main', {
-      empolyeeId: "R20220202",
+      employeeId: "R20220202",
     }).then((response) => {
-      
+      console.log(response);
     }).catch((error) => {
       console.log(error);
     });
