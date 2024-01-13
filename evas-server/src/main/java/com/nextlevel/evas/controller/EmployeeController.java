@@ -24,7 +24,7 @@ public class EmployeeController {
   // EmployeeLoginForm 과 같이 파라미터 타입이 자바 객체라면 자바 객체로 변환해줌
   // 단, passWd와 같이 자바 객체에 json의 key에 해당하는 값의 변수와 getter가 있어야 함
   public Employee login(@RequestBody EmployeeLoginForm form) {
-    return employeeService.login(form.getId(), form.getPasswd());
+    return employeeService.login(form.getLoginId(), form.getPassword());
   }
 
 }

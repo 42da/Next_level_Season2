@@ -10,10 +10,11 @@
  * and re-run your build process.
  * See https://goo.gl/2aRDsh
  */
+
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.8ad3a1add221f06c6310036e337f30f0.js"
+  "/precache-manifest.f7f8b725d7a56a1b941bad6980a92996.js"
 );
 
 self.addEventListener('message', (event) => {
@@ -21,7 +22,9 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+
 workbox.core.clientsClaim();
+
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
  * requests for URLs in the manifest.
@@ -29,7 +32,8 @@ workbox.core.clientsClaim();
  */
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
 workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/index.html"), {
   
-  blacklist: [/^\/_/,/\/[^/]+\.[^/]+$/],
+  blacklist: [/^\/_/,/\/[^/?]+\.[^/]+$/],
 });

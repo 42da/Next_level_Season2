@@ -1,19 +1,20 @@
 package com.nextlevel.evas.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Vacation {
 
   private int idx;
   private String code;
-  private LocalDateTime start;
-  private LocalDateTime end;
+  private LocalDate start;
+  private LocalDate end;
   private String content;
 
-  private String type;
+  private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
   private Float period;
-  private String approvalStatus;
-  private String useStatus;
+  private String approvalStatus;    // 기본 값 : 대기 중 (W), 승인 (A), 거절 (R)
+  private String useStatus;         // 기본 값 : 미사용 (R), 사용 (U)
+  private LocalDate applicationDate;
 
   private String empId;
 
@@ -33,19 +34,19 @@ public class Vacation {
     this.code = code;
   }
 
-  public LocalDateTime getStart() {
+  public LocalDate getStart() {
     return start;
   }
 
-  public void setStart(LocalDateTime start) {
+  public void setStart(LocalDate start) {
     this.start = start;
   }
 
-  public LocalDateTime getEnd() {
+  public LocalDate getEnd() {
     return end;
   }
 
-  public void setEnd(LocalDateTime end) {
+  public void setEnd(LocalDate end) {
     this.end = end;
   }
 
@@ -87,6 +88,14 @@ public class Vacation {
 
   public void setUseStatus(String useStatus) {
     this.useStatus = useStatus;
+  }
+
+  public LocalDate getApplicationDate() {
+    return applicationDate;
+  }
+
+  public void setApplicationDate(LocalDate applicationDate) {
+    this.applicationDate = applicationDate;
   }
 
   public String getEmpId() {
