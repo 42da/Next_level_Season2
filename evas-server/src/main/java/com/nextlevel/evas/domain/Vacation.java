@@ -10,13 +10,13 @@ public class Vacation {
   private LocalDate end;
   private String content;
 
-  private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
   private Float period;
+  private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
   private String approvalStatus;    // 기본 값 : 대기 중 (W), 승인 (A), 거절 (R)
   private String useStatus;         // 기본 값 : 미사용 (R), 사용 (U)
   private LocalDate applicationDate;
 
-  private String empId;
+  private String employeeId;
 
   public int getIdx() {
     return idx;
@@ -58,20 +58,20 @@ public class Vacation {
     this.content = content;
   }
 
-  public Float getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Float period) {
-    this.period = period;
-  }
-
   public String getType() {
     return type;
   }
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public Float getPeriod() {
+    return period;
+  }
+
+  public void setPeriod(Float period) {
+    this.period = period;
   }
 
   public String getApprovalStatus() {
@@ -98,12 +98,12 @@ public class Vacation {
     this.applicationDate = applicationDate;
   }
 
-  public String getEmpId() {
-    return empId;
+  public String getEmployeeId() {
+    return employeeId;
   }
 
-  public void setEmpId(String empId) {
-    this.empId = empId;
+  public void setEmployeeId(String employeeId) {
+    this.employeeId = employeeId;
   }
 
 }

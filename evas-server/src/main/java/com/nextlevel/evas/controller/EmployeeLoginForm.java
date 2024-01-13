@@ -2,8 +2,8 @@ package com.nextlevel.evas.controller;
 
 public class EmployeeLoginForm {
 
-  String loginId;
-  String password;
+  private String loginId;
+  private String password;
 
   public String getLoginId() {
     return loginId;

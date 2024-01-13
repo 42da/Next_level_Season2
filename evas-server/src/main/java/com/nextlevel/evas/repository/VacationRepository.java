@@ -1,8 +1,10 @@
 package com.nextlevel.evas.repository;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import com.nextlevel.evas.domain.Vacation;
 
+@Mapper
 public interface VacationRepository {
 
   void insert(Vacation absence);
@@ -13,7 +15,7 @@ public interface VacationRepository {
   void updateUseStatus(int idx);
 
   Vacation findByIdx(int idx);
-  List<Vacation> findAllByEmpId(String empId);
+  List<Vacation> findAllByEmployeeId(String employeeId);
   List<Vacation> findAll();
 
 }
