@@ -4,6 +4,11 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nextlevel.evas.repository.VacationRepository">
+  <insert id="insert" parameterType="Vacation">
+    insert into vacation(code, start, end, content, period, type, employee_id)
+    values(#{code}, #{start}, #{end}, #{content}, #{period}, #{type}, #{employeeId})
+  </insert>
+  
   <select id="findAllApplicationByEmployeeId" resultType="Vacation">
     select idx, code, start, end, content,
       period, type, approval_status, use_status, application_date,

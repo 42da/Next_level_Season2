@@ -1,4 +1,4 @@
-package com.nextlevel.evas.controller;
+package com.nextlevel.evas.form;
 
 public class EmployeeLoginForm {
 

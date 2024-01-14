@@ -1,0 +1,71 @@
+package com.nextlevel.evas.form;
+
+public class VacationApplicationForm {
+
+  private String code;
+  private String start;
+  private String end;
+  private String content;
+
+  private Float period;
+  private String type;
+
+  private String employeeId;
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
+
+  public String getStart() {
+    return start;
+  }
+
+  public void setStart(String start) {
+    this.start = start;
+  }
+
+  public String getEnd() {
+    return end;
+  }
+
+  public void setEnd(String end) {
+    this.end = end;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public Float getPeriod() {
+    return period;
+  }
+
+  public void setPeriod(Float period) {
+    this.period = period;
+  }
+
+  public String getEmployeeId() {
+    return employeeId;
+  }
+
+  public void setEmployeeId(String employeeId) {
+    this.employeeId = employeeId;
+  }
+
+}

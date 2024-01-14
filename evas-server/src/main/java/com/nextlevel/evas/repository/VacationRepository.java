@@ -7,8 +7,8 @@ import com.nextlevel.evas.domain.Vacation;
 @Mapper
 public interface VacationRepository {
 
-  void insert(Vacation absence);
-  void update(Vacation absence);
+  Vacation insert(Vacation vacation);
+  void update(Vacation vacation);
   void delete(int idx);
 
   void updateApprovalStatus(int idx);

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextlevel.evas.domain.Vacation;
+import com.nextlevel.evas.form.EmployeeIdForm;
+import com.nextlevel.evas.form.VacationApplicationForm;
 import com.nextlevel.evas.service.VacationService;
 
 @Controller
@@ -20,10 +22,16 @@ public class VacationController {
     this.vacationService = vacationService;
   }
 
-  @PostMapping("main")
+  @PostMapping({"main", "main/refresh"})
   @ResponseBody
-  public Map<String, List<Vacation>> findAllVacation(@RequestBody EmployeeForm form) {
-    return vacationService.findAllVacation(form.getEmployeeId());
+  public Map<String, List<Vacation>> findAllList(@RequestBody EmployeeIdForm form) {
+    return vacationService.findAllList(form.getEmployeeId());
+  }
+
+  @PostMapping({"main/application"})
+  @ResponseBody
+  public Vacation application(@RequestBody VacationApplicationForm form) {
+    return vacationService.application(form);
   }
 
 }

@@ -11,10 +11,10 @@ public class Vacation {
   private String content;
 
   private Float period;
-  private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
-  private String approvalStatus;    // 기본 값 : 대기 중 (W), 승인 (A), 거절 (R)
-  private String useStatus;         // 기본 값 : 미사용 (R), 사용 (U)
-  private LocalDate applicationDate;
+  private String type;                  // 기본 값 : 개인 연차 (P), 전체 연차 (C)
+  private String approvalStatus;        // 기본 값 : 대기 중 (W), 승인 (A), 거절 (R)
+  private String useStatus;             // 기본 값 : 미사용 (R), 사용 (U)
+  private LocalDate applicationDate;    // 오늘 날짜
 
   private String employeeId;
 

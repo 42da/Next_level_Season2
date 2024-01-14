@@ -1,6 +1,6 @@
-package com.nextlevel.evas.controller;
+package com.nextlevel.evas.form;
 
-public class EmployeeForm {
+public class EmployeeIdForm {
 
   private String employeeId;
 
