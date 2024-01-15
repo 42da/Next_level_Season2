@@ -49,21 +49,23 @@ public class VacationService {
 
     vacation.setEmployeeId(form.getEmployeeId());
 
-    //    if ((Integer) form.getIdx() != null) {
-    //      return vacationRepository.update(vacation);
-    //    } else {
-    return vacationRepository.insert(vacation);
-    //    }
+    if (form.getIdx() != null) {
+      vacation.setIdx(Integer.parseInt(form.getIdx()));
+
+      return vacationRepository.update(vacation);
+    } else {
+      return vacationRepository.insert(vacation);
+    }
   }
 
   // 연차 수정 시
-  public Vacation update(int idx) {
-    return vacationRepository.findByIdx(idx);
+  public Vacation update(String idx) {
+    return vacationRepository.findByIdx(Integer.parseInt(idx));
   }
 
   // 연차 삭제 시
-  public void delete(int idx) {
-    vacationRepository.delete(idx);
+  public void delete(String idx) {
+    vacationRepository.delete(Integer.parseInt(idx));
   }
 
   private LocalDate parseStringToDate(String str) {

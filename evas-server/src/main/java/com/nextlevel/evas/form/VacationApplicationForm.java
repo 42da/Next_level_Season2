@@ -2,7 +2,7 @@ package com.nextlevel.evas.form;
 
 public class VacationApplicationForm {
 
-  private int idx;
+  private String idx;
   private String code;
   private String start;
   private String end;
@@ -12,11 +12,11 @@ public class VacationApplicationForm {
 
   private String employeeId;
 
-  public int getIdx() {
+  public String getIdx() {
     return idx;
   }
 
-  public void setIdx(int idx) {
+  public void setIdx(String idx) {
     this.idx = idx;
   }
 

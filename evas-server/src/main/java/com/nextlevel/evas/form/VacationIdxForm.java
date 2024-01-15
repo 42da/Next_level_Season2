@@ -2,13 +2,13 @@ package com.nextlevel.evas.form;
 
 public class VacationIdxForm {
 
-  private int idx;
+  private String idx;
 
-  public int getIdx() {
+  public String getIdx() {
     return idx;
   }
 
-  public void setIdx(int idx) {
+  public void setIdx(String idx) {
     this.idx = idx;
   }
 
