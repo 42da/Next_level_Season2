@@ -41,4 +41,10 @@ public class VacationController {
     return vacationService.update(form.getIdx());
   }
 
+  @PostMapping("main/delete")
+  @ResponseBody
+  public void delete(@RequestBody VacationIdxForm form) {
+    vacationService.delete(form.getIdx());
+  }
+
 }

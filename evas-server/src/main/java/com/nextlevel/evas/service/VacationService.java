@@ -61,6 +61,11 @@ public class VacationService {
     return vacationRepository.findByIdx(idx);
   }
 
+  // 연차 삭제 시
+  public void delete(int idx) {
+    vacationRepository.delete(idx);
+  }
+
   private LocalDate parseStringToDate(String str) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate date = LocalDate.parse(str, formatter);

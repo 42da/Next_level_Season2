@@ -16,6 +16,12 @@
     where idx = #{idx}
   </update>
   
+  <delete id="delete" parameterType="int">
+    delete
+    from vacation
+    where idx = #{idx}
+  </delete>
+  
   <select id="findByIdx" resultType="Vacation">
     select idx, code, start, end, content,
       period, type, approval_status, use_status, application_date,

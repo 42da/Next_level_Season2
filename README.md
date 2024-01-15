@@ -37,7 +37,7 @@
 
 <br>
 
-<b>3. `사원` 수정 시</b>
+<b>3. `사원` 연차 수정 시</b>
 - url : main/update
 - request data
     |key|value|
@@ -46,7 +46,7 @@
 
 <br>
 
-<b>4. `사원` 삭제 시</b>
+<b>4. `사원` 연차 삭제 시</b>
 - url : main/delete
 - request data
     |key|value|
