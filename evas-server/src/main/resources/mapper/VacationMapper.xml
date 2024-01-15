@@ -9,6 +9,21 @@
     values(#{code}, #{start}, #{end}, #{content}, #{period}, #{type}, #{employeeId})
   </insert>
   
+  <update id="update" parameterType="Vacation">
+    update vacation
+    set code = #{code}, start = #{start}, end = #{end}, content = #{content},
+      period = #{period}
+    where idx = #{idx}
+  </update>
+  
+  <select id="findByIdx" resultType="Vacation">
+    select idx, code, start, end, content,
+      period, type, approval_status, use_status, application_date,
+      employee_id
+    from vacation
+    where idx = #{idx}
+  </select>
+  
   <select id="findAllApplicationByEmployeeId" resultType="Vacation">
     select idx, code, start, end, content,
       period, type, approval_status, use_status, application_date,

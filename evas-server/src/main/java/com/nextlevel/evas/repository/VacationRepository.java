@@ -8,7 +8,7 @@ import com.nextlevel.evas.domain.Vacation;
 public interface VacationRepository {
 
   Vacation insert(Vacation vacation);
-  void update(Vacation vacation);
+  Vacation update(Vacation vacation);
   void delete(int idx);
 
   void updateApprovalStatus(int idx);

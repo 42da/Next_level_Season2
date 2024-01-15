@@ -1,6 +1,7 @@
 package com.nextlevel.evas.service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ public class VacationService {
     this.vacationRepository = vacationRepository;
   }
 
+  // main 접속, 새로 고침 시
   public Map<String, List<Vacation>> findAllList(String employeeId) {
     Map<String, List<Vacation>> result = new HashMap<String, List<Vacation>>();
 
@@ -31,6 +33,7 @@ public class VacationService {
     return result;
   }
 
+  // 연차 신청, 수정 후 신청 시
   public Vacation application(VacationApplicationForm form) {
     Vacation vacation = new Vacation();
 
@@ -39,15 +42,23 @@ public class VacationService {
     vacation.setEnd(parseStringToDate(form.getEnd()));
     vacation.setContent(form.getContent());
 
-    vacation.setPeriod(form.getPeriod());
-
-    if (form.getType() != null) {
+    vacation.setPeriod(calculatePeriod(vacation.getCode(), vacation.getStart(), vacation.getEnd()));
+    if (form.getType() != null) { 
       vacation.setType(form.getType());
     }
 
     vacation.setEmployeeId(form.getEmployeeId());
 
+    //    if ((Integer) form.getIdx() != null) {
+    //      return vacationRepository.update(vacation);
+    //    } else {
     return vacationRepository.insert(vacation);
+    //    }
+  }
+
+  // 연차 수정 시
+  public Vacation update(int idx) {
+    return vacationRepository.findByIdx(idx);
   }
 
   private LocalDate parseStringToDate(String str) {
@@ -57,6 +68,20 @@ public class VacationService {
     System.out.println("parseStringToDate : " + date);
 
     return date;
+  }
+
+  private Float calculatePeriod(String code, LocalDate start, LocalDate end) {
+    float period = 0;
+
+    if (code.equals("abs01")) {
+      period = Period.between(start, end).getDays();
+    } else if (code.equals("abs02") || code.equals("abs03")) {
+      period = (float) 0.5;
+    }
+
+    System.out.println("calculatePeriod : " + period);
+
+    return period;
   }
 
 }

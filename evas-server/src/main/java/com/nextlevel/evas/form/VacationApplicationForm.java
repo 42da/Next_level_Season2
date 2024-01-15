@@ -2,15 +2,23 @@ package com.nextlevel.evas.form;
 
 public class VacationApplicationForm {
 
+  private int idx;
   private String code;
   private String start;
   private String end;
   private String content;
 
-  private Float period;
   private String type;
 
   private String employeeId;
+
+  public int getIdx() {
+    return idx;
+  }
+
+  public void setIdx(int idx) {
+    this.idx = idx;
+  }
 
   public String getCode() {
     return code;
@@ -50,14 +58,6 @@ public class VacationApplicationForm {
 
   public void setType(String type) {
     this.type = type;
-  }
-
-  public Float getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Float period) {
-    this.period = period;
   }
 
   public String getEmployeeId() {
