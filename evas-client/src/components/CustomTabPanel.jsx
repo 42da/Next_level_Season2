@@ -19,21 +19,11 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import ApplicationForm from "./ApplicationForm";
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('연차', '23-01-01', '그냥', '대기', '미사용'),
-    createData('오전반차', '23-01-01', '퇴사를 위한 자기계발', '승인', '사용'),
-    createData('오후반차', '23-01-01', '개인 사유', '반려', '미사용'),
-    createData('대체휴가', '23-01-01', '숙취로 인한 휴가', '반려', '미사용'),
-    createData('경조사휴가', '23-01-01', '결혼식', '대기', '미사용'),
-];
-
 function CustomTabPanel(props) {
-    const [dense, setDense] = useState(false);
-    const [secondary, setSecondary] = useState(false);
+    const [rows, setRows] = useState([]);
+    const createData = (name, calories, fat, carbs, protein) => {
+        return { name, calories, fat, carbs, protein };
+    }
     const [reset, setReset] = useState(false);
     const resetHandler = () => {
         setReset(true);
@@ -96,7 +86,7 @@ function CustomTabPanel(props) {
                                             {row.name}
                                         </TableCell>
                                         <TableCell align="center">{row.calories}</TableCell>
-                                        <TableCell align="center">{props.content}</TableCell>
+                                        <TableCell align="center">{}</TableCell>
                                         <TableCell align="center">{row.carbs}</TableCell>
                                         <TableCell align="center">{row.protein}</TableCell>
                                         <TableCell align="center">

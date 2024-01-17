@@ -35,6 +35,7 @@ function Main() {
     axios.post('http://localhost:8080/main', {
       employeeId: "R20220202",
     }).then((response) => {
+      setContent(response.data.applicationList);
       console.log(response);
     }).catch((error) => {
       console.log(error);
