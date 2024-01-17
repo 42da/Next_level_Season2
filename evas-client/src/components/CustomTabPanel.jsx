@@ -21,9 +21,19 @@ import ApplicationForm from "./ApplicationForm";
 
 function CustomTabPanel(props) {
     const [rows, setRows] = useState([]);
-    const createData = (name, calories, fat, carbs, protein) => {
-        return { name, calories, fat, carbs, protein };
+    const createData = (code, period, content, approvalStatus) => {
+        return { code, period, content, approvalStatus };
     }
+
+    const [sendData, setSendData] = useState({
+        idx: "",
+        code: "",
+        start: "",
+        end: "",
+        content: "",
+        employeeId: props.employeeId,
+    });
+
     const [reset, setReset] = useState(false);
     const resetHandler = () => {
         setReset(true);
@@ -31,11 +41,14 @@ function CustomTabPanel(props) {
     const submit = () => {
         // 신청
         axios.post('http://localhost:8080/main/application', {
-            id: "test",
-            passwd: "test",
+            //idx: "",
+            code: sendData.code,
+            start: "2024-01-17",
+            end: "2024-01-18",
+            content: sendData.content,
+            employeeId: sendData.employeeId,
         }).then((response) => {
-
-
+            console.log(response);
         }).catch((error) => {
             console.log(error);
         });
@@ -50,7 +63,7 @@ function CustomTabPanel(props) {
             {props.value === 0 && (
                 <>
                     <Box sx={{ pt: 3 }}>
-                        <ApplicationForm reset={reset} setReset={setReset} />
+                        <ApplicationForm sendData={sendData} setSendData={setSendData} reset={reset} setReset={setReset} />
                     </Box>
                     <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ pt: 3 }}>
                         <Button onClick={resetHandler} variant="outlined" startIcon={<ResetTv />}>
@@ -72,23 +85,21 @@ function CustomTabPanel(props) {
                                     <TableCell align="center">기간</TableCell>
                                     <TableCell align="center">사유</TableCell>
                                     <TableCell align="center">상태</TableCell>
-                                    <TableCell align="center">사용 유무</TableCell>
                                     <TableCell align="center">수정</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.map((row) => (
+                                {props.data.map((row) => (
                                     <TableRow
-                                        key={row.name}
+                                        key={row.idx}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell align="center" scope="row">
-                                            {row.name}
+                                            {row.code}
                                         </TableCell>
-                                        <TableCell align="center">{row.calories}</TableCell>
-                                        <TableCell align="center">{}</TableCell>
-                                        <TableCell align="center">{row.carbs}</TableCell>
-                                        <TableCell align="center">{row.protein}</TableCell>
+                                        <TableCell align="center">{row.start}</TableCell>
+                                        <TableCell align="center">{row.content}</TableCell>
+                                        <TableCell align="center">{row.approvalStatus}</TableCell>
                                         <TableCell align="center">
                                             <Button endIcon={<EditIcon />} />
                                         </TableCell>
@@ -109,22 +120,20 @@ function CustomTabPanel(props) {
                                     <TableCell align="center">기간</TableCell>
                                     <TableCell align="center">사유</TableCell>
                                     <TableCell align="center">상태</TableCell>
-                                    <TableCell align="center">사용 유무</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.map((row) => (
+                                {props.data.map((row) => (
                                     <TableRow
-                                        key={row.name}
+                                        key={row.idx}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell align="center" scope="row">
-                                            {row.name}
+                                            {row.code}
                                         </TableCell>
-                                        <TableCell align="center">{row.calories}</TableCell>
-                                        <TableCell align="center">{row.fat}</TableCell>
-                                        <TableCell align="center">{row.carbs}</TableCell>
-                                        <TableCell align="center">{row.protein}</TableCell>
+                                        <TableCell align="center">{row.start}</TableCell>
+                                        <TableCell align="center">{row.content}</TableCell>
+                                        <TableCell align="center">{row.approvalStatus}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

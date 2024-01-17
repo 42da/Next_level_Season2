@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
+import { useLocation } from "react-router-dom"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Grid } from '@mui/material';
@@ -13,15 +14,17 @@ import axios from "axios";
 
 function Main() {
   const [value, setValue] = useState(1);
-  const [content, setContent] = useState('');
+  const [data, setData] = useState([]);
   
+  const {state} = useLocation();
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   
   const refresh = () => {
     axios.post('http://localhost:8080/main/vacationList', {
-      employeeId: "R20220202",
+      employeeId: state,
     }).then((response) => {
       
     }).catch((error) => {
@@ -33,9 +36,9 @@ function Main() {
     // 데이터 요청
     // 신청 현황, 연차 목록, calander 에 뿌려줄 데이터
     axios.post('http://localhost:8080/main', {
-      employeeId: "R20220202",
+      employeeId: state,
     }).then((response) => {
-      setContent(response.data.applicationList);
+      setData(response.data.applicationList);
       console.log(response);
     }).catch((error) => {
       console.log(error);
@@ -51,9 +54,9 @@ function Main() {
             <Tab label="신청 현황" />
             <Tab label="연차 목록" />
           </Tabs>
-          <CustomTabPanel value={value} index={0} />
-          <CustomTabPanel value={value} content={content} index={1} />
-          <CustomTabPanel value={value} index={2} />
+          <CustomTabPanel employeeId={state} data={data} value={value} index={0} />
+          <CustomTabPanel employeeId={state} data={data} value={value} index={1} />
+          <CustomTabPanel employeeId={state} data={data} value={value} index={2} />
         </Grid>
         <Grid item xs={6}>
           <CustomCalendar />

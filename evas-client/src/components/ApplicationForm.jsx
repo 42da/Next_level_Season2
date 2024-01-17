@@ -12,15 +12,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 
-function ApplicationForm({ reset, setReset }) {
+function ApplicationForm({ reset, setReset, sendData, setSendData }) {
     const [vacation, setVacation] = useState('');
     const [vactionReason, setVactionReason] = useState('');
 
     const handleChange = (event) => {
         setVacation(event.target.value);
+        setSendData({ ...sendData, code: event.target.value });
     };
     const handleChangeReason = (event) => {
         setVactionReason(event.target.value);
+        setSendData({ ...sendData, content: event.target.value });
     };
     useEffect(() => {
         if (reset) {
@@ -40,13 +42,13 @@ function ApplicationForm({ reset, setReset }) {
                     label="연차 종류"
                     onChange={handleChange}
                 >
-                    <MenuItem value={10}>연차</MenuItem>
-                    <MenuItem value={20}>연차)오전반차</MenuItem>
-                    <MenuItem value={30}>연차)오후반차</MenuItem>
-                    <MenuItem value={30}>대체휴가</MenuItem>
-                    <MenuItem value={30}>경조휴가</MenuItem>
-                    <MenuItem value={30}>출산육아휴가</MenuItem>
-                    <MenuItem value={30}>기타</MenuItem>
+                    <MenuItem value={"abs01"}>연차</MenuItem>
+                    <MenuItem value={"abs02"}>연차)오전반차</MenuItem>
+                    <MenuItem value={"abs03"}>연차)오후반차</MenuItem>
+                    <MenuItem value={"abs04"}>대체휴가</MenuItem>
+                    <MenuItem value={"abs05"}>경조휴가</MenuItem>
+                    <MenuItem value={"abs06"}>출산육아휴가</MenuItem>
+                    <MenuItem value={"abs07"}>기타</MenuItem>
                 </Select>
             </FormControl>
             <TextField value={vactionReason} onChange={handleChangeReason} sx={{ pb: 3, width: '100%' }} id="outlined-basic" label="연차 사유" variant="outlined" />

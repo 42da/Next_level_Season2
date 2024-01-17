@@ -45,7 +45,7 @@ export default function SignIn() {
     }).then((response) => {
       if (response.data.employeeId) { // response.responseText.indexOf('ok') > -1) {
         // 로그인 성공
-        navigate('/main');
+        navigate('/main', {state: response.data.employeeId});
       } else alert('로그인 실패');
     }).catch((error) => {
       console.log(error);
