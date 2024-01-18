@@ -13,6 +13,8 @@ public class Employee {
   private LocalDate resetVacationDate;
   private Float totalVacation;
 
+  private Boolean isAdmin;
+
   public String getLoginId() {
     return loginId;
   }
@@ -59,6 +61,14 @@ public class Employee {
 
   public void setTotalVacation(Float totalVacation) {
     this.totalVacation = totalVacation;
+  }
+
+  public Boolean getIsAdmin() {
+    return isAdmin;
+  }
+
+  public void setIsAdmin(Boolean isAdmin) {
+    this.isAdmin = isAdmin;
   }
 
 }

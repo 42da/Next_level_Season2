@@ -17,6 +17,7 @@
     |start|시작 날짜|
     |end|종료 날짜|
     |content|내용|
+    |employeeId|사원 번호|
 - 참고
     |code|value|period|
     |-|-|-|
