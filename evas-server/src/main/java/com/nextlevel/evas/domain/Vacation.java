@@ -18,6 +18,8 @@ public class Vacation {
 
   private String employeeId;
 
+  private String rejectionContent;
+
   public int getIdx() {
     return idx;
   }
@@ -104,6 +106,14 @@ public class Vacation {
 
   public void setEmployeeId(String employeeId) {
     this.employeeId = employeeId;
+  }
+
+  public String getRejectionContent() {
+    return rejectionContent;
+  }
+
+  public void setRejectionContent(String rejectionContent) {
+    this.rejectionContent = rejectionContent;
   }
 
 }

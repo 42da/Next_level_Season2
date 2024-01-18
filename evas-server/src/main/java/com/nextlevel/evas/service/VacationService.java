@@ -34,7 +34,7 @@ public class VacationService {
   }
 
   // 연차 신청, 수정 후 신청 시
-  public Vacation application(VacationApplicationForm form) {
+  public Vacation apply(VacationApplicationForm form) {
     Vacation vacation = new Vacation();
 
     vacation.setCode(form.getCode());
@@ -64,8 +64,15 @@ public class VacationService {
   }
 
   // 연차 삭제 시
-  public void delete(String idx) {
-    vacationRepository.delete(Integer.parseInt(idx));
+  public int delete(String idx) {
+    int result = vacationRepository.delete(Integer.parseInt(idx));
+
+    if (result > 0) {
+      return Integer.parseInt(idx);
+    } else {
+      return result;
+    }
+
   }
 
   private LocalDate parseStringToDate(String str) {

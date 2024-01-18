@@ -25,7 +25,7 @@
   <select id="findByIdx" resultType="Vacation">
     select idx, code, start, end, content,
       period, type, approval_status, use_status, application_date,
-      employee_id
+      employee_id, rejection_content
     from vacation
     where idx = #{idx}
   </select>
@@ -33,7 +33,7 @@
   <select id="findAllApplicationByEmployeeId" resultType="Vacation">
     select idx, code, start, end, content,
       period, type, approval_status, use_status, application_date,
-      employee_id
+      employee_id, rejection_content
     from vacation
     where employee_id = #{employeeId}
       and DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) > 0
@@ -42,7 +42,7 @@
   <select id="findAllVacationByEmployeeId" resultType="Vacation">
     select idx, code, start, end, content,
       period, type, approval_status, use_status, application_date,
-      employee_id
+      employee_id, rejection_content
     from vacation
     where employee_id = #{employeeId}
       and approval_status = 'A'
@@ -52,7 +52,7 @@
   <select id="findAllCalendar" resultType="Vacation">
     select idx, code, start, end, content,
       period, type, approval_status, use_status, application_date,
-      employee_id
+      employee_id, rejection_content
     from vacation
     where approval_status = 'A'
   </select>

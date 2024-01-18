@@ -9,7 +9,7 @@ public interface VacationRepository {
 
   Vacation insert(Vacation vacation);
   Vacation update(Vacation vacation);
-  void delete(int idx);
+  int delete(int idx);
 
   void updateApprovalStatus(int idx);
   void updateUseStatus(int idx);

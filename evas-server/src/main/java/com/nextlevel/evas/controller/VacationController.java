@@ -31,8 +31,8 @@ public class VacationController {
 
   @PostMapping("main/application")
   @ResponseBody
-  public Vacation application(@RequestBody VacationApplicationForm form) {
-    return vacationService.application(form);
+  public Vacation apply(@RequestBody VacationApplicationForm form) {
+    return vacationService.apply(form);
   }
 
   @PostMapping("main/update")
@@ -43,8 +43,8 @@ public class VacationController {
 
   @PostMapping("main/delete")
   @ResponseBody
-  public void delete(@RequestBody VacationIdxForm form) {
-    vacationService.delete(form.getIdx());
+  public int delete(@RequestBody VacationIdxForm form) {
+    return vacationService.delete(form.getIdx());
   }
 
 }
