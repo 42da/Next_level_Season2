@@ -14,7 +14,11 @@ import axios from "axios";
 
 function Main() {
   const [value, setValue] = useState(1);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    applicationList: [],
+    vacationList: [],
+    calendarList: [],
+  });
   
   const {state} = useLocation();
 
@@ -38,8 +42,8 @@ function Main() {
     axios.post('http://localhost:8080/main', {
       employeeId: state,
     }).then((response) => {
-      setData(response.data.applicationList);
-      console.log(response);
+      setData(response.data);
+      console.log("main response : ", response);
     }).catch((error) => {
       console.log(error);
     });
@@ -54,12 +58,12 @@ function Main() {
             <Tab label="신청 현황" />
             <Tab label="연차 목록" />
           </Tabs>
-          <CustomTabPanel employeeId={state} data={data} value={value} index={0} />
-          <CustomTabPanel employeeId={state} data={data} value={value} index={1} />
+          <CustomTabPanel setValue={setValue} setData={setData} employeeId={state} data={data} value={value} index={0} />
+          <CustomTabPanel setData={setData} employeeId={state} data={data} value={value} index={1} />
           <CustomTabPanel employeeId={state} data={data} value={value} index={2} />
         </Grid>
         <Grid item xs={6}>
-          <CustomCalendar />
+          <CustomCalendar data={data.calendarList}/>
         </Grid>
       </Grid>
 

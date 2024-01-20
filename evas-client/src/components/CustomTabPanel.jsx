@@ -11,13 +11,17 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import dayjs from 'dayjs';
+
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import ResetTv from '@mui/icons-material/ResetTv';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import ApplicationForm from "./ApplicationForm";
+import { IconButton } from "@mui/material";
 
 function CustomTabPanel(props) {
     const [rows, setRows] = useState([]);
@@ -28,8 +32,8 @@ function CustomTabPanel(props) {
     const [sendData, setSendData] = useState({
         idx: "",
         code: "",
-        start: "",
-        end: "",
+        start: dayjs(new Date().toLocaleDateString()),
+        end: dayjs(new Date().toLocaleDateString()),
         content: "",
         employeeId: props.employeeId,
     });
@@ -43,12 +47,26 @@ function CustomTabPanel(props) {
         axios.post('http://localhost:8080/main/application', {
             //idx: "",
             code: sendData.code,
-            start: "2024-01-17",
-            end: "2024-01-18",
+            start: sendData.start,
+            end: sendData.end,
             content: sendData.content,
-            employeeId: sendData.employeeId,
+            employeeId: props.employeeId,
         }).then((response) => {
-            console.log(response);
+            //debugger;
+            props.setData({ vacationList: [...props.data.vacationList], calendarList: [...props.data.calendarList, { start: sendData.start, end: sendData.end, employeeId: props.employeeId }], applicationList: [...props.data.applicationList, {idx: props.data.applicationList.slice(-1)[0].idx + 1, code: sendData.code, start: sendData.start, end: sendData.end, content: sendData.content, approvalStatus: "W" }] });
+            props.setValue(1);
+            console.log("response : ", response, "props.data.applicationList : ", props.data.applicationList);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+    const deleteList = (idx) => {
+        axios.post('http://localhost:8080/main/delete', {
+            idx: idx,
+        }).then((response) => {
+            
+            props.setData({ vacationList: [...props.data.vacationList], calendarList: [...props.data.calendarList], applicationList: [...props.data.applicationList.filter((row) => row.idx !== response.data)] });
+            console.log("delete response : ", response);
         }).catch((error) => {
             console.log(error);
         });
@@ -89,19 +107,25 @@ function CustomTabPanel(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {props.data.map((row) => (
+                                {props.data.applicationList.map((row) => (
                                     <TableRow
                                         key={row.idx}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell align="center" scope="row">
+                                        <TableCell sx={{ minWidth: '20%' }} align="center" scope="row">
                                             {row.code}
                                         </TableCell>
-                                        <TableCell align="center">{row.start}</TableCell>
-                                        <TableCell align="center">{row.content}</TableCell>
-                                        <TableCell align="center">{row.approvalStatus}</TableCell>
-                                        <TableCell align="center">
-                                            <Button endIcon={<EditIcon />} />
+                                        <TableCell sx={{ minWidth: '20%' }} align="center">{row.start} ~ {row.end}</TableCell>
+                                        <TableCell sx={{ minWidth: '20%' }} align="center">{row.content}</TableCell>
+                                        <TableCell sx={{ minWidth: '20%' }} align="center">{row.approvalStatus}</TableCell>
+                                        <TableCell sx={{ minWidth: '20%' }} align="center">
+                                            <IconButton>
+                                                <EditIcon fontSize="small" />
+                                            </IconButton>
+                                            <IconButton onClick={() => {deleteList(row.idx)}}>
+                                                <DeleteIcon fontSize="small" />
+                                            </IconButton>
+                                            {/* <Button endIcon={<EditIcon fontSize="large" />} /> */}
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -123,15 +147,16 @@ function CustomTabPanel(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {props.data.map((row) => (
+                                {props.data.vacationList.map((row) => (
                                     <TableRow
+
                                         key={row.idx}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell align="center" scope="row">
                                             {row.code}
                                         </TableCell>
-                                        <TableCell align="center">{row.start}</TableCell>
+                                        <TableCell align="center">{row.start} ~ {row.end}</TableCell>
                                         <TableCell align="center">{row.content}</TableCell>
                                         <TableCell align="center">{row.approvalStatus}</TableCell>
                                     </TableRow>

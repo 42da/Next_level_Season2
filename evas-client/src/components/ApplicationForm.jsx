@@ -10,9 +10,11 @@ import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
+import { DatePicker } from '@mui/x-date-pickers';
+import { Stack } from '@mui/system';
 
-function ApplicationForm({ reset, setReset, sendData, setSendData }) {
+function ApplicationForm({ reset, setReset, sendData, setSendData, date }) {
+    const today = [dayjs(new Date().toLocaleDateString()), dayjs(new Date().toLocaleDateString())]; // [start, end
     const [vacation, setVacation] = useState('');
     const [vactionReason, setVactionReason] = useState('');
 
@@ -24,7 +26,16 @@ function ApplicationForm({ reset, setReset, sendData, setSendData }) {
         setVactionReason(event.target.value);
         setSendData({ ...sendData, content: event.target.value });
     };
+    const handleStartChangeDate = (value) => {
+        const formattedDate = dayjs(value).format("YYYY-MM-DD");
+        setSendData({ ...sendData, start: formattedDate });
+    };
+    const handleEndChangeDate = (value) => {
+        const formattedDate = dayjs(value).format("YYYY-MM-DD");
+        setSendData({ ...sendData, end: formattedDate });
+    };
     useEffect(() => {
+        setSendData({ ...sendData, start: dayjs(today[0]).format("YYYY-MM-DD"), end: dayjs(today[1]).format("YYYY-MM-DD") });
         if (reset) {
             setVacation('');
             setVactionReason('');
@@ -60,11 +71,15 @@ function ApplicationForm({ reset, setReset, sendData, setSendData }) {
                     ]}
                 >
                     <DemoItem label="연차 기간" component="DesktopDateRangePicker"> */}
-                        <DesktopDateRangePicker
+                {/* <DesktopDateRangePicker
                             defaultValue={[dayjs(new Date().toLocaleDateString()), dayjs(new Date().toLocaleDateString())]}
-                        />
-                    {/* </DemoItem>
+                        /> */}
+                {/* </DemoItem>
                 </DemoContainer> */}
+                <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ pb: 3 }}>
+                    <DatePicker format='YYYY/MM/DD' sx={{width: "50%"}} onChange={handleStartChangeDate} label="Start Date" defaultValue={today[0]} name='start' />
+                    <DatePicker format='YYYY/MM/DD' sx={{width: "50%"}} onChange={handleEndChangeDate} label="End Date" defaultValue={today[1]} name='end'/>
+                </Stack>
             </LocalizationProvider>
 
         </>
