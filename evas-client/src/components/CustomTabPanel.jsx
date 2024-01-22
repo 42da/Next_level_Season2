@@ -9,14 +9,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Collapse from "@mui/material/Collapse";
 import Paper from '@mui/material/Paper';
 
 import dayjs from 'dayjs';
 
-import Button from '@mui/material/Button';
-import SendIcon from '@mui/icons-material/Send';
-import Stack from '@mui/material/Stack';
-import ResetTv from '@mui/icons-material/ResetTv';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -24,53 +21,33 @@ import ApplicationForm from "./ApplicationForm";
 import { IconButton } from "@mui/material";
 
 function CustomTabPanel(props) {
-    const [rows, setRows] = useState([]);
-    const createData = (code, period, content, approvalStatus) => {
-        return { code, period, content, approvalStatus };
-    }
-
-    const [sendData, setSendData] = useState({
-        idx: "",
-        code: "",
-        start: dayjs(new Date().toLocaleDateString()),
-        end: dayjs(new Date().toLocaleDateString()),
-        content: "",
-        employeeId: props.employeeId,
-    });
-
-    const [reset, setReset] = useState(false);
-    const resetHandler = () => {
-        setReset(true);
-    }
-    const submit = () => {
-        // 신청
-        axios.post('http://localhost:8080/main/application', {
-            //idx: "",
-            code: sendData.code,
-            start: sendData.start,
-            end: sendData.end,
-            content: sendData.content,
-            employeeId: props.employeeId,
-        }).then((response) => {
-            //debugger;
-            props.setData({ vacationList: [...props.data.vacationList], calendarList: [...props.data.calendarList, { start: sendData.start, end: sendData.end, employeeId: props.employeeId }], applicationList: [...props.data.applicationList, {idx: props.data.applicationList.slice(-1)[0].idx + 1, code: sendData.code, start: sendData.start, end: sendData.end, content: sendData.content, approvalStatus: "W" }] });
-            props.setValue(1);
-            console.log("response : ", response, "props.data.applicationList : ", props.data.applicationList);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
+    const [date, setDate] = useState([dayjs(new Date()), dayjs(new Date())]);   // [start, end]
+    
+    const [modifyOpen, setModifyOpen] = useState([]);   // 각 row 의 수정 버튼 클릭 여부
+    
     const deleteList = (idx) => {
         axios.post('http://localhost:8080/main/delete', {
             idx: idx,
         }).then((response) => {
-            
             props.setData({ vacationList: [...props.data.vacationList], calendarList: [...props.data.calendarList], applicationList: [...props.data.applicationList.filter((row) => row.idx !== response.data)] });
             console.log("delete response : ", response);
         }).catch((error) => {
             console.log(error);
         });
     }
+
+    const modify = (idx) => {       // 수정 버튼 클릭 시
+        let temp = [...modifyOpen];
+        temp = temp.map((row) => row ? false : row);    // 모든 수정 버튼 닫기(한번에 하나만 수정 가능)
+        
+        temp[idx] = !temp[idx];
+        setModifyOpen(temp);
+    }
+    
+    useEffect(() => {
+        setModifyOpen([...props.data.applicationList.map((row) => false)]);
+    }, [props.data.applicationList]);
+
     return (
         <div
             role="tabpanel"
@@ -81,21 +58,13 @@ function CustomTabPanel(props) {
             {props.value === 0 && (
                 <>
                     <Box sx={{ pt: 3 }}>
-                        <ApplicationForm sendData={sendData} setSendData={setSendData} reset={reset} setReset={setReset} />
+                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={false} />
                     </Box>
-                    <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ pt: 3 }}>
-                        <Button onClick={resetHandler} variant="outlined" startIcon={<ResetTv />}>
-                            초기화
-                        </Button>
-                        <Button onClick={submit} variant="contained" endIcon={<SendIcon />}>
-                            신청
-                        </Button>
-                    </Stack>
                 </>
             )}
             {props.value === 1 && (
                 <Box sx={{ pt: 3 }}>
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
@@ -107,27 +76,43 @@ function CustomTabPanel(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {props.data.applicationList.map((row) => (
-                                    <TableRow
-                                        key={row.idx}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                        <TableCell sx={{ minWidth: '20%' }} align="center" scope="row">
-                                            {row.code}
-                                        </TableCell>
-                                        <TableCell sx={{ minWidth: '20%' }} align="center">{row.start} ~ {row.end}</TableCell>
-                                        <TableCell sx={{ minWidth: '20%' }} align="center">{row.content}</TableCell>
-                                        <TableCell sx={{ minWidth: '20%' }} align="center">{row.approvalStatus}</TableCell>
-                                        <TableCell sx={{ minWidth: '20%' }} align="center">
-                                            <IconButton>
-                                                <EditIcon fontSize="small" />
-                                            </IconButton>
-                                            <IconButton onClick={() => {deleteList(row.idx)}}>
-                                                <DeleteIcon fontSize="small" />
-                                            </IconButton>
-                                            {/* <Button endIcon={<EditIcon fontSize="large" />} /> */}
-                                        </TableCell>
-                                    </TableRow>
+                                {props.data.applicationList.map((row, idx) => (
+                                    <React.Fragment key={row.idx + "application"}>
+                                        <TableRow
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                            <TableCell sx={{ minWidth: '20%' }} align="center" scope="row">
+                                                {row.code}
+                                            </TableCell>
+                                            <TableCell sx={{ minWidth: '20%' }} align="center">{row.start} ~ {row.end}</TableCell>
+                                            <TableCell sx={{ minWidth: '20%' }} align="center">{row.content}</TableCell>
+                                            <TableCell sx={{ minWidth: '20%' }} align="center">{row.approvalStatus}</TableCell>
+                                            <TableCell sx={{ minWidth: '20%' }} align="center">
+                                                <IconButton onClick={() => { modify(idx) }}>
+                                                    <EditIcon fontSize="small" />
+                                                </IconButton>
+                                                <IconButton onClick={() => { deleteList(row.idx) }}>
+                                                    <DeleteIcon fontSize="small" />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell style={{ padding: 0, border: 0 }} colSpan={5}>
+                                                <Collapse in={modifyOpen[idx]} timeout="auto" unmountOnExit>
+                                                    <Table aria-label="modify vacation" sx={{ width: '100%' }}>
+                                                        <TableBody>
+                                                            <TableRow>
+                                                                <TableCell align="left" scope="row">
+                                                                    <Box sx={{ pt: 2, }}>
+                                                                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify}/>
+                                                                    </Box>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </TableBody>
+                                                    </Table>
+                                                </Collapse>
+                                            </TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
                                 ))}
                             </TableBody>
                         </Table>
@@ -150,7 +135,7 @@ function CustomTabPanel(props) {
                                 {props.data.vacationList.map((row) => (
                                     <TableRow
 
-                                        key={row.idx}
+                                        key={row.idx + "vacation"}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell align="center" scope="row">

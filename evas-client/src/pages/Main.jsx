@@ -59,7 +59,7 @@ function Main() {
             <Tab label="연차 목록" />
           </Tabs>
           <CustomTabPanel setValue={setValue} setData={setData} employeeId={state} data={data} value={value} index={0} />
-          <CustomTabPanel setData={setData} employeeId={state} data={data} value={value} index={1} />
+          <CustomTabPanel setValue={setValue} setData={setData} employeeId={state} data={data} value={value} index={1} />
           <CustomTabPanel employeeId={state} data={data} value={value} index={2} />
         </Grid>
         <Grid item xs={6}>
