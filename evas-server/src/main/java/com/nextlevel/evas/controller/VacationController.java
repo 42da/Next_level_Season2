@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextlevel.evas.domain.Vacation;
 import com.nextlevel.evas.form.EmployeeIdForm;
 import com.nextlevel.evas.form.VacationApplicationForm;
+import com.nextlevel.evas.form.VacationApprovalForm;
 import com.nextlevel.evas.form.VacationIdxForm;
 import com.nextlevel.evas.service.VacationService;
 
@@ -39,6 +40,12 @@ public class VacationController {
   @ResponseBody
   public int delete(@RequestBody VacationIdxForm form) {
     return vacationService.delete(form.getIdx());
+  }
+
+  @PostMapping("main/approval")
+  @ResponseBody
+  public Vacation approve(@RequestBody VacationApprovalForm form) {
+    return vacationService.approve(form.getIdx(), form.getApprovalStatus(), form.getRejectionContent());
   }
 
 }

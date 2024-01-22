@@ -22,6 +22,12 @@
     where idx = #{idx}
   </delete>
   
+  <update id="updateApprovalStatus" parameterType="Map">
+    update vacation
+    set approval_status = #{approvalStatus}, rejection_content = #{rejection_content}
+    where idx = #{idx}
+  </update>
+  
   <select id="findByIdx" resultType="Vacation">
     select idx, code, start, end, content,
       period, type, approval_status, use_status, application_date,

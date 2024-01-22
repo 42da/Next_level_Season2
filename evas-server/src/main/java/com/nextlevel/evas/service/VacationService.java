@@ -83,6 +83,16 @@ public class VacationService {
     }
   }
 
+  // 연차 승인/거절 시
+  public Vacation approve(String idx, String approvalStatus, String rejectionContent) {
+    int result = vacationRepository.updateApprovalStatus(Integer.parseInt(idx), approvalStatus, rejectionContent);
+    if (result > 0) {
+      return vacationRepository.findByIdx(Integer.parseInt(idx)); 
+    } else {
+      return null;
+    }
+  }
+
   private LocalDate parseStringToDate(String str) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate date = LocalDate.parse(str, formatter);

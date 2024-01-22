@@ -27,7 +27,7 @@
     |abs04|대체휴가|0|
     |abs05|경조휴가|0|
     |abs06|출산육아휴가|0|
-    |abs07|기타|0 <i>(상의)</i>|
+    |abs07|기타|0|
 
     |key|기본 값|
     |-|-|
@@ -38,8 +38,8 @@
 
 <br>
 
-<b>3. `사원` 연차 수정 시</b>
-- url : main/update
+<b>3. `사원` 연차 삭제 시</b>
+- url : main/delete
 - request data
     |key|value|
     |-|-|
@@ -47,9 +47,21 @@
 
 <br>
 
-<b>4. `사원` 연차 삭제 시</b>
-- url : main/delete
+<b>4. `관리자` 전체 연차 신청 / 수정 후 신청 시</b>
+- url : main/application
+- request data <br>
+    2. `사원` 연차 신청 / 수정 후 신청 시와 동일
+    |key|value|
+    |-|-|
+    |<i>type</i>|<i>C</i>|
+
+<br>
+
+<b>6. `관리자` 승인/거절 시</b>
+- url : main/approval
 - request data
     |key|value|
     |-|-|
     |idx|연차 번호|
+    |approvalStatus|승인 상태|
+    |<i>rejectionContent</i>|<i>거절 내용 (거절 시)</i>|
