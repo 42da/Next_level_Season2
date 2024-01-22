@@ -4,12 +4,12 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nextlevel.evas.repository.VacationRepository">
-  <insert id="insert" parameterType="Vacation">
+  <insert id="insert" parameterType="Vacation" useGeneratedKeys="true" keyProperty="idx">
     insert into vacation(code, start, end, content, period, type, employee_id)
     values(#{code}, #{start}, #{end}, #{content}, #{period}, #{type}, #{employeeId})
   </insert>
   
-  <update id="update" parameterType="Vacation">
+  <update id="update" parameterType="Vacation" useGeneratedKeys="true" keyProperty="idx">
     update vacation
     set code = #{code}, start = #{start}, end = #{end}, content = #{content},
       period = #{period}

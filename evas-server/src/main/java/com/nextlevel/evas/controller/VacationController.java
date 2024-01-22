@@ -35,12 +35,6 @@ public class VacationController {
     return vacationService.apply(form);
   }
 
-  @PostMapping("main/update")
-  @ResponseBody
-  public Vacation update(@RequestBody VacationIdxForm form) {
-    return vacationService.update(form.getIdx());
-  }
-
   @PostMapping("main/delete")
   @ResponseBody
   public int delete(@RequestBody VacationIdxForm form) {
