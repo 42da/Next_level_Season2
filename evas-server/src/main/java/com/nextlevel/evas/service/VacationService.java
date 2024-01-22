@@ -106,7 +106,7 @@ public class VacationService {
     float period = 0;
 
     if (code.equals("abs01")) {
-      period = Period.between(start, end).getDays();
+      period = (Period.between(start, end).getDays() + 1);
     } else if (code.equals("abs02") || code.equals("abs03")) {
       period = (float) 0.5;
     }
