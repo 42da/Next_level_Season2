@@ -30,7 +30,7 @@ public class VacationController {
     return vacationService.findAllList(form.getEmployeeId());
   }
 
-  @PostMapping("main/application")
+  @PostMapping("main/apply")
   @ResponseBody
   public Vacation apply(@RequestBody VacationApplicationForm form) {
     return vacationService.apply(form);
@@ -42,7 +42,7 @@ public class VacationController {
     return vacationService.delete(form.getIdx());
   }
 
-  @PostMapping("main/approval")
+  @PostMapping("main/approve")
   @ResponseBody
   public Vacation approve(@RequestBody VacationApprovalForm form) {
     return vacationService.approve(form.getIdx(), form.getApprovalStatus(), form.getRejectionContent());

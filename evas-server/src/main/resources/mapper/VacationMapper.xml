@@ -61,7 +61,7 @@
       employee_id, rejection_content
     from vacation
     where approval_status = 'A'
-      and -7 &lt; TIMESTAMPDIFF(MONTH, start, CURDATE())
-      and TIMESTAMPDIFF(MONTH, start, CURDATE()) &lt; 7
+      and start BETWEEN DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
+      and DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-31')
   </select>
 </mapper>
