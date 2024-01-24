@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -7,13 +7,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Stack } from '@mui/system';
-import { day } from 'date-arithmetic';
-import { duration } from 'moment';
 import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ResetTv from '@mui/icons-material/ResetTv';
@@ -70,6 +68,7 @@ function ApplicationForm(props) {
             employeeId: props.employeeId,
         }).then((response) => {
             const responseData = response.data;
+            console.log("modify response : ", responseData);
             if (props.isModify) {
                 const modifiedList = props.data.applicationList;
                 modifiedList.splice(props.idx, 1, responseData);

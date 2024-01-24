@@ -38,9 +38,10 @@ function CustomTabPanel(props) {
 
     const modify = (idx) => {       // 수정 버튼 클릭 시
         let temp = [...modifyOpen];
-        temp = temp.map((row) => row ? false : row);    // 모든 수정 버튼 닫기(한번에 하나만 수정 가능)
         
         temp[idx] = !temp[idx];
+        temp = temp.map((row, i) => row && idx == i ? row : false);    // 모든 수정 버튼 닫기(한번에 하나만 수정 가능)
+        
         setModifyOpen(temp);
     }
     
