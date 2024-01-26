@@ -11,10 +11,9 @@ public class Vacation {
   private String content;
 
   private Float period;
-  private String type;                  // 기본 값 : 개인 연차 (P), 전체 연차 (C)
-  private String approvalStatus;        // 기본 값 : 대기 (W), 승인 (A), 거절 (R)
-  private String useStatus;             // 기본 값 : 미사용 (R), 사용 (U)
-  private LocalDate applicationDate;    // 기본 값 : 오늘 날짜
+  private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
+  private String approvalStatus;    // 기본 값 : 대기 (W), 승인 (A), 거절 (R), 취소 대기 (CW), 취소 (C)
+  private String useStatus;         // 기본 값 : 미사용 (R), 사용 (U)
 
   private String employeeId;
 
@@ -90,14 +89,6 @@ public class Vacation {
 
   public void setUseStatus(String useStatus) {
     this.useStatus = useStatus;
-  }
-
-  public LocalDate getApplicationDate() {
-    return applicationDate;
-  }
-
-  public void setApplicationDate(LocalDate applicationDate) {
-    this.applicationDate = applicationDate;
   }
 
   public String getEmployeeId() {

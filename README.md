@@ -7,17 +7,23 @@
 
 <br>
 
-<b>2. `사원` 연차 신청 / 수정 후 신청 시</b>
-- url : main/application
+<b>2. `사원` 연차 신청 시</b><br>
+<b>3. `관리자` 연차 신청 시</b><br>
+- url : main/apply
+
+<b>4. `사원` 연차 수정 후 신청 시</b><br>
+<b>5. `관리자` 연차 수정 후 신청 시</b><br>
+- url : main/update
 - request data
     |key|value|
     |-|-|
-    |<i>idx</i>|<i>연차 번호 (수정 후 신청 시)</i>|
-    |code|종류|
+    |code|코드|
     |start|시작 날짜|
     |end|종료 날짜|
     |content|내용|
     |employeeId|사원 번호|
+    |<i>type</i>|<i>종류 (`관리자` 연차 신청 시)</i>|
+    |<i>idx</i>|<i>연차 번호 (수정 후 신청 시)</i>|
 - 참고
     |code|value|period|
     |-|-|-|
@@ -38,7 +44,7 @@
 
 <br>
 
-<b>3. `사원` 연차 삭제 시</b>
+<b>6. `사원` 연차 삭제 시</b>
 - url : main/delete
 - request data
     |key|value|
@@ -47,17 +53,25 @@
 
 <br>
 
-<b>4. `관리자` 전체 연차 신청 / 수정 후 신청 시</b>
-- url : main/application
-- request data <br>
-    2. `사원` 연차 신청 / 수정 후 신청 시와 동일
+<b>7. `사원` 연차 취소 시</b>
+- url : main/cancel
+- request data
     |key|value|
     |-|-|
-    |<i>type</i>|<i>C</i>|
+    |idx|연차 번호|
 
 <br>
 
-<b>6. `관리자` 승인/거절 시</b>
+<b>8. `사원` 연차 취소의 취소 시</b>
+- url : main/recancel
+- request data
+    |key|value|
+    |-|-|
+    |idx|연차 번호|
+
+<br>
+
+<b>9. `관리자` 승인/거절/취소 승인 시</b>
 - url : main/approval
 - request data
     |key|value|

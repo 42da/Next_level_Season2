@@ -30,7 +30,7 @@ public class VacationController {
     return vacationService.findAllList(form.getEmployeeId());
   }
 
-  @PostMapping("main/apply")
+  @PostMapping({"main/apply", "main/update"})
   @ResponseBody
   public Vacation apply(@RequestBody VacationApplicationForm form) {
     return vacationService.apply(form);

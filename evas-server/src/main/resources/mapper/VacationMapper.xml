@@ -30,7 +30,7 @@
   
   <select id="findByIdx" resultType="Vacation">
     select idx, code, start, end, content,
-      period, type, approval_status, use_status, application_date,
+      period, type, approval_status, use_status,
       employee_id, rejection_content
     from vacation
     where idx = #{idx}
@@ -38,7 +38,7 @@
   
   <select id="findAllApplicationByEmployeeId" resultType="Vacation">
     select idx, code, start, end, content,
-      period, type, approval_status, use_status, application_date,
+      period, type, approval_status, use_status,
       employee_id, rejection_content
     from vacation
     where employee_id = #{employeeId}
@@ -47,7 +47,7 @@
   
   <select id="findAllVacationByEmployeeId" resultType="Vacation">
     select idx, code, start, end, content,
-      period, type, approval_status, use_status, application_date,
+      period, type, approval_status, use_status,
       employee_id, rejection_content
     from vacation
     where employee_id = #{employeeId}
@@ -57,7 +57,7 @@
   
   <select id="findAllCalendar" resultType="Vacation">
     select idx, code, start, end, content,
-      period, type, approval_status, use_status, application_date,
+      period, type, approval_status, use_status,
       employee_id, rejection_content
     from vacation
     where approval_status = 'A'
