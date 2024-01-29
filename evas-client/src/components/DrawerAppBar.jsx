@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router';
+
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -22,9 +24,15 @@ function DrawerAppBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const navigate = useNavigate();
+
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  const handleSignOut = () => {
+    navigate('/');
+  }
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -69,7 +77,7 @@ function DrawerAppBar(props) {
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff' }}>
+              <Button onClick={item.toLowerCase() === "sign out" ? handleSignOut : null} key={item} sx={{ color: '#fff' }}>
                 {item}
               </Button>
             ))}

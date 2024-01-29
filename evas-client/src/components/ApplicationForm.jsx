@@ -57,9 +57,8 @@ function ApplicationForm(props) {
     }
 
     const submit = () => {
-        
         // 신청, 수정
-        axios.post('http://localhost:8080/main/application', {
+        axios.post('http://localhost:8080/main/apply', {
             idx: props.isModify ? props.data.applicationList.filter((row) => row.idx === props.rowIdx)[0].idx : null,
             code: sendData.code,
             start: sendData.start,
@@ -148,20 +147,6 @@ function ApplicationForm(props) {
                             )
                         })
                     }
-                    {/* <DatePicker
-                        label="Start Date"
-                        shouldDisableDate={(date) => { return date.day() === 0 || date.day() === 6 }} 
-                        format='YYYY/MM/DD' 
-                        sx={{ width: "50%" }} 
-                        onChange={handleStartChangeDate} 
-                        value={props.isModify ? dayjs(props.data.applicationList.filter((row) => row.idx === props.rowIdx)[0].start) : dayjs(props.date[0])} />
-                    <DatePicker 
-                        label="End Date"
-                        shouldDisableDate={(date) => { return date.day() === 0 || date.day() === 6 }} 
-                        format='YYYY/MM/DD' 
-                        sx={{ width: "50%" }} 
-                        onChange={handleEndChangeDate}
-                        value={props.isModify ? dayjs(props.data.applicationList.filter((row) => row.idx === props.rowIdx)[0].end) : dayjs(props.date[1])} /> */}
                 </Stack>
             </LocalizationProvider>
             <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ pt: 2 }}>
