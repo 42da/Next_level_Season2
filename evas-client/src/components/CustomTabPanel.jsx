@@ -11,6 +11,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Collapse from "@mui/material/Collapse";
 import Paper from '@mui/material/Paper';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 import dayjs from 'dayjs';
 
@@ -21,13 +25,18 @@ import ApplicationForm from "./ApplicationForm";
 import { IconButton } from "@mui/material";
 
 function CustomTabPanel(props) {
+    const [employee, setEmployee] = useState('');
     const [date, setDate] = useState([dayjs(new Date()), dayjs(new Date())]);   // [start, end]
-    
+
     const [modifyOpen, setModifyOpen] = useState([]);   // 각 row 의 수정 버튼 클릭 여부
-    
-    const deleteList = (idx) => {
+
+    const handleChange = (event) => {
+        setEmployee(event.target.value);
+    };
+
+    const deleteList = (idxArr) => {
         axios.post('http://localhost:8080/main/delete', {
-            idx: idx,
+            idx: idxArr,
         }).then((response) => {
             props.setData({ vacationList: [...props.data.vacationList], calendarList: [...props.data.calendarList], applicationList: [...props.data.applicationList.filter((row) => row.idx !== response.data)] });
             console.log("delete response : ", response);
@@ -38,13 +47,13 @@ function CustomTabPanel(props) {
 
     const modify = (idx) => {       // 수정 버튼 클릭 시
         let temp = [...modifyOpen];
-        
+
         temp[idx] = !temp[idx];
-        temp = temp.map((row, i) => row && idx == i ? row : false);    // 모든 수정 버튼 닫기(한번에 하나만 수정 가능)
-        
+        temp = temp.map((row, i) => row && idx === i ? row : false);    // 모든 수정 버튼 닫기(한번에 하나만 수정 가능)
+
         setModifyOpen(temp);
     }
-    
+
     useEffect(() => {
         setModifyOpen([...props.data.applicationList.map((row) => false)]);
     }, [props.data.applicationList]);
@@ -65,6 +74,24 @@ function CustomTabPanel(props) {
             )}
             {props.value === 1 && (
                 <Box sx={{ pt: 3 }}>
+                    {props.isAdmin && (
+                        <Box sx={{ pb: 3, display: 'flex',justifyContent: "flex-end" }}>
+                            <FormControl size="small" sx={{minWidth: 250}}>
+                                <InputLabel id="demo-simple-select-label">사원 정보</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={employee}
+                                    label="사원 정보"
+                                    onChange={handleChange}
+                                >
+                                    {props.data.applicationList.map((row, i) => (<MenuItem key={i} value={row.employeeId}>{row.employeeId} 이름</MenuItem>))}
+                                    
+                                </Select>
+                            </FormControl>
+                        </Box>
+
+                    )}
                     <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
@@ -91,7 +118,7 @@ function CustomTabPanel(props) {
                                                 <IconButton onClick={() => { modify(idx) }}>
                                                     <EditIcon fontSize="small" />
                                                 </IconButton>
-                                                <IconButton onClick={() => { deleteList(row.idx) }}>
+                                                <IconButton onClick={() => { deleteList([row.idx]) }}>
                                                     <DeleteIcon fontSize="small" />
                                                 </IconButton>
                                             </TableCell>
@@ -104,7 +131,7 @@ function CustomTabPanel(props) {
                                                             <TableRow>
                                                                 <TableCell align="left" scope="row">
                                                                     <Box sx={{ pt: 2, }}>
-                                                                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify}/>
+                                                                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify} />
                                                                     </Box>
                                                                 </TableCell>
                                                             </TableRow>

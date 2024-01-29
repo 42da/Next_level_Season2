@@ -45,7 +45,10 @@ export default function SignIn() {
     }).then((response) => {
       if (response.data.employeeId) { // response.responseText.indexOf('ok') > -1) {
         // 로그인 성공
-        navigate('/main', {state: response.data.employeeId});
+        navigate('/main', {state: {employeeId: response.data.employeeId,
+          resetVacationDate: response.data.resetVacationDate,
+          isAdmin: response.data.isAdmin} });
+        console.log("login response : ", response.data);
       } else alert('로그인 실패');
     }).catch((error) => {
       console.log(error);
