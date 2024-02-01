@@ -1,14 +1,15 @@
 package com.nextlevel.evas.form;
 
+import java.util.List;
+
 public class VacationApplicationForm {
 
   private String idx;
   private String code;
   private String start;
   private String end;
+  private List<String> date;
   private String content;
-
-  private String type;
 
   private String employeeId;
 
@@ -52,12 +53,12 @@ public class VacationApplicationForm {
     this.content = content;
   }
 
-  public String getType() {
-    return type;
+  public List<String> getDate() {
+    return date;
   }
 
-  public void setType(String type) {
-    this.type = type;
+  public void setDate(List<String> date) {
+    this.date = date;
   }
 
   public String getEmployeeId() {

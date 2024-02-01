@@ -8,9 +8,9 @@ public class Vacation {
   private String code;
   private LocalDate start;
   private LocalDate end;
+  private LocalDate date;
   private String content;
 
-  private Float period;
   private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
   private String approvalStatus;    // 기본 값 : 대기 (W), 승인 (A), 거절 (R), 취소 대기 (CW), 취소 (C)
   private String useStatus;         // 기본 값 : 미사용 (R), 사용 (U)
@@ -18,6 +18,7 @@ public class Vacation {
   private String employeeId;
 
   private String rejectionContent;
+  private String cancellationContent;
 
   public int getIdx() {
     return idx;
@@ -51,6 +52,14 @@ public class Vacation {
     this.end = end;
   }
 
+  public LocalDate getDate() {
+    return date;
+  }
+
+  public void setDate(LocalDate date) {
+    this.date = date;
+  }
+
   public String getContent() {
     return content;
   }
@@ -65,14 +74,6 @@ public class Vacation {
 
   public void setType(String type) {
     this.type = type;
-  }
-
-  public Float getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Float period) {
-    this.period = period;
   }
 
   public String getApprovalStatus() {
@@ -105,6 +106,14 @@ public class Vacation {
 
   public void setRejectionContent(String rejectionContent) {
     this.rejectionContent = rejectionContent;
+  }
+
+  public String getCancellationContent() {
+    return cancellationContent;
+  }
+
+  public void setCancellationContent(String cancellationContent) {
+    this.cancellationContent = cancellationContent;
   }
 
 }

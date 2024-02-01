@@ -4,16 +4,20 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nextlevel.evas.repository.VacationRepository">
-  <insert id="insert" parameterType="Vacation" useGeneratedKeys="true" keyProperty="idx">
-    insert into vacation(code, start, end, content, period, type, employee_id)
-    values(#{code}, #{start}, #{end}, #{content}, #{period}, #{type}, #{employeeId})
+  <insert id="insert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO vacation (code, start, end, date, content, employee_id)
+    VALUES
+      <foreach item="item" collection="list" separator=",">
+        (#{item.code}, #{item.start}, #{item.end}, #{item.date}, #{item.content}, #{item.employeeId})
+      </foreach>
   </insert>
-  
-  <update id="update" parameterType="Vacation" useGeneratedKeys="true" keyProperty="idx">
-    update vacation
-    set code = #{code}, start = #{start}, end = #{end}, content = #{content},
-      period = #{period}
-    where idx = #{idx}
+
+  <update id="update" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    <foreach collection="list" item="item" index="index">
+      update vacation
+      set code = #{item.code}, start = #{item.start}, end = #{item.end}, content = #{item.content}
+      where idx = #{idx}
+    </foreach>
   </update>
   
   <delete id="delete" parameterType="int">
@@ -22,46 +26,32 @@
     where idx = #{idx}
   </delete>
   
-  <update id="updateApprovalStatus" parameterType="Map">
-    update vacation
-    set approval_status = #{approvalStatus}, rejection_content = #{rejection_content}
-    where idx = #{idx}
-  </update>
-  
   <select id="findByIdx" resultType="Vacation">
-    select idx, code, start, end, content,
-      period, type, approval_status, use_status,
-      employee_id, rejection_content
+    select *
     from vacation
     where idx = #{idx}
   </select>
   
   <select id="findAllApplicationByEmployeeId" resultType="Vacation">
-    select idx, code, start, end, content,
-      period, type, approval_status, use_status,
-      employee_id, rejection_content
+    select *
     from vacation
     where employee_id = #{employeeId}
-      and DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) > 0
+      and date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(now(), '%Y-%m-%d'))
+      and approval_status in ('W', 'R', 'C')
   </select>
   
   <select id="findAllVacationByEmployeeId" resultType="Vacation">
-    select idx, code, start, end, content,
-      period, type, approval_status, use_status,
-      employee_id, rejection_content
+    select *
     from vacation
     where employee_id = #{employeeId}
       and approval_status = 'A'
-      and DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) &lt; 1
   </select>
   
   <select id="findAllCalendar" resultType="Vacation">
-    select idx, code, start, end, content,
-      period, type, approval_status, use_status,
-      employee_id, rejection_content
+    select *
     from vacation
     where approval_status = 'A'
-      and start BETWEEN DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
-      and DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-31')
+      and date between DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
+      and LAST_DAY(DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-%d'))
   </select>
 </mapper>
