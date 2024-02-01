@@ -1,8 +1,8 @@
 package com.nextlevel.evas.service;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,43 +33,39 @@ public class VacationService {
     return result;
   }
 
-  // 연차 신청, 수정 후 신청 시
+  // 연차 신청, 수정 시
   public Vacation apply(VacationApplicationForm form) {
-    Vacation vacation = new Vacation();
+    List<Vacation> vacationList = new ArrayList<>();
 
-    vacation.setCode(form.getCode());
-    vacation.setStart(parseStringToDate(form.getStart()));
-    vacation.setEnd(parseStringToDate(form.getEnd()));
-    vacation.setContent(form.getContent());
+    for (String date : form.getDate()) {
+      Vacation vacation = new Vacation();
 
-    vacation.setPeriod(calculatePeriod(vacation.getCode(), vacation.getStart(), vacation.getEnd()));
-    if (form.getType() != null) { 
-      vacation.setType(form.getType());
-    } else {
-      vacation.setType("P");
+      vacation.setCode(form.getCode());
+      vacation.setStart(parseStringToDate(form.getStart()));
+      vacation.setEnd(parseStringToDate(form.getEnd()));
+      vacation.setDate(parseStringToDate(date));
+      System.out.println(date);
+      vacation.setContent(form.getContent());
+      if (form.getIdx() != null) {
+        vacation.setIdx(Integer.parseInt(form.getIdx()));
+      }
+      vacation.setEmployeeId(form.getEmployeeId());
+
+      vacationList.add(vacation);
     }
 
-    vacation.setEmployeeId(form.getEmployeeId());
-
-    // 수정
+    int result = 0;
     if (form.getIdx() != null) {
-      vacation.setIdx(Integer.parseInt(form.getIdx()));
-
-      int result = vacationRepository.update(vacation);
-      if (result > 0) {
-        return vacationRepository.findByIdx(vacation.getIdx());
-      } else {
-        return null;
-      }
-
-      // 신청
+      result = vacationRepository.update(vacationList);
     } else {
-      int result = vacationRepository.insert(vacation);
-      if (result > 0) {
-        return vacationRepository.findByIdx(vacation.getIdx());
-      } else {
-        return null;
-      }
+      result = vacationRepository.insert(vacationList);
+    }
+
+    Vacation vacation = new Vacation(); // 임시
+    if (result > 0) {
+      return vacationRepository.findByIdx(vacation.getIdx());
+    } else {
+      return null;
     }
   }
 
@@ -83,16 +79,6 @@ public class VacationService {
     }
   }
 
-  // 연차 승인/거절 시
-  public Vacation approve(String idx, String approvalStatus, String rejectionContent) {
-    int result = vacationRepository.updateApprovalStatus(Integer.parseInt(idx), approvalStatus, rejectionContent);
-    if (result > 0) {
-      return vacationRepository.findByIdx(Integer.parseInt(idx)); 
-    } else {
-      return null;
-    }
-  }
-
   private LocalDate parseStringToDate(String str) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate date = LocalDate.parse(str, formatter);
@@ -100,20 +86,6 @@ public class VacationService {
     System.out.println("parseStringToDate : " + date);
 
     return date;
-  }
-
-  private Float calculatePeriod(String code, LocalDate start, LocalDate end) {
-    float period = 0;
-
-    if (code.equals("abs01")) {
-      period = (Period.between(start, end).getDays() + 1);
-    } else if (code.equals("abs02") || code.equals("abs03")) {
-      period = (float) 0.5;
-    }
-
-    System.out.println("calculatePeriod : " + period);
-
-    return period;
   }
 
 }
