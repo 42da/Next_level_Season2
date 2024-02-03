@@ -4,26 +4,40 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nextlevel.evas.repository.VacationRepository">
+  <resultMap id="vacationResultMap" type="Vacation">
+    <!-- JSON 배열을 처리할 TypeHandler 지정 -->
+    <result column="date" property="date" typeHandler="com.your.package.typehandler.JsonArrayDateTypeHandler"/>
+  </resultMap>
+  
   <insert id="insert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
     INSERT INTO vacation (code, start, end, date, content, employee_id)
-    VALUES
-      <foreach item="item" collection="list" separator=",">
-        (#{item.code}, #{item.start}, #{item.end}, #{item.date}, #{item.content}, #{item.employeeId})
-      </foreach>
+    VALUES (#{code}, #{start}, #{end}, #{date}, #{content}, #{employeeId})
   </insert>
 
   <update id="update" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
-    <foreach collection="list" item="item" index="index">
-      update vacation
-      set code = #{item.code}, start = #{item.start}, end = #{item.end}, content = #{item.content}
-      where idx = #{idx}
-    </foreach>
+    update vacation
+    set code = #{code}, start = #{start}, end = #{end}, content = #{content}
+    where idx = #{idx}
   </update>
   
   <delete id="delete" parameterType="int">
     delete
     from vacation
     where idx = #{idx}
+  </delete>
+  
+  <insert id="insertHistory" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO vacationHistory (vacation_idx, date)
+    VALUES
+      <foreach item="item" collection="list" separator=",">
+        (#{item.vacationIdx}, #{item.date})
+      </foreach>
+  </insert>
+  
+  <delete id="History" parameterType="int">
+    delete
+    from vacationHistory
+    where vacation_idx = #{vacationIdx}
   </delete>
   
   <select id="findByIdx" resultType="Vacation">
@@ -47,11 +61,13 @@
       and approval_status = 'A'
   </select>
   
-  <select id="findAllCalendar" resultType="Vacation">
-    select *
-    from vacation
-    where approval_status = 'A'
+  <select id="findAllCalendar" resultType="Vacation" >
+    SELECT v.*, vh.vacation_idx, CONCAT("[", GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ', '), "]") AS date
+    FROM vacation v JOIN vacation_history vh ON v.idx = vh.vacation_idx
+    WHERE approval_status = 'A'
       and date between DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
       and LAST_DAY(DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-%d'))
+    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+    ORDER BY v.idx;
   </select>
 </mapper>
