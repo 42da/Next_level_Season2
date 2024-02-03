@@ -1,6 +1,7 @@
 package com.nextlevel.evas.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Vacation {
 
@@ -8,17 +9,17 @@ public class Vacation {
   private String code;
   private LocalDate start;
   private LocalDate end;
-  private LocalDate date;
   private String content;
 
   private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
-  private String approvalStatus;    // 기본 값 : 대기 (W), 승인 (A), 거절 (R), 취소 대기 (CW), 취소 (C)
+  private String approvalStatus;    // 기본 값 : 대기 (W), 승인 (A), 거절 (R), 취소 (C)
   private String useStatus;         // 기본 값 : 미사용 (R), 사용 (U)
 
   private String employeeId;
 
   private String rejectionContent;
   private String cancellationContent;
+  private List<LocalDate> date;
 
   public int getIdx() {
     return idx;
@@ -52,11 +53,11 @@ public class Vacation {
     this.end = end;
   }
 
-  public LocalDate getDate() {
+  public List<LocalDate> getDate() {
     return date;
   }
 
-  public void setDate(LocalDate date) {
+  public void setDate(List<LocalDate> date) {
     this.date = date;
   }
 
