@@ -2,7 +2,7 @@ package com.nextlevel.evas.domain;
 
 import java.time.LocalDate;
 
-public class VacationHistory {
+public class VacationDetailDate {
 
   private int idx;
   private int vacationIdx;

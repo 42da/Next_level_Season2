@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nextlevel.evas.domain.Vacation;
-import com.nextlevel.evas.domain.VacationHistory;
+import com.nextlevel.evas.domain.VacationDetailDate;
 import com.nextlevel.evas.form.VacationApplicationForm;
 import com.nextlevel.evas.repository.VacationRepository;
 
@@ -60,7 +60,7 @@ public class VacationService {
       // 신청
     } else {
       result = vacationRepository.insert(vacation);
-      if (result > 1) {
+      if (result > 0) {
         result = 0;
         return insertVacationHistory(vacation, form.getDate());
       } else {
@@ -92,19 +92,11 @@ public class VacationService {
     return date;
   }
 
-  private List<LocalDate> parseStringListToDate(List<String> strList) {
-    List<LocalDate> dateList = new ArrayList<>();
-    for (String str : strList) {
-      dateList.add(parseStringToDate(str));
-    }
-    return dateList;
-  }
-
-  private List<VacationHistory> createVacationHistory(int idx, List<String> vacationDateList) {
-    List<VacationHistory> vacationHistoryList = new ArrayList<>();
+  private List<VacationDetailDate> createVacationHistory(int idx, List<String> vacationDateList) {
+    List<VacationDetailDate> vacationHistoryList = new ArrayList<>();
 
     for (String date : vacationDateList) {
-      VacationHistory vacationHistory = new VacationHistory();
+      VacationDetailDate vacationHistory = new VacationDetailDate();
 
       vacationHistory.setVacationIdx(idx);
       vacationHistory.setDate(parseStringToDate(date));
@@ -116,11 +108,11 @@ public class VacationService {
   }
 
   private Vacation insertVacationHistory(Vacation vacation, List<String> vacationDateList) {
-    List<VacationHistory> vacationHistoryList = createVacationHistory(vacation.getIdx(), vacationDateList);
+    List<VacationDetailDate> vacationHistoryList = createVacationHistory(vacation.getIdx(), vacationDateList);
 
     int result = vacationRepository.insertHistory(vacationHistoryList);
     if (result > 0) {
-      vacation.setDate(parseStringListToDate(vacationDateList));
+      vacation.setDate(vacationRepository.findByVacationIdx(vacation.getIdx()));
       return vacation;
     } else {
       return null;
@@ -128,14 +120,14 @@ public class VacationService {
   }
 
   private Vacation updateVacationHistory(Vacation vacation, List<String> vacationDateList) {
-    List<VacationHistory> vacationHistoryList = createVacationHistory(vacation.getIdx(), vacationDateList);
+    List<VacationDetailDate> vacationHistoryList = createVacationHistory(vacation.getIdx(), vacationDateList);
 
     int result = vacationRepository.deleteHistory(vacation.getIdx());
     if (result > 0) {
       result = 0;
       result = vacationRepository.insertHistory(vacationHistoryList);
       if (result > 0) {
-        vacation.setDate(parseStringListToDate(vacationDateList));
+        vacation.setDate(vacationRepository.findByVacationIdx(vacation.getIdx()));
         return vacation;
       } else {
         return null;

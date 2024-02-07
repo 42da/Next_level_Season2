@@ -1,7 +1,6 @@
 package com.nextlevel.evas.domain;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class Vacation {
 
@@ -19,7 +18,8 @@ public class Vacation {
 
   private String rejectionContent;
   private String cancellationContent;
-  private List<LocalDate> date;
+
+  private String date;
 
   public int getIdx() {
     return idx;
@@ -51,14 +51,6 @@ public class Vacation {
 
   public void setEnd(LocalDate end) {
     this.end = end;
-  }
-
-  public List<LocalDate> getDate() {
-    return date;
-  }
-
-  public void setDate(List<LocalDate> date) {
-    this.date = date;
   }
 
   public String getContent() {
@@ -115,6 +107,14 @@ public class Vacation {
 
   public void setCancellationContent(String cancellationContent) {
     this.cancellationContent = cancellationContent;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public void setDate(String date) {
+    this.date = date;
   }
 
 }
