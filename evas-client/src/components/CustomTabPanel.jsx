@@ -34,9 +34,9 @@ function CustomTabPanel(props) {
         setEmployee(event.target.value);
     };
 
-    const deleteList = (idxArr) => {
+    const deleteList = (vacationIdx) => {
         axios.post('http://localhost:8080/main/delete', {
-            idx: idxArr,
+            idx: vacationIdx,
         }).then((response) => {
             props.setData({ vacationList: [...props.data.vacationList], calendarList: [...props.data.calendarList], applicationList: [...props.data.applicationList.filter((row) => row.idx !== response.data)] });
             console.log("delete response : ", response);
@@ -90,7 +90,6 @@ function CustomTabPanel(props) {
                                 </Select>
                             </FormControl>
                         </Box>
-
                     )}
                     <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
                         <Table sx={{ width: '100%' }} aria-label="simple table">
@@ -118,7 +117,7 @@ function CustomTabPanel(props) {
                                                 <IconButton onClick={() => { modify(idx) }}>
                                                     <EditIcon fontSize="small" />
                                                 </IconButton>
-                                                <IconButton onClick={() => { deleteList([row.idx]) }}>
+                                                <IconButton onClick={() => { deleteList(row.idx) }}>
                                                     <DeleteIcon fontSize="small" />
                                                 </IconButton>
                                             </TableCell>

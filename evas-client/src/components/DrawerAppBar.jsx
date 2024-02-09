@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import PropTypes from 'prop-types';
@@ -18,11 +19,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
 const drawerWidth = 240;
-const navItems = ['Sign Out', 'About', 'Contact'];
+let navItems = ['Sign Out', 'About', 'Contact'];
 
 function DrawerAppBar(props) {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -33,6 +35,29 @@ function DrawerAppBar(props) {
   const handleSignOut = () => {
     navigate('/');
   }
+  
+  const handleChangeToAdminOrUser = () => {
+    props.adminComp ? navItems[0] = 'Change To Admin' : navItems[0] = 'Change To User';
+    props.setAdminComp(!props.adminComp);
+  }
+
+  const navToFunc = (navItem) => {
+    switch (navItem.toLowerCase()) {
+      case 'change to admin':
+      case 'change to user':
+        handleChangeToAdminOrUser();
+        break;
+      case 'sign out':
+        handleSignOut();
+        break;
+      default: break;
+    } 
+  }
+  useEffect(() => {
+    if (props.isAdmin) {
+      navItems.splice(0, 0, "Change To Admin");
+    } 
+  }, []);
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -77,7 +102,7 @@ function DrawerAppBar(props) {
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
-              <Button onClick={item.toLowerCase() === "sign out" ? handleSignOut : null} key={item} sx={{ color: '#fff' }}>
+              <Button onClick={() => {navToFunc(item)}} key={item} sx={{ color: '#fff' }}>
                 {item}
               </Button>
             ))}

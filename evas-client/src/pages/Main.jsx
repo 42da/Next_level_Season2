@@ -13,24 +13,25 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import axios from "axios";
 
 function Main() {
+  const [adminComp, setAdminComp] = useState(false); // admin component 보여줄지 여부
   const [value, setValue] = useState(1);
   const [data, setData] = useState({
     applicationList: [],
     vacationList: [],
     calendarList: [],
   });
-  
-  const {state} = useLocation();
+
+  const { state } = useLocation();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
+
   const refresh = () => {
     axios.post('http://localhost:8080/main/vacationList', {
       employeeId: state.employeeId,
     }).then((response) => {
-      
+
     }).catch((error) => {
       console.log(error);
     });
@@ -52,20 +53,33 @@ function Main() {
   }, []);
   return (
     <div>
-      <DrawerAppBar />
-      <Grid container spacing={2} sx={{pl: 2}}>
+      <DrawerAppBar adminComp={adminComp} setAdminComp={setAdminComp} isAdmin={state.isAdmin}/>
+      <Grid container spacing={2} sx={{ pl: 2 }}>
         <Grid item xs={6} >
           <Tabs variant="fullWidth" value={value} onChange={handleChange} sx={{ borderBottom: 1, borderColor: 'divider' }} centered>
             <Tab label="연차 신청" />
-            <Tab label="신청 현황" />
-            <Tab label="연차 목록" />
+            <Tab label={adminComp ? "전체 신청 현황" : "신청 현황"} />
+            <Tab label={adminComp ? "전체 연차 목록" : "연차 목록"} />
           </Tabs>
-          <CustomTabPanel isAdmin={state.isAdmin} setValue={setValue} setData={setData} employeeId={state.employeeId} data={data} value={value} index={0} />
-          <CustomTabPanel isAdmin={state.isAdmin} setValue={setValue} setData={setData} employeeId={state.employeeId} data={data} value={value} index={1} />
-          <CustomTabPanel isAdmin={state.isAdmin} employeeId={state.employeeId} data={data} value={value} index={2} />
+              <>
+                {
+                  [0, 1, 2].map((index) => {
+                    return (
+                      <CustomTabPanel key={index}
+                        isAdmin={state.isAdmin}
+                        setValue={index !== 2 ? setValue : null}
+                        setData={index !== 2 ? setData : null}
+                        employeeId={state.employeeId}
+                        data={data}
+                        value={value}
+                        index={index} />
+                    )
+                  })
+                }
+              </>
         </Grid>
         <Grid item xs={6}>
-          <CustomCalendar data={data.calendarList}/>
+          <CustomCalendar data={data.calendarList} />
         </Grid>
       </Grid>
 
