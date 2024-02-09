@@ -7,6 +7,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import dayjs from 'dayjs';
+import moment from 'moment';
+import 'moment/locale/ko'; // For moment's locale settings
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,6 +20,11 @@ import ResetTv from '@mui/icons-material/ResetTv';
 
 import axios from 'axios';
 import Edit from '@mui/icons-material/Edit';
+
+import holiday from "../data/holiday";
+
+// Localizer for the calendar
+moment.locale('ko');
 
 function ApplicationForm(props) {
     //const today = [dayjs(new Date()), dayjs(new Date())]; // [start, end]
@@ -31,6 +38,7 @@ function ApplicationForm(props) {
         start: "",   //dayjs(new Date().toLocaleDateString()), 2024-01-21
         end: "",
         content: "",
+        date: [],
         employeeId: props.employeeId,
     });
     
@@ -51,6 +59,20 @@ function ApplicationForm(props) {
     const getInfoByIdx = (idx) => {     // list 에서 data idx 에 해당하는 정보 가져오기
         return props.data.applicationList.filter((row) => row.idx === idx)[0];
     }
+
+    const getWeekDays = (start, end) => {
+        let result = [];
+        let startDate = moment(start);
+        let endDate = moment(end);
+        while (startDate <= endDate) {
+            if (startDate.day() !== 0 && startDate.day() !== 6 && !holiday.includes(startDate)) {
+                result.push(startDate.format("YYYY-MM-DD"));
+            }
+            startDate = startDate.add(1, "days");
+        }
+        return result;
+    }
+
     const [reset, setReset] = useState(false);
     const resetHandler = () => {
         setReset(true);
@@ -64,6 +86,7 @@ function ApplicationForm(props) {
             start: sendData.start,
             end: sendData.end,
             content: sendData.content,
+            date: getWeekDays(sendData.start, sendData.end),
             employeeId: props.employeeId,
         }).then((response) => {
             const responseData = response.data;
