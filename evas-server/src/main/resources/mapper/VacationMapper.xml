@@ -45,7 +45,7 @@
     SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
     FROM vacation v JOIN vacation_detail_date vh ON v.idx = vh.vacation_idx
     WHERE employee_id = #{employeeId}
-      and date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(now(), '%Y-%m-%d'))
+      and date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
       and approval_status in ('W', 'R', 'C')
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
     ORDER BY v.idx;

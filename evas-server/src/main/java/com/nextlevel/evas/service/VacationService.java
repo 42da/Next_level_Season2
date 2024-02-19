@@ -52,7 +52,7 @@ public class VacationService {
       result = vacationRepository.update(vacation);
       if (result > 0) {
         result = 0;
-        return updateVacationHistory(vacation, form.getDate());
+        return updateVacationHistory(vacationRepository.findByIdx(vacation.getIdx()), form.getDate());
       } else {
         return null;
       }
@@ -62,7 +62,7 @@ public class VacationService {
       result = vacationRepository.insert(vacation);
       if (result > 0) {
         result = 0;
-        return insertVacationHistory(vacation, form.getDate());
+        return insertVacationHistory(vacationRepository.findByIdx(vacation.getIdx()), form.getDate());
       } else {
         return null;
       }
