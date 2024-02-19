@@ -10,7 +10,6 @@ public class Vacation {
   private LocalDate end;
   private String content;
 
-  private String type;              // 기본 값 : 개인 연차 (P), 전체 연차 (C)
   private String approvalStatus;    // 기본 값 : 대기 (W), 승인 (A), 거절 (R), 취소 (C)
   private String useStatus;         // 기본 값 : 미사용 (R), 사용 (U)
 
@@ -59,14 +58,6 @@ public class Vacation {
 
   public void setContent(String content) {
     this.content = content;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
   }
 
   public String getApprovalStatus() {

@@ -11,7 +11,8 @@ public class Employee {
   private String name;
 
   private LocalDate resetVacationDate;
-  private Float totalVacation;
+  private Float totalVacationCount;
+  private Float useVacationCount;
 
   private Boolean isAdmin;
 
@@ -55,12 +56,20 @@ public class Employee {
     this.resetVacationDate = resetVacationDate;
   }
 
-  public Float getTotalVacation() {
-    return totalVacation;
+  public Float getTotalVacationCount() {
+    return totalVacationCount;
   }
 
-  public void setTotalVacation(Float totalVacation) {
-    this.totalVacation = totalVacation;
+  public void setTotalVacationCount(Float totalVacationCount) {
+    this.totalVacationCount = totalVacationCount;
+  }
+
+  public Float getUseVacationCount() {
+    return useVacationCount;
+  }
+
+  public void setUseVacationCount(Float useVacationCount) {
+    this.useVacationCount = useVacationCount;
   }
 
   public Boolean getIsAdmin() {
