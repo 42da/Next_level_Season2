@@ -1,8 +1,14 @@
 import moment from 'moment';
 import 'moment/locale/ko'; // For moment's locale settings
 
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko'; // For dayjs's locale settings
+
 // Localizer for the calendar
 moment.locale('ko');
+
+// ---------- dayjs version ---------- //
+dayjs.locale('ko');
 
 let holiday = {
     year: 2024,
@@ -11,13 +17,27 @@ let holiday = {
 };
 
 let createHoliday = (obj) => {
-    let result = [];
+    let result = {
+        moment: [],
+        dayjs: [],
+    };
+    let result_moment = [];
     obj.fixedDay.forEach((day) => {
-        result.push(moment(`${obj.year}-${day}`, "YYYY-MM-DD"));
+        result_moment.push(moment(`${obj.year}-${day}`, "YYYY-MM-DD"));
     });
     obj.dynamicDay.forEach((day) => {
-        result.push(moment(`${obj.year}-${day}`, "YYYY-MM-DD"));
+        result_moment.push(moment(`${obj.year}-${day}`, "YYYY-MM-DD"));
     });
+
+    let result_dayjs = [];
+    obj.fixedDay.forEach((day) => {
+        result_dayjs.push(dayjs(`${obj.year}-${day}`));
+    });
+    obj.dynamicDay.forEach((day) => {
+        result_dayjs.push(dayjs(`${obj.year}-${day}`));
+    });
+    result.moment = result_moment;
+    result.dayjs = result_dayjs;
     return result;
 }
 

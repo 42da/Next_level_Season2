@@ -55,8 +55,9 @@ function DrawerAppBar(props) {
   }
   useEffect(() => {
     if (props.isAdmin) {
-      navItems.splice(0, 0, "Change To Admin");
-    } 
+      if (navItems.length === 3) navItems.splice(0, 0, "Change To Admin");
+      else if (navItems[0] == "Change To User") navItems[0] = "Change To Admin";
+    }
   }, []);
 
   const drawer = (
@@ -126,7 +127,7 @@ function DrawerAppBar(props) {
           {drawer}
         </Drawer>
       </nav>
-      <Box component="main" sx={{ p: 3 }}>
+      <Box component="main" sx={{ p: 1 }}>
         <Toolbar />
         <Typography>
           
