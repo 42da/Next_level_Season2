@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -7,6 +7,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+
 import moment from 'moment';
 import 'moment/locale/ko'; // For moment's locale settings
 
@@ -22,9 +24,13 @@ import axios from 'axios';
 import Edit from '@mui/icons-material/Edit';
 
 import holiday from "../data/holiday";
+import { dayjsLocalizer } from 'react-big-calendar';
 
 // Localizer for the calendar
 moment.locale('ko');
+dayjs.locale('ko');
+
+const dateVersion = 'dayjs'; // 'moment' or 'dayjs'
 
 function ApplicationForm(props) {
     //const today = [dayjs(new Date()), dayjs(new Date())]; // [start, end]
@@ -41,7 +47,8 @@ function ApplicationForm(props) {
         date: [],
         employeeId: props.employeeId,
     });
-    
+    const [modifyOrCancel, setModifyOrCancel] = useState("modify"); // 수정 or 취소 여부
+
     const handleChange = (event) => {
         setVacation(event.target.value);
         setSendData({ ...sendData, code: event.target.value });
@@ -62,10 +69,10 @@ function ApplicationForm(props) {
 
     const getWeekDays = (start, end) => {
         let result = [];
-        let startDate = moment(start);
-        let endDate = moment(end);
+        let startDate = dayjs(start);
+        let endDate = dayjs(end);
         while (startDate <= endDate) {
-            if (startDate.day() !== 0 && startDate.day() !== 6 && !holiday.includes(startDate)) {
+            if (startDate.day() !== 0 && startDate.day() !== 6 && !holiday[dateVersion].some((day) => day.isSame(startDate))) {
                 result.push(startDate.format("YYYY-MM-DD"));
             }
             startDate = startDate.add(1, "days");
@@ -79,9 +86,17 @@ function ApplicationForm(props) {
     }
 
     const submit = () => {
+        let url = 'http://localhost:8080/main/';
+        if (props.isModify && modifyOrCancel === "modify") url += "update";
+        else if (modifyOrCancel === "cancel") url += "cancel";
+        else url += "apply";
+
+        let idx = null;
+        if (props.isModify && modifyOrCancel === "modify") idx = props.data.applicationList.filter((row) => row.idx === props.rowIdx)[0].idx;
+        else if (modifyOrCancel === "cancel") idx = props.data.vacationList.filter((row) => row.idx === props.rowIdx)[0].idx;
         // 신청, 수정
-        axios.post('http://localhost:8080/main/apply', {
-            idx: props.isModify ? props.data.applicationList.filter((row) => row.idx === props.rowIdx)[0].idx : null,
+        axios.post(url, {
+            idx: idx,
             code: sendData.code,
             start: sendData.start,
             end: sendData.end,
@@ -90,19 +105,37 @@ function ApplicationForm(props) {
             employeeId: props.employeeId,
         }).then((response) => {
             const responseData = response.data;
-            console.log("modify response : ", responseData);
+            const newData = {
+                idx: responseData.idx,
+                code: responseData.code,
+                start: responseData.start,
+                end: responseData.end,
+                content: responseData.content,
+                approvalStatus: responseData.approvalStatus, // 응답 와야함.
+                cancellationContent: responseData.cancellationContent,
+                employeeId: responseData.employeeId,
+                date: responseData.date,
+                rejection: responseData.rejection,
+                type: responseData.type,
+                useStatus: responseData.useStatus
+            };
             if (props.isModify) {
-                const modifiedList = props.data.applicationList;
+                console.log("modify response : ", responseData);
+                let modifiedList = props.data.applicationList;
                 modifiedList.splice(props.idx, 1, responseData);
                 props.modify(props.idx);
-                props.setData({ vacationList: [...props.data.vacationList],
-                    calendarList: [...props.data.calendarList.filter((row) => row.idx !== responseData.idx), { start: responseData.start, end: responseData.end, employeeId: props.employeeId }], 
+                
+                props.setData({
+                    vacationList: [...props.data.vacationList],
+                    calendarList: [...props.data.calendarList.filter((row) => row.idx !== responseData.idx), newData],
                     applicationList: modifiedList
                 });
             } else {
+                console.log("apply response : ", responseData);
                 props.setValue(1);
-                props.setData({ vacationList: [...props.data.vacationList], 
-                    calendarList: [...props.data.calendarList, { start: responseData.start, end: responseData.end, employeeId: props.employeeId }], applicationList: [...props.data.applicationList, { idx: responseData.idx, code: responseData.code, start: responseData.start, end: responseData.end, content: responseData.content, approvalStatus: responseData.approvalStatus }] 
+                props.setData({
+                    vacationList: [...props.data.vacationList],
+                    calendarList: [...props.data.calendarList, newData], applicationList: [...props.data.applicationList, newData]
                 });
             }
         }).catch((error) => {
@@ -111,72 +144,93 @@ function ApplicationForm(props) {
     }
 
     useEffect(() => {
-        if (reset) {
-            setVacation('');
-            setVacationReason('');
-            setReset(false);
-        }
-        if (props.isModify) {
-            const info = getInfoByIdx(props.rowIdx);
-            setVacation(info.code);
-            setVacationReason(info.content);
-            setSendData({ ...sendData, idx: props.rowIdx, code: info.code, content: info.content, start: info.start, end: info.end });
-        } else {
-            setSendData({ ...sendData, start: dayjs(props.date[0]).format("YYYY-MM-DD"), end: dayjs(props.date[1]).format("YYYY-MM-DD") });
-        }
+        if (props.value !== 2) {
+            if (reset) {
+                setVacation('');
+                setVacationReason('');
+                setReset(false);
+            }
+            
+            if (props.isModify) {
+                const info = getInfoByIdx(props.rowIdx);
+                setVacation(info.code);
+                setVacationReason(info.content);
+                setSendData({ ...sendData, idx: props.rowIdx, code: info.code, content: info.content, start: info.start, end: info.end });
+            } else {
+                setSendData({ ...sendData, start: dayjs(props.date[0]).format("YYYY-MM-DD"), end: dayjs(props.date[1]).format("YYYY-MM-DD") });
+            }
+        } else setModifyOrCancel("cancel");
     }, [reset]);
     return (
         <>
-            <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">연차 종류</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={vacation}
-                    label="연차 종류"
-                    onChange={handleChange}
-                >
-                    <MenuItem value={"abs01"}>연차</MenuItem>
-                    <MenuItem value={"abs02"}>연차)오전반차</MenuItem>
-                    <MenuItem value={"abs03"}>연차)오후반차</MenuItem>
-                    <MenuItem value={"abs04"}>대체휴가</MenuItem>
-                    <MenuItem value={"abs05"}>경조휴가</MenuItem>
-                    <MenuItem value={"abs06"}>출산육아휴가</MenuItem>
-                    <MenuItem value={"abs07"}>기타</MenuItem>
-                </Select>
-            </FormControl>
+            {
+                props.value !== 2 && (
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">연차 종류</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={vacation}
+                            label="연차 종류"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={"abs01"}>연차</MenuItem>
+                            <MenuItem value={"abs02"}>연차)오전반차</MenuItem>
+                            <MenuItem value={"abs03"}>연차)오후반차</MenuItem>
+                            <MenuItem value={"abs04"}>대체휴가</MenuItem>
+                            <MenuItem value={"abs05"}>경조휴가</MenuItem>
+                            <MenuItem value={"abs06"}>출산육아휴가</MenuItem>
+                            <MenuItem value={"abs07"}>기타</MenuItem>
+                        </Select>
+                    </FormControl>
+                )
+            }
+
             <TextField
                 id="outlined-basic"
-                label="연차 사유"
+                label={props.value === 2 ? "취소 사유" : "연차 사유"}
                 variant="outlined"
                 value={vacationReason}
                 onChange={handleChangeReason}
-                sx={{ mt: 3, width: '100%' }}
+                sx={{ mt: props.value === 2 ? 0 : 3, width: '100%' }}
             />
-            <LocalizationProvider dateAdapter={AdapterDayjs} >
-                {/* 주말 비활성화(shouldDisableDate) */}
-                <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ mt: 3 }}>
-                    {
-                        ["start", "end"].map((item, idx) => {
-                            return (
-                                <DatePicker
-                                    key={item}
-                                    label={item + " Date"}
-                                    shouldDisableDate={(date) => { return date.day() === 0 || date.day() === 6 }}
-                                    format='YYYY/MM/DD'
-                                    sx={{ width: "50%" }}
-                                    onChange={(value) => handleChangeDate(value, item)}
-                                    value={props.isModify ? dayjs(getInfoByIdx(props.rowIdx)[item]) : dayjs(props.date[idx])} />
-                            )
-                        })
-                    }
-                </Stack>
-            </LocalizationProvider>
+            {
+                props.value !== 2 && (
+                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                        {/* 주말 비활성화(shouldDisableDate) */}
+                        <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ mt: 3 }}>
+                            {
+                                ["start", "end"].map((item, idx) => {
+                                    return (
+                                        <DatePicker
+                                            key={item}
+                                            label={item + " Date"}
+                                            name={item}
+                                            /*
+                                                주말 및 공휴일 비활성화 (Array.includes -> Array.some 으로 변경)
+                                                primitive type (string, number 등) 에서만 사용 가능한 includes 대신 객체 배열에서 사용 가능한 some 사용하기 위해 변경함. 
+                                                한가지 의문점은 day == date 으로 하면 안되고 day.isSame(date) 으로 동작된다는 점.)
+                                            */
+
+                                            shouldDisableDate={(date) => { return date.day() === 0 || date.day() === 6 || holiday[dateVersion].some((day) => day.isSame(date)) }}
+                                            disablePast
+                                            format='YYYY/MM/DD'
+                                            sx={{ width: "50%" }}
+                                            onChange={(value) => handleChangeDate(value, item)}
+                                            value={props.isModify ? dayjs(getInfoByIdx(props.rowIdx)[item]) : dayjs(props.date[idx])} />
+                                    )
+                                })
+                            }
+                        </Stack>
+                    </LocalizationProvider>
+                )
+            }
+
             <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ pt: 2 }}>
                 {
                     props.isModify ? (
                         <Button onClick={() => { submit("update") }} variant="contained" startIcon={<Edit />}>
-                            수정
+                            {modifyOrCancel === "modify" ? "수정" : "취소"}
                         </Button>
                     ) : (
                         <>

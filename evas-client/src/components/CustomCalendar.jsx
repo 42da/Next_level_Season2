@@ -1,42 +1,79 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer, dayjsLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/locale/ko'; // For moment's locale settings
 
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import 'dayjs/locale/ko';
+
 import holiday from '../data/holiday';
+import { date } from 'date-arithmetic';
 
 // Localizer for the calendar
 moment.locale('ko');
-const localizer = momentLocalizer(moment);
+dayjs.locale('ko');
+dayjs.extend(isBetween);
+
+const dateVersion = 'dayjs'; // 'moment' or 'dayjs'
+
+//const localizer = momentLocalizer(moment);
+const localizer = dayjsLocalizer(dayjs);
 
 const CustomCalendar = (props) => {
-  const [currMonth, setCurrMonth] = useState(moment());
-  const [events, setEvents] = useState([
-    // {
-    //   start: new Date(2023, 11, 28, 9, 0, 0), // date 불러오기
-    //   end: new Date(2023, 11, 28, 18, 0, 0),   // 언제까지 불러올지
-    //   title: 'Some title',
-    // },
-    // ... more events ...
-  ]);
+  const [currDate, setCurrDate] = useState(dayjs());
+  const [events, setEvents] = useState([]);
+  
   const onRangeChange = useCallback((range) => {
-    if (currMonth.year() <= moment(range.end).year() && currMonth.month() < moment(range.end).month() && currMonth < moment(range.end)) { // 현재 달이 end 보다 작으면 next
-      setCurrMonth(currMonth.add(1, "months"));
-    } else {  
-      setCurrMonth(currMonth.subtract(1, "months"));
+    
+    if (currDate < dayjs(range.end)) { // 현재 달이 end 보다 작으면 next
+      if (currDate.add(1, "month").isBetween(dayjs(range.start), dayjs(range.end))) { // today 눌렀을 때 처리
+        setCurrDate(currDate.add(1, "month")); 
+      } else setCurrDate(dayjs());
+    } else {
+      if (currDate.subtract(1, "month").isBetween(dayjs(range.start), dayjs(range.end))) {  // today 눌렀을 때 처리
+        setCurrDate(currDate.subtract(1, "month"));
+      } else setCurrDate(dayjs());
     }
-  }, []);
+  }, [currDate]);
   const checkHoliday = (date) => {
-    for (let i = 0; i < holiday.length; i++) 
+    for (let i = 0; i < holiday[dateVersion].length; i++) 
     {
-      if (moment(date).isSame(holiday[i]) && moment(date).isSame(currMonth, "month")) { // && (holiday[i].isSameOrBefore(moment(), "month") && holiday[i].isSameOrAfter(moment(), "month"))) {
+      if (dayjs(date).isSame(holiday[dateVersion][i]) && dayjs(date).isSame(currDate, "month")) { // && (holiday[i].isSameOrBefore(moment(), "month") && holiday[i].isSameOrAfter(moment(), "month"))) {
         return true;
       }
     }
     return false;
   }
   useEffect(() => {
-    setEvents(props.data.map((item) => {
+    const getholidayArr = (calendarData) => {
+      let result = [];
+      for (let i = 0; i < calendarData.length; i++) {
+        let startEnd = {
+          start: '',
+          end: '',
+          employeeId: calendarData[i].employeeId,
+        }
+        let dateArr = calendarData[i].date.split(",");
+        if (dateArr.length === 1) {
+          result.push({...startEnd, start: dateArr[0], end: dateArr[0]});
+          continue;
+        }
+        startEnd.start = dateArr[0];
+        
+        for (let j = 0; j < dateArr.length; j++) {
+          if (j === dateArr.length - 1) {
+            result.push({...startEnd, end: dateArr[j]});
+          } else if (!dayjs(dateArr[j]).add(1, "day").isSame(dayjs(dateArr[j+1]))) {
+            result.push({...startEnd, end: dateArr[j]});
+            startEnd.start = dateArr[j+1];
+          }
+        }
+      }
+      return result;
+    };
+    console.log("calendarData : ", props.data);
+    setEvents(getholidayArr(props.data).map((item) => {
       return {
         start: new Date(item.start), //new Date("2023-11-01"), // date 불러오기
         end: new Date(item.end), //end: new Date("2023-11-02"),   // 언제까지 불러올지
@@ -60,7 +97,7 @@ const CustomCalendar = (props) => {
   // Custom event style getter
   const eventStyleGetter = (event, start, end, isSelected) => {
     let style = {
-      backgroundColor: event.isHoliday ? 'red' : 'lightblue',
+      backgroundColor: event.title === props.employeeId ? 'rgba(255, 0, 0, 0.1)' : 'lightblue',
       borderRadius: '0px',
       opacity: 0.8,
       color: 'black',
@@ -83,13 +120,13 @@ const CustomCalendar = (props) => {
   };
   const dayPropGetter = useCallback(
     (date) => {return ({
-      ...((((moment(date).day() === 0 || moment(date).day() === 6) && moment(date).isSame(currMonth, "month")) || checkHoliday(date)) && {
+      ...((((dayjs(date).day() === 0 || dayjs(date).day() === 6) && dayjs(date).isSame(currDate, "month")) || checkHoliday(date)) && {
         style: {
           backgroundColor: 'rgba(255, 0, 0, 0.1)',
         }
       }),
     })},
-    [currMonth]
+    [currDate]
   );
   return (
     <div style={{ height: '700px' }}>

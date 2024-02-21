@@ -17,16 +17,20 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 
 import ApplicationForm from "./ApplicationForm";
 import { IconButton } from "@mui/material";
 
+dayjs.locale('ko');
+
 function CustomTabPanel(props) {
     const [employee, setEmployee] = useState('');
-    const [date, setDate] = useState([dayjs(new Date()), dayjs(new Date())]);   // [start, end]
+    const [date, setDate] = useState([dayjs(), dayjs()]);   // [start, end]
 
     const [modifyOpen, setModifyOpen] = useState([]);   // 각 row 의 수정 버튼 클릭 여부
 
@@ -55,7 +59,7 @@ function CustomTabPanel(props) {
     }
 
     useEffect(() => {
-        setModifyOpen([...props.data.applicationList.map((row) => false)]);
+        setModifyOpen([...props.data.applicationList.map(() => false)]);
     }, [props.data.applicationList]);
 
     return (
@@ -74,32 +78,18 @@ function CustomTabPanel(props) {
             )}
             {props.value === 1 && (
                 <Box sx={{ pt: 3 }}>
-                    {props.isAdmin && (
-                        <Box sx={{ pb: 3, display: 'flex',justifyContent: "flex-end" }}>
-                            <FormControl size="small" sx={{minWidth: 250}}>
-                                <InputLabel id="demo-simple-select-label">사원 정보</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={employee}
-                                    label="사원 정보"
-                                    onChange={handleChange}
-                                >
-                                    {props.data.applicationList.map((row, i) => (<MenuItem key={i} value={row.employeeId}>{row.employeeId} 이름</MenuItem>))}
-                                    
-                                </Select>
-                            </FormControl>
-                        </Box>
+                    {(props.isAdmin && props.adminComp) && (
+                        <EmployeeList data={props.data} onChange={handleChange} employee={employee} />
                     )}
                     <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell align="center">연차 종류</TableCell>
-                                    <TableCell align="center">기간</TableCell>
-                                    <TableCell align="center">사유</TableCell>
-                                    <TableCell align="center">상태</TableCell>
-                                    <TableCell align="center">수정</TableCell>
+                                    <TableCell sx={{ width: '15%' }} align="center">연차 종류</TableCell>
+                                    <TableCell sx={{ width: '25%' }} align="center">기간</TableCell>
+                                    <TableCell sx={{ width: '25%' }} align="center">사유</TableCell>
+                                    <TableCell sx={{ width: '10%' }} align="center">상태</TableCell>
+                                    <TableCell sx={{ width: '20%' }} align="center">수정 및 삭제</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -130,7 +120,7 @@ function CustomTabPanel(props) {
                                                             <TableRow>
                                                                 <TableCell align="left" scope="row">
                                                                     <Box sx={{ pt: 2, }}>
-                                                                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify} />
+                                                                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} value={props.value} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify} />
                                                                     </Box>
                                                                 </TableCell>
                                                             </TableRow>
@@ -148,30 +138,58 @@ function CustomTabPanel(props) {
             )}
             {props.value === 2 && (
                 <Box sx={{ pt: 3 }}>
+                    {(props.isAdmin && props.adminComp) && (
+                        <EmployeeList data={props.data} onChange={handleChange} employee={employee} />
+                    )}
                     <TableContainer component={Paper}>
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell align="center">연차 종류</TableCell>
-                                    <TableCell align="center">기간</TableCell>
-                                    <TableCell align="center">사유</TableCell>
-                                    <TableCell align="center">상태</TableCell>
+                                    <TableCell sx={{ width: '15%' }} align="center">연차 종류</TableCell>
+                                    <TableCell sx={{ width: '25%' }} align="center">기간</TableCell>
+                                    <TableCell sx={{ width: '25%' }} align="center">사유</TableCell>
+                                    <TableCell sx={{ width: '10%' }} align="center">상태</TableCell>
+                                    <TableCell sx={{ width: '20%' }} align="center">취소</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {props.data.vacationList.map((row) => (
-                                    <TableRow
+                                {props.data.vacationList.map((row, idx) => (
+                                    <React.Fragment key={row.idx + "cancel"}>
+                                        <TableRow
 
-                                        key={row.idx + "vacation"}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                        <TableCell align="center" scope="row">
-                                            {row.code}
-                                        </TableCell>
-                                        <TableCell align="center">{row.start} ~ {row.end}</TableCell>
-                                        <TableCell align="center">{row.content}</TableCell>
-                                        <TableCell align="center">{row.approvalStatus}</TableCell>
-                                    </TableRow>
+                                            key={row.idx + "vacation"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell align="center" scope="row">
+                                                {row.code}
+                                            </TableCell>
+                                            <TableCell align="center">{row.start} ~ {row.end}</TableCell>
+                                            <TableCell align="center">{row.content}</TableCell>
+                                            <TableCell align="center">{row.approvalStatus}</TableCell>
+                                            <TableCell sx={{ minWidth: '20%' }} align="center">
+                                                <IconButton onClick={() => { modify(idx) }}>
+                                                    <DoDisturbOnIcon fontSize="small" />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell style={{ padding: 0, border: 0 }} colSpan={5}>
+                                                <Collapse in={modifyOpen[idx]} timeout="auto" unmountOnExit>
+                                                    <Table aria-label="modify vacation" sx={{ width: '100%' }}>
+                                                        <TableBody>
+                                                            <TableRow>
+                                                                <TableCell align="left" scope="row">
+                                                                    <Box sx={{ pt: 2, }}>
+                                                                        <ApplicationForm employeeId={props.employeeId} value={props.value} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify} />
+                                                                    </Box>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </TableBody>
+                                                    </Table>
+                                                </Collapse>
+                                            </TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
                                 ))}
                             </TableBody>
                         </Table>
@@ -179,6 +197,26 @@ function CustomTabPanel(props) {
                 </Box>
             )}
         </div>
+    );
+}
+
+function EmployeeList(props) {
+    return (
+        <Box sx={{ pb: 3, display: 'flex', justifyContent: "flex-end" }}>
+            <FormControl size="small" sx={{ minWidth: 250 }}>
+                <InputLabel id="demo-simple-select-label">사원 정보</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={props.employee}
+                    label="사원 정보"
+                    onChange={props.onChange}
+                >
+                    {props.data.applicationList.map((row, i) => (<MenuItem key={i} value={row.employeeId}>{row.employeeId} 이름</MenuItem>))}
+
+                </Select>
+            </FormControl>
+        </Box>
     );
 }
 
