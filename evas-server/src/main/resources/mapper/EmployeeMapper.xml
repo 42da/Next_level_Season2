@@ -5,8 +5,14 @@
 
 <mapper namespace="com.nextlevel.evas.repository.EmployeeRepository">
   <select id="findByLoginId" resultType="Employee">
-    select employee_id, name, reset_vacation_date, total_vacation, is_admin
+    select employee_id, name, reset_vacation_date, total_vacation_count, is_admin
     from employee
     where login_id = #{loginId} and password = #{password}
+  </select>
+  
+  <select id="findUseVacationCountByEmployeeId" resultType="float">
+    select sum(vc.value) as use_vacation_count
+    from vacation v join vacation_code vc on v.code = vc.code
+    where v.employee_id = #{employeeId} and v.use_status = 'U';
   </select>
 </mapper>
