@@ -16,7 +16,12 @@ public class EmployeeService {
   }
 
   public Employee login(String loginId, String password) {
-    return employeeRepository.findByLoginId(loginId, password);
+    Employee employee = employeeRepository.findByLoginId(loginId, password);
+    if (employee != null) {
+      employee.setUseVacationCount(employeeRepository.findUseVacationCountByEmployeeId(employee.getEmployeeId()));
+    }
+
+    return employee;
   }
 
 }
