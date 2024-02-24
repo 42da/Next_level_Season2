@@ -40,7 +40,7 @@
       and date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
       and approval_status in ('W', 'R', 'C')
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
-    ORDER BY v.start desc;
+    ORDER BY v.start desc
   </select>
   
   <select id="findAllVacationByEmployeeId" resultType="Vacation">
@@ -48,7 +48,7 @@
     FROM vacation
     WHERE employee_id = #{employeeId}
       and approval_status = 'A'
-    ORDER BY start desc;
+    ORDER BY start desc
   </select>
   
   <select id="findAllCalendar" resultType="Vacation" >
@@ -58,7 +58,7 @@
       and date between DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
       and LAST_DAY(DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-%d'))
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
-    ORDER BY v.start desc;
+    ORDER BY v.start desc
   </select>
   
   <insert id="insertDate" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
@@ -80,6 +80,6 @@
     FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE vacation_idx = #{vacationIdx}
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
-    ORDER BY v.idx;
+    ORDER BY v.idx
   </select>
 </mapper>
