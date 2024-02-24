@@ -9,8 +9,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nextlevel.evas.domain.Vacation;
-import com.nextlevel.evas.domain.VacationDetailDate;
+import com.nextlevel.evas.domain.VacationDate;
 import com.nextlevel.evas.form.VacationApplicationForm;
+import com.nextlevel.evas.form.VacationCancellationForm;
 import com.nextlevel.evas.repository.VacationRepository;
 
 @Service
@@ -45,33 +46,31 @@ public class VacationService {
     vacation.setEmployeeId(form.getEmployeeId());
 
     int result = 0;
+    String type = "";
     // 수정
     if (form.getIdx() != null) {
-      vacation.setIdx(Integer.parseInt(form.getIdx()));
+      type = "U";
 
+      vacation.setIdx(Integer.parseInt(form.getIdx()));
       result = vacationRepository.update(vacation);
-      if (result > 0) {
-        result = 0;
-        return updateVacationHistory(vacationRepository.findByIdx(vacation.getIdx()), form.getDate());
-      } else {
-        return null;
-      }
 
       // 신청
     } else {
+      type = "A";
+
       result = vacationRepository.insert(vacation);
-      if (result > 0) {
-        result = 0;
-        return insertVacationHistory(vacationRepository.findByIdx(vacation.getIdx()), form.getDate());
-      } else {
-        return null;
-      }
+    }
+
+    if (result > 0) {
+      return setVacationDate(vacationRepository.findByIdx(vacation.getIdx()), form.getDate(), type);
+    } else {
+      return null;
     }
   }
 
   // 연차 삭제 시
   public int delete(String idx) {
-    int result = vacationRepository.deleteHistory(Integer.parseInt(idx));
+    int result = vacationRepository.deleteDate(Integer.parseInt(idx));
     if (result > 0) {
       result = 0;
       result = vacationRepository.delete(Integer.parseInt(idx));
@@ -85,6 +84,16 @@ public class VacationService {
     }
   }
 
+  // 연차 취소 시
+  public int cancel(VacationCancellationForm form) {
+    int result = vacationRepository.updateCancellationContent(Integer.parseInt(form.getIdx()), form.getCancellationContent());
+    if (result > 0) {
+      return Integer.parseInt(form.getIdx());
+    } else {
+      return -1;
+    }
+  }
+
   private LocalDate parseStringToDate(String str) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate date = LocalDate.parse(str, formatter);
@@ -92,46 +101,39 @@ public class VacationService {
     return date;
   }
 
-  private List<VacationDetailDate> createVacationHistory(int idx, List<String> vacationDateList) {
-    List<VacationDetailDate> vacationHistoryList = new ArrayList<>();
+  private List<VacationDate> createVacationDateList(int idx, List<String> strList) {
+    List<VacationDate> vacationDateList = new ArrayList<>();
 
-    for (String date : vacationDateList) {
-      VacationDetailDate vacationHistory = new VacationDetailDate();
+    for (String date : strList) {
+      VacationDate vacationDate = new VacationDate();
 
-      vacationHistory.setVacationIdx(idx);
-      vacationHistory.setDate(parseStringToDate(date));
+      vacationDate.setVacationIdx(idx);
+      vacationDate.setDate(parseStringToDate(date));
 
-      vacationHistoryList.add(vacationHistory);
+      vacationDateList.add(vacationDate);
     }
 
-    return vacationHistoryList;
+    return vacationDateList;
   }
 
-  private Vacation insertVacationHistory(Vacation vacation, List<String> vacationDateList) {
-    List<VacationDetailDate> vacationHistoryList = createVacationHistory(vacation.getIdx(), vacationDateList);
+  private Vacation setVacationDate(Vacation vacation, List<String> vacationDate, String type) {
+    List<VacationDate> vacationDateList = createVacationDateList(vacation.getIdx(), vacationDate);
 
-    int result = vacationRepository.insertHistory(vacationHistoryList);
-    if (result > 0) {
-      vacation.setDate(vacationRepository.findByVacationIdx(vacation.getIdx()));
-      return vacation;
+    int result = 0;
+    if (type.equals("U")) {
+      result = vacationRepository.deleteDate(vacation.getIdx());
+    }
+
+    if ((type.equals("U") && result > 0) || type.equals("A")) {
+      result = 0;
+      result = vacationRepository.insertDate(vacationDateList);
     } else {
       return null;
     }
-  }
 
-  private Vacation updateVacationHistory(Vacation vacation, List<String> vacationDateList) {
-    List<VacationDetailDate> vacationHistoryList = createVacationHistory(vacation.getIdx(), vacationDateList);
-
-    int result = vacationRepository.deleteHistory(vacation.getIdx());
     if (result > 0) {
-      result = 0;
-      result = vacationRepository.insertHistory(vacationHistoryList);
-      if (result > 0) {
-        vacation.setDate(vacationRepository.findByVacationIdx(vacation.getIdx()));
-        return vacation;
-      } else {
-        return null;
-      }
+      vacation.setDate(vacationRepository.findDateByVacationIdx(vacation.getIdx()));
+      return vacation;
     } else {
       return null;
     }

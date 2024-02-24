@@ -1,6 +1,6 @@
 package com.nextlevel.evas.form;
 
-public class VacationIdxForm {
+public class VacationDeletionForm {
 
   private String idx;
 
