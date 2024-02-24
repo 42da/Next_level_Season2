@@ -21,19 +21,11 @@
     WHERE idx = #{idx}
   </delete>
   
-  <insert id="insertHistory" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
-    INSERT INTO vacation_detail_date (vacation_idx, date)
-    VALUES
-      <foreach item="item" collection="list" separator=",">
-        (#{item.vacationIdx}, #{item.date})
-      </foreach>
-  </insert>
-  
-  <delete id="deleteHistory" parameterType="int">
-    DELETE
-    FROM vacation_detail_date
-    WHERE vacation_idx = #{vacationIdx}
-  </delete>
+  <update id="updateCancellationContent">
+    UPDATE vacation
+    SET approval_status = 'C', cancellation_content = #{cancellationContent}
+    WHERE idx = #{idx}
+  </update>
   
   <select id="findByIdx" resultType="Vacation">
     SELECT *
@@ -43,12 +35,12 @@
   
   <select id="findAllApplicationByEmployeeId" resultType="Vacation">
     SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
-    FROM vacation v JOIN vacation_detail_date vh ON v.idx = vh.vacation_idx
+    FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE employee_id = #{employeeId}
       and date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
       and approval_status in ('W', 'R', 'C')
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
-    ORDER BY v.idx;
+    ORDER BY v.start desc;
   </select>
   
   <select id="findAllVacationByEmployeeId" resultType="Vacation">
@@ -56,21 +48,36 @@
     FROM vacation
     WHERE employee_id = #{employeeId}
       and approval_status = 'A'
+    ORDER BY start desc;
   </select>
   
   <select id="findAllCalendar" resultType="Vacation" >
     SELECT v.*, vh.vacation_idx, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
-    FROM vacation v JOIN vacation_detail_date vh ON v.idx = vh.vacation_idx
+    FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE approval_status = 'A'
       and date between DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
       and LAST_DAY(DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-%d'))
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
-    ORDER BY v.idx;
+    ORDER BY v.start desc;
   </select>
   
-  <select id="findByVacationIdx" resultType="String" >
+  <insert id="insertDate" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO vacation_date (vacation_idx, date)
+    VALUES
+      <foreach item="item" collection="list" separator=",">
+        (#{item.vacationIdx}, #{item.date})
+      </foreach>
+  </insert>
+  
+  <delete id="deleteDate" parameterType="int">
+    DELETE
+    FROM vacation_date
+    WHERE vacation_idx = #{vacationIdx}
+  </delete>
+  
+  <select id="findDateByVacationIdx" resultType="String" >
     SELECT GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
-    FROM vacation v JOIN vacation_detail_date vh ON v.idx = vh.vacation_idx
+    FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE vacation_idx = #{vacationIdx}
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
     ORDER BY v.idx;

@@ -2,8 +2,9 @@ package com.nextlevel.evas.repository;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import com.nextlevel.evas.domain.Vacation;
-import com.nextlevel.evas.domain.VacationDetailDate;
+import com.nextlevel.evas.domain.VacationDate;
 
 @Mapper
 public interface VacationRepository {
@@ -12,14 +13,16 @@ public interface VacationRepository {
   int update(Vacation vacation);
   int delete(int idx);
 
-  int insertHistory(List<VacationDetailDate> vacationList);
-  int deleteHistory(int vacationIdx);
+  int updateCancellationContent(@Param("idx") int idx, @Param("cancellationContent") String cancellationContent);
 
   Vacation findByIdx(int idx);
   List<Vacation> findAllApplicationByEmployeeId(String employeeId);
   List<Vacation> findAllVacationByEmployeeId(String employeeId);
   List<Vacation> findAllCalendar();
 
-  String findByVacationIdx(int vacationidx);
+  int insertDate(List<VacationDate> vacationDateList);
+  int deleteDate(int vacationIdx);
+
+  String findDateByVacationIdx(int vacationidx);
 
 }
