@@ -44,7 +44,7 @@ public class VacationController {
 
   @PostMapping("main/cancel")
   @ResponseBody
-  public int cancel(@RequestBody VacationCancellationForm form) {
+  public Vacation cancel(@RequestBody VacationCancellationForm form) {
     return vacationService.cancel(form);
   }
 

@@ -5,7 +5,7 @@
 
 <mapper namespace="com.nextlevel.evas.repository.AdminRepository">
   <select id="findAllEmployee" resultType="Employee">
-    SELECT *
+    SELECT employee_id, name, reset_vacation_date, total_vacation_count, is_admin
     FROM employee
     ORDER BY reset_vacation_date;
   </select>
