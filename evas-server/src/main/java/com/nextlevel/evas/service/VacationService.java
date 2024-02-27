@@ -85,12 +85,15 @@ public class VacationService {
   }
 
   // 연차 취소 시
-  public int cancel(VacationCancellationForm form) {
+  public Vacation cancel(VacationCancellationForm form) {
     int result = vacationRepository.updateCancellationContent(Integer.parseInt(form.getIdx()), form.getCancellationContent());
     if (result > 0) {
-      return Integer.parseInt(form.getIdx());
+      Vacation vacation = vacationRepository.findByIdx(Integer.parseInt(form.getIdx()));
+      vacation.setDate(vacationRepository.findDateByVacationIdx(vacation.getIdx()));
+
+      return vacation;
     } else {
-      return -1;
+      return null;
     }
   }
 

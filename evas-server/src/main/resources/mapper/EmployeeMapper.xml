@@ -11,7 +11,7 @@
   </select>
   
   <select id="findUseVacationCountByEmployeeId" resultType="float">
-    select sum(vc.value) as use_vacation_count
+    select ifnull(sum(vc.value), 0) as use_vacation_count
     from vacation v join vacation_code vc on v.code = vc.code
     where v.employee_id = #{employeeId} and v.use_status = 'U';
   </select>
