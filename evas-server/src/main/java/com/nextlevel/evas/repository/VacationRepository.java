@@ -23,6 +23,4 @@ public interface VacationRepository {
   int insertDate(List<VacationDate> vacationDateList);
   int deleteDate(int vacationIdx);
 
-  String findDateByVacationIdx(int vacationidx);
-
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextlevel.evas.domain.Employee;
+import com.nextlevel.evas.domain.Vacation;
 import com.nextlevel.evas.service.AdminService;
 
 @Controller
@@ -19,10 +20,16 @@ public class AdminController {
     this.adminService = adminService;
   }
 
+  @PostMapping("employee")
+  @ResponseBody
+  public Map<String, List<Employee>> findAllEmployeeList() {
+    return adminService.findAllEmployeeList();
+  }
+
   @PostMapping("admin")
   @ResponseBody
-  public Map<String, List<Employee>> findAllList() {
-    return adminService.findAllList();
+  public Map<String, List<Vacation>> findAllVacationList() {
+    return adminService.findAllVacationList();
   }
 
 }

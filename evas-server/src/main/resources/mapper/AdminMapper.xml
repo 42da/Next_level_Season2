@@ -9,4 +9,20 @@
     FROM employee
     ORDER BY reset_vacation_date;
   </select>
+  
+  <select id="findAllApplication" resultType="Vacation">
+    SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
+    FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
+    WHERE date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
+      and approval_status in ('W', 'R', 'C')
+    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+    ORDER BY v.start desc
+  </select>
+  
+  <select id="findAllVacation" resultType="Vacation">
+    SELECT *
+    FROM vacation
+    WHERE approval_status = 'A'
+    ORDER BY start desc
+  </select>
 </mapper>

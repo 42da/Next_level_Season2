@@ -62,7 +62,7 @@ public class VacationService {
     }
 
     if (result > 0) {
-      return setVacationDate(vacationRepository.findByIdx(vacation.getIdx()), form.getDate(), type);
+      return setVacationDate(vacation.getIdx(), form.getDate(), type);
     } else {
       return null;
     }
@@ -88,10 +88,7 @@ public class VacationService {
   public Vacation cancel(VacationCancellationForm form) {
     int result = vacationRepository.updateCancellationContent(Integer.parseInt(form.getIdx()), form.getCancellationContent());
     if (result > 0) {
-      Vacation vacation = vacationRepository.findByIdx(Integer.parseInt(form.getIdx()));
-      vacation.setDate(vacationRepository.findDateByVacationIdx(vacation.getIdx()));
-
-      return vacation;
+      return vacationRepository.findByIdx(Integer.parseInt(form.getIdx()));
     } else {
       return null;
     }
@@ -119,12 +116,12 @@ public class VacationService {
     return vacationDateList;
   }
 
-  private Vacation setVacationDate(Vacation vacation, List<String> vacationDate, String type) {
-    List<VacationDate> vacationDateList = createVacationDateList(vacation.getIdx(), vacationDate);
+  private Vacation setVacationDate(int idx, List<String> vacationDate, String type) {
+    List<VacationDate> vacationDateList = createVacationDateList(idx, vacationDate);
 
     int result = 0;
     if (type.equals("U")) {
-      result = vacationRepository.deleteDate(vacation.getIdx());
+      result = vacationRepository.deleteDate(idx);
     }
 
     if ((type.equals("U") && result > 0) || type.equals("A")) {
@@ -135,8 +132,7 @@ public class VacationService {
     }
 
     if (result > 0) {
-      vacation.setDate(vacationRepository.findDateByVacationIdx(vacation.getIdx()));
-      return vacation;
+      return vacationRepository.findByIdx(idx);
     } else {
       return null;
     }
