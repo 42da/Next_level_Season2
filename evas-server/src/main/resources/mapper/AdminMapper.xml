@@ -10,6 +10,24 @@
     ORDER BY reset_vacation_date;
   </select>
   
+  <insert id="insert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO vacation (code, start, end, content, employee_id)
+    VALUES (#{code}, #{start}, #{end}, #{content}, #{employeeId})
+  </insert>
+
+  <update id="update" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    UPDATE vacation
+    SET code = #{code}, start = #{start}, end = #{end}, content = #{content}
+    WHERE idx = #{idx}
+  </update>
+  
+  <select id="findByIdx" resultType="Vacation">
+    SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
+    FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
+    WHERE v.idx = #{idx}
+    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+  </select>
+  
   <select id="findAllApplication" resultType="Vacation">
     SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
     FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
@@ -25,4 +43,18 @@
     WHERE approval_status = 'A'
     ORDER BY start desc
   </select>
+  
+  <insert id="insertDate" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO vacation_date (vacation_idx, date)
+    VALUES
+      <foreach item="item" collection="list" separator=",">
+        (#{item.vacationIdx}, #{item.date})
+      </foreach>
+  </insert>
+  
+  <delete id="deleteDate" parameterType="int">
+    DELETE
+    FROM vacation_date
+    WHERE vacation_idx = #{vacationIdx}
+  </delete>
 </mapper>
