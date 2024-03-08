@@ -37,11 +37,11 @@ public class AdminController {
   @PostMapping({"admin/apply", "admin/update"})
   @ResponseBody
   public Vacation apply(@RequestBody VacationApplicationForm form) {
-    //    if (form.getCode().equals("abs08")) {
-    //      return adminService.applyAll(form);
-    //    } else {
-    return adminService.apply(form);
-    //    }
+    if (form.getCode().equals("abs08")) {
+      return adminService.applyWhole(form);
+    } else {
+      return adminService.apply(form);
+    }
   }
 
 }

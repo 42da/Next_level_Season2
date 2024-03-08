@@ -10,6 +10,23 @@
     ORDER BY reset_vacation_date;
   </select>
   
+  <insert id="insertWhole" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO vacation (start, end, content)
+    VALUES (#{start}, #{end}, #{content})
+  </insert>
+
+  <update id="updateWhole" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    UPDATE vacation
+    SET start = #{start}, end = #{end}, content = #{content}
+    WHERE idx = #{idx}
+  </update>
+  
+  <select id="findWholeByIdx" resultType="Vacation">
+    SELECT *, 'abs08' as code, 'A' as approval_status
+    FROM whole_vacation
+    WHERE idx = #{idx}
+  </select>
+  
   <insert id="insert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
     INSERT INTO vacation (code, start, end, content, employee_id)
     VALUES (#{code}, #{start}, #{end}, #{content}, #{employeeId})
