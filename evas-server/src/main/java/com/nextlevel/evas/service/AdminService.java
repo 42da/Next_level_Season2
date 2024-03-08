@@ -43,6 +43,33 @@ public class AdminService {
     return result;
   }
 
+  // 전체 연차 신청, 수정 시
+  public Vacation applyWhole(VacationApplicationForm form) {
+    Vacation vacation = new Vacation();
+
+    vacation.setStart(parseStringToDate(form.getStart()));
+    vacation.setEnd(parseStringToDate(form.getEnd()));
+    vacation.setContent(form.getContent());
+
+    int result = 0;
+    String type = "";
+    // 수정
+    if (form.getIdx() != null) {
+      vacation.setIdx(Integer.parseInt(form.getIdx()));
+      result = adminRepository.updateWhole(vacation);
+
+      // 신청
+    } else {
+      result = adminRepository.insertWhole(vacation);
+    }
+
+    if (result > 0) {
+      return adminRepository.findWholeByIdx(vacation.getIdx());
+    } else {
+      return null;
+    }
+  }
+
   // 연차 신청, 수정 시
   public Vacation apply(VacationApplicationForm form) {
     Vacation vacation = new Vacation();
