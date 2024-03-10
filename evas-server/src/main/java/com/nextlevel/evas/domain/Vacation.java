@@ -19,6 +19,7 @@ public class Vacation {
   private String cancellationContent;
 
   private String date;
+  private String isWhole;
 
   public int getIdx() {
     return idx;
@@ -106,6 +107,14 @@ public class Vacation {
 
   public void setDate(String date) {
     this.date = date;
+  }
+
+  public String getIsWhole() {
+    return isWhole;
+  }
+
+  public void setIsWhole(String isWhole) {
+    this.isWhole = isWhole;
   }
 
 }

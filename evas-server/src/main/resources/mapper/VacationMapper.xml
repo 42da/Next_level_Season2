@@ -45,21 +45,30 @@
   </select>
   
   <select id="findAllVacationByEmployeeId" resultType="Vacation">
-    SELECT *
-    FROM vacation
-    WHERE employee_id = #{employeeId}
-      and approval_status = 'A'
-    ORDER BY start desc
+    SELECT res.*
+    FROM (
+      (SELECT *, 'N' AS is_whole FROM vacation
+      WHERE employee_id = #{employeeId} AND approval_status = 'A'
+      ORDER BY start desc)
+      UNION ALL
+      (SELECT *, 'Y' AS is_whole FROM whole_vacation)
+    ) AS res;
   </select>
   
   <select id="findAllCalendar" resultType="Vacation" >
-    SELECT v.*, vh.vacation_idx, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
-    FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
-    WHERE approval_status = 'A'
-      and date between DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
-      and LAST_DAY(DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-%d'))
-    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
-    ORDER BY v.start desc
+    SELECT res.*
+    FROM (
+      (SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date, 'N' as is_whole
+      FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
+      WHERE approval_status = 'A'
+        and date between DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
+        and LAST_DAY(DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-%d'))
+      GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+      ORDER BY v.start desc)
+      UNION ALL
+      (SELECT *, start AS date, 'Y' as is_whole
+      FROM whole_vacation)
+    ) AS res;
   </select>
   
   <insert id="insertDate" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
