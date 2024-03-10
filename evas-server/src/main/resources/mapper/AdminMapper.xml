@@ -55,10 +55,14 @@
   </select>
   
   <select id="findAllVacation" resultType="Vacation">
-    SELECT *
-    FROM vacation
-    WHERE approval_status = 'A'
-    ORDER BY start desc
+    SELECT res.*
+    FROM (
+      (SELECT *, 'N' AS is_whole FROM vacation
+      WHERE approval_status = 'A'
+      ORDER BY start desc)
+      UNION ALL
+      (SELECT *, 'Y' AS is_whole FROM whole_vacation)
+    ) AS res;
   </select>
   
   <insert id="insertDate" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">

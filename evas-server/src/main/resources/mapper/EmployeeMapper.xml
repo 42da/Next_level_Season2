@@ -11,8 +11,15 @@
   </select>
   
   <select id="findUseVacationCountByEmployeeId" resultType="float">
-    select ifnull(sum(vc.value), 0) as use_vacation_count
-    from vacation v join vacation_code vc on v.code = vc.code
-    where v.employee_id = #{employeeId} and v.use_status = 'U';
+    select sum(res.cnt) as use_vacation_count
+    from (
+      (select ifnull(sum(vc.value), 0) as cnt
+      from vacation v join vacation_code vc on v.code = vc.code
+      where v.employee_id = #{employeeId} and v.use_status = 'U')
+      union all
+      (select ifnull(count(idx), 0) as cnt
+      from whole_vacation
+      where use_status = 'U')
+    ) as res;
   </select>
 </mapper>
