@@ -11,18 +11,18 @@
   </select>
   
   <insert id="insertWhole" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
-    INSERT INTO vacation (start, end, content)
+    INSERT INTO whole_vacation (start, end, content)
     VALUES (#{start}, #{end}, #{content})
   </insert>
 
   <update id="updateWhole" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
-    UPDATE vacation
+    UPDATE whole_vacation
     SET start = #{start}, end = #{end}, content = #{content}
     WHERE idx = #{idx}
   </update>
   
   <select id="findWholeByIdx" resultType="Vacation">
-    SELECT *, 'abs08' as code, 'A' as approval_status
+    SELECT *, 'abs08' as code, 'A' as approval_status, 'Y' AS is_whole
     FROM whole_vacation
     WHERE idx = #{idx}
   </select>
