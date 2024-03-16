@@ -50,6 +50,28 @@
     FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
       and approval_status in ('W', 'R', 'C')
+      and employee_id = #{employeeId}
+    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+    ORDER BY v.start desc
+  </select>
+  
+  <select id="findAllVacation" resultType="Vacation">
+    SELECT res.*
+    FROM (
+      (SELECT *, 'N' AS is_whole FROM vacation
+      WHERE approval_status = 'A'
+        and employee_id = #{employeeId}
+      ORDER BY start desc)
+      UNION ALL
+      (SELECT *, 'Y' AS is_whole FROM whole_vacation)
+    ) AS res;
+  </select>
+  
+  <select id="findAllApplication" resultType="Vacation">
+    SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
+    FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
+    WHERE date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
+      and approval_status in ('W', 'R', 'C')
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
     ORDER BY v.start desc
   </select>
@@ -76,6 +98,20 @@
   <delete id="deleteDate" parameterType="int">
     DELETE
     FROM vacation_date
+    WHERE vacation_idx = #{vacationIdx}
+  </delete>
+  
+  <insert id="insertWholeDate" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO whole_vacation_date (vacation_idx, date)
+    VALUES
+      <foreach item="item" collection="list" separator=",">
+        (#{item.vacationIdx}, #{item.date})
+      </foreach>
+  </insert>
+  
+  <delete id="deleteWholeDate" parameterType="int">
+    DELETE
+    FROM whole_vacation_date
     WHERE vacation_idx = #{vacationIdx}
   </delete>
 </mapper>
