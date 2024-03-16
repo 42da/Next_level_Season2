@@ -11,10 +11,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Collapse from "@mui/material/Collapse";
 import Paper from '@mui/material/Paper';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
@@ -26,6 +22,8 @@ import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import ApplicationForm from "./ApplicationForm";
 import { IconButton } from "@mui/material";
 
+// import EmployeeList from "./EmployeeList";
+
 dayjs.locale('ko');
 
 function CustomTabPanel(props) {
@@ -36,7 +34,19 @@ function CustomTabPanel(props) {
 
     const handleChange = (event) => {
         setEmployee(event.target.value);
-    };
+        if (props.value == 0) {
+
+        } else {
+            console.log(props.value === 1 ? 'application' : 'vacation');
+            axios.post('http://localhost:8080/admin/list', {
+                employeeId: event.target.value,
+                listType: props.value === 1 ? 'application' : 'vacation',
+            }).then((response) => {
+                
+            }).catch((error) => {
+            });
+        }
+    }
 
     const deleteList = (vacationIdx) => {
         axios.post('http://localhost:8080/main/delete', {
@@ -72,15 +82,15 @@ function CustomTabPanel(props) {
             {props.value === 0 && (
                 <>
                     <Box sx={{ pt: 3 }}>
-                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={false} />
+                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={false} isAdmin={props.isAdmin} adminComp={props.adminComp} setEmployee={props.setEmployee} />
                     </Box>
                 </>
             )}
             {props.value === 1 && (
                 <Box sx={{ pt: 3 }}>
-                    {(props.isAdmin && props.adminComp) && (
-                        <EmployeeList data={props.data} onChange={handleChange} employee={employee} />
-                    )}
+                    {/* {(props.isAdmin && props.adminComp) && (
+                        <EmployeeList value={props.value} onChange={handleChange} employee={employee} />
+                    )} */}
                     <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
@@ -138,9 +148,9 @@ function CustomTabPanel(props) {
             )}
             {props.value === 2 && (
                 <Box sx={{ pt: 3 }}>
-                    {(props.isAdmin && props.adminComp) && (
-                        <EmployeeList data={props.data} onChange={handleChange} employee={employee} />
-                    )}
+                    {/* {(props.isAdmin && props.adminComp) && (
+                        <EmployeeList value={props.value} onChange={handleChange} employee={employee} />
+                    )} */}
                     <TableContainer component={Paper}>
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
@@ -154,9 +164,8 @@ function CustomTabPanel(props) {
                             </TableHead>
                             <TableBody>
                                 {props.data.vacationList.map((row, idx) => (
-                                    <React.Fragment key={row.idx + "cancel"}>
+                                    <React.Fragment key={idx + "cancel"}>
                                         <TableRow
-
                                             key={row.idx + "vacation"}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
@@ -197,26 +206,6 @@ function CustomTabPanel(props) {
                 </Box>
             )}
         </div>
-    );
-}
-
-function EmployeeList(props) {
-    return (
-        <Box sx={{ pb: 3, display: 'flex', justifyContent: "flex-end" }}>
-            <FormControl size="small" sx={{ minWidth: 250 }}>
-                <InputLabel id="demo-simple-select-label">사원 정보</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={props.employee}
-                    label="사원 정보"
-                    onChange={props.onChange}
-                >
-                    {props.data.applicationList.map((row, i) => (<MenuItem key={i} value={row.employeeId}>{row.employeeId} 이름</MenuItem>))}
-
-                </Select>
-            </FormControl>
-        </Box>
     );
 }
 
