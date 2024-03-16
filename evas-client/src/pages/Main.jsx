@@ -19,6 +19,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import axios from "axios";
 import { Box } from "@mui/system";
 
+import EmployeeList from "../components/EmployeeList";
+
 function Main() {
   const [adminComp, setAdminComp] = useState(false); // admin component 보여줄지 여부
   const [value, setValue] = useState(1);
@@ -30,9 +32,12 @@ function Main() {
 
   const { state } = useLocation();
 
+  const [employee, setEmployee] = useState('');
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
 
   const refresh = () => {
     axios.post('http://localhost:8080/main/vacationList', {
@@ -62,14 +67,18 @@ function Main() {
     <div>
       <DrawerAppBar adminComp={adminComp} setAdminComp={setAdminComp} isAdmin={state.isAdmin} />
       <Grid container spacing={2} sx={{ pl: 2 }}>
+        
         <Grid item xs={6} sx={{ display: 'flex', justifyContent: "flex-end"}}>
-            <Card sx={{ minWidth: 200, justifyContent: "flex-end" }} variant="outlined">
+        {(state.isAdmin && adminComp) && (
+          <EmployeeList employee={employee} setEmployee={setEmployee} />
+                    )}
+            <Card sx={{ minWidth: 150, justifyContent: "flex-end", ml: 2 }} variant="outlined">
               <CardContent align="right">
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                   연차
                 </Typography>
                 <Typography variant="h5" component="div">
-                  15/20
+                  {state.totalVacationCount - state.useVacationCount}/{state.totalVacationCount}
                 </Typography>
               </CardContent>
               {/* <CardActions>
@@ -99,7 +108,8 @@ function Main() {
                     employeeId={state.employeeId}
                     data={data}
                     value={value}
-                    index={index} />
+                    index={index}
+                    setEmployee={setEmployee} />
                 )
               })
             }
