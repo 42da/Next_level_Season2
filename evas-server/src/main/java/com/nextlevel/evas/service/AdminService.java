@@ -43,35 +43,8 @@ public class AdminService {
     return result;
   }
 
-  // 전체 연차 신청, 수정 시
-  public Vacation applyWhole(VacationApplicationForm form) {
-    Vacation vacation = new Vacation();
-
-    vacation.setStart(parseStringToDate(form.getStart()));
-    vacation.setEnd(parseStringToDate(form.getEnd()));
-    vacation.setContent(form.getContent());
-
-    int result = 0;
-    String type = "";
-    // 수정
-    if (form.getIdx() != null) {
-      vacation.setIdx(Integer.parseInt(form.getIdx()));
-      result = adminRepository.updateWhole(vacation);
-
-      // 신청
-    } else {
-      result = adminRepository.insertWhole(vacation);
-    }
-
-    if (result > 0) {
-      return adminRepository.findWholeByIdx(vacation.getIdx());
-    } else {
-      return null;
-    }
-  }
-
   // 연차 신청, 수정 시
-  public Vacation apply(VacationApplicationForm form) {
+  public Map<String, List<Vacation>> apply(VacationApplicationForm form) {
     Vacation vacation = new Vacation();
 
     vacation.setCode(form.getCode());
@@ -87,17 +60,24 @@ public class AdminService {
       type = "U";
 
       vacation.setIdx(Integer.parseInt(form.getIdx()));
-      result = adminRepository.update(vacation);
+      if (form.getCode().equals("abs08")) {
+        result = adminRepository.updateWhole(vacation);
+      } else {
+        result = adminRepository.update(vacation);
+      }
 
       // 신청
     } else {
       type = "A";
-
-      result = adminRepository.insert(vacation);
+      if (form.getCode().equals("abs08")) {
+        result = adminRepository.insertWhole(vacation);
+      } else {
+        result = adminRepository.insert(vacation);
+      }
     }
 
     if (result > 0) {
-      return setVacationDate(vacation.getIdx(), form.getDate(), type);
+      return setVacationDate(vacation.getIdx(), form, type);
     } else {
       return null;
     }
@@ -125,23 +105,39 @@ public class AdminService {
     return vacationDateList;
   }
 
-  private Vacation setVacationDate(int idx, List<String> vacationDate, String type) {
-    List<VacationDate> vacationDateList = createVacationDateList(idx, vacationDate);
+  private Map<String, List<Vacation>> setVacationDate(int idx, VacationApplicationForm form, String type) {
+    List<VacationDate> vacationDateList = createVacationDateList(idx, form.getDate());
 
     int result = 0;
     if (type.equals("U")) {
-      result = adminRepository.deleteDate(idx);
+      if (form.getCode().equals("abs08")) {
+        result = adminRepository.deleteWholeDate(idx);
+      } else {
+        result = adminRepository.deleteDate(idx);
+      }
     }
 
     if ((type.equals("U") && result > 0) || type.equals("A")) {
       result = 0;
-      result = adminRepository.insertDate(vacationDateList);
-    } else {
-      return null;
+      if (form.getCode().equals("abs08")) {
+        result = adminRepository.insertWholeDate(vacationDateList);
+      } else {
+        result = adminRepository.insertDate(vacationDateList);
+      }
     }
 
     if (result > 0) {
-      return adminRepository.findByIdx(idx);
+      Map<String, List<Vacation>> resultList = new HashMap<String, List<Vacation>>();
+
+      if (form.getCode().equals("abs08")) {
+        resultList.put("applicationList", adminRepository.findAllApplication());
+        resultList.put("vacationList", adminRepository.findAllVacation());
+      } else {
+        resultList.put("applicationList", adminRepository.findByEmployeeIdApplication(form.getEmployeeId()));
+        resultList.put("vacationList", adminRepository.findEmployeeIdVacation(form.getEmployeeId()));
+      }
+
+      return resultList;
     } else {
       return null;
     }
