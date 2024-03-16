@@ -23,11 +23,18 @@ public interface AdminRepository {
   int update(Vacation vacation);
 
   Vacation findByIdx(int idx);
+
+  List<Vacation> findByEmployeeIdApplication(String employeeId);
+  List<Vacation> findEmployeeIdVacation(String employeeId);
   List<Vacation> findAllApplication();
   List<Vacation> findAllVacation();
 
-  // 연차 날짜
+  // 사원 연차 날짜
   int insertDate(List<VacationDate> vacationDateList);
   int deleteDate(int vacationIdx);
+
+  // 전체 연차 날짜
+  int insertWholeDate(List<VacationDate> vacationDateList);
+  int deleteWholeDate(int wholeVacationIdx);
 
 }
