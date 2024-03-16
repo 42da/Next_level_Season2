@@ -17,6 +17,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 
 const drawerWidth = 240;
 let navItems = ['Sign Out', 'About', 'Contact'];
@@ -25,6 +26,7 @@ function DrawerAppBar(props) {
   const { window } = props;
 
   const [mobileOpen, setMobileOpen] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -35,11 +37,19 @@ function DrawerAppBar(props) {
   const handleSignOut = () => {
     navigate('/');
   }
-  
+
   const handleChangeToAdminOrUser = () => {
     props.adminComp ? navItems[0] = 'Change To Admin' : navItems[0] = 'Change To User';
     props.setAdminComp(!props.adminComp);
+    axios.post('http://localhost:8080/admin', {
+    }).then((response) => {
+      console.log("changeToAdminOrUser response : ", response);
+    }).catch((error) => {
+      console.log(error);
+    });
+    
   }
+
 
   const navToFunc = (navItem) => {
     switch (navItem.toLowerCase()) {
@@ -51,7 +61,7 @@ function DrawerAppBar(props) {
         handleSignOut();
         break;
       default: break;
-    } 
+    }
   }
   useEffect(() => {
     if (props.isAdmin) {
@@ -103,7 +113,7 @@ function DrawerAppBar(props) {
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
-              <Button onClick={() => {navToFunc(item)}} key={item} sx={{ color: '#fff' }}>
+              <Button onClick={() => { navToFunc(item) }} key={item} sx={{ color: '#fff' }}>
                 {item}
               </Button>
             ))}
@@ -130,7 +140,7 @@ function DrawerAppBar(props) {
       <Box component="main" sx={{ p: 1 }}>
         <Toolbar />
         <Typography>
-          
+
         </Typography>
       </Box>
     </Box>
