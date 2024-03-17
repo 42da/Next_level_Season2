@@ -12,10 +12,7 @@ import com.nextlevel.evas.domain.Employee;
 import com.nextlevel.evas.domain.Vacation;
 import com.nextlevel.evas.domain.VacationDate;
 import com.nextlevel.evas.form.VacationApplicationForm;
-<<<<<<< HEAD
 import com.nextlevel.evas.form.VacationApprovalForm;
-=======
->>>>>>> 00b6e2b92347a9d0255e0be53eefa98845c699c8
 import com.nextlevel.evas.form.VacationDeletionForm;
 import com.nextlevel.evas.repository.AdminRepository;
 
@@ -105,11 +102,7 @@ public class AdminService {
     return result;
   }
 
-  <<<<<<< HEAD
   // 연차 취소(삭제) 시
-  =======
-  // 연차 삭제 시
-  >>>>>>> 00b6e2b92347a9d0255e0be53eefa98845c699c8
   public int delete(VacationDeletionForm form) {
     int result = 0;
     if (form.getCode().equals("abs08")) {
