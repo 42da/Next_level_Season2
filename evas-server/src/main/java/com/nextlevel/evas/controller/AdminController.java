@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextlevel.evas.domain.Employee;
 import com.nextlevel.evas.domain.Vacation;
+import com.nextlevel.evas.form.EmployeeIdForm;
 import com.nextlevel.evas.form.VacationApplicationForm;
 import com.nextlevel.evas.service.AdminService;
 
@@ -30,14 +31,20 @@ public class AdminController {
 
   @PostMapping("admin")
   @ResponseBody
-  public Map<String, List<Vacation>> findAllVacationList() {
-    return adminService.findAllVacationList();
+  public Map<String, List<Vacation>> findAllList() {
+    return adminService.findAllList();
   }
 
   @PostMapping({"admin/apply", "admin/update"})
   @ResponseBody
   public Map<String, List<Vacation>> apply(@RequestBody VacationApplicationForm form) {
     return adminService.apply(form);
+  }
+
+  @PostMapping("admin/list")
+  @ResponseBody
+  public Map<String, List<Vacation>> findByEmployeeIdList(@RequestBody EmployeeIdForm form) {
+    return adminService.findByEmployeeIdList(form.getEmployeeId());
   }
 
 }

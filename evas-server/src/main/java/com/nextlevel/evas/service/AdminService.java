@@ -34,7 +34,7 @@ public class AdminService {
   }
 
   // 관리자 전환 시 연차 목록
-  public Map<String, List<Vacation>> findAllVacationList() {
+  public Map<String, List<Vacation>> findAllList() {
     Map<String, List<Vacation>> result = new HashMap<String, List<Vacation>>();
 
     result.put("applicationList", adminRepository.findAllApplication());
@@ -81,6 +81,22 @@ public class AdminService {
     } else {
       return null;
     }
+  }
+
+  // 연차 조회 시
+  public Map<String, List<Vacation>> findByEmployeeIdList(String employeeId) {
+    Map<String, List<Vacation>> result = new HashMap<String, List<Vacation>>();
+    // 사원
+    if (employeeId != null) {
+      result.put("applicationList", adminRepository.findByEmployeeIdApplication(employeeId));
+      result.put("vacationList", adminRepository.findEmployeeIdVacation(employeeId));
+
+      // 전체
+    } else {
+      result.put("applicationList", adminRepository.findAllApplication());
+      result.put("vacationList", adminRepository.findAllVacation());
+    }
+    return result;
   }
 
   private LocalDate parseStringToDate(String str) {
