@@ -47,7 +47,7 @@ export default function SignIn() {
         // 로그인 성공
         navigate('/main', {state: {employeeId: response.data.employeeId,
           resetVacationDate: response.data.resetVacationDate,
-          isAdmin: response.data.isAdmin} });
+          isAdmin: response.data.isAdmin, totalVacationCount : response.data.totalVacationCount, useVacationCount: response.data.useVacationCount} });
         console.log("login response : ", response.data);
       } else alert('로그인 실패');
     }).catch((error) => {
