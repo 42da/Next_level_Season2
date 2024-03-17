@@ -11,6 +11,8 @@ import com.nextlevel.evas.domain.Employee;
 import com.nextlevel.evas.domain.Vacation;
 import com.nextlevel.evas.form.EmployeeIdForm;
 import com.nextlevel.evas.form.VacationApplicationForm;
+import com.nextlevel.evas.form.VacationApprovalForm;
+import com.nextlevel.evas.form.VacationDeletionForm;
 import com.nextlevel.evas.service.AdminService;
 
 @Controller
@@ -45,6 +47,21 @@ public class AdminController {
   @ResponseBody
   public Map<String, List<Vacation>> findByEmployeeIdList(@RequestBody EmployeeIdForm form) {
     return adminService.findByEmployeeIdList(form.getEmployeeId());
+  }
+
+  // 관리자가 전체, 사원 연차 신청 시 approvalStatus가 A인데
+  // 사원한테 기록이 남으면 안 되니까 ‘취소’가 아니라
+  // ‘삭제’로 처리
+  @PostMapping("admin/cancel")
+  @ResponseBody
+  public int delete(@RequestBody VacationDeletionForm form) {
+    return adminService.delete(form);
+  }
+
+  @PostMapping("admin/approve")
+  @ResponseBody
+  public Vacation approve(@RequestBody VacationApprovalForm form) {
+    return adminService.approve(form);
   }
 
 }
