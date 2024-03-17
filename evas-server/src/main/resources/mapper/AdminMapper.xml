@@ -21,6 +21,12 @@
     WHERE idx = #{idx}
   </update>
   
+  <delete id="deleteWhole" parameterType="int">
+    DELETE
+    FROM whole_vacation
+    WHERE idx = #{idx}
+  </delete>
+  
   <select id="findWholeByIdx" resultType="Vacation">
     SELECT *, 'abs08' as code, 'A' as approval_status, 'Y' AS is_whole
     FROM whole_vacation

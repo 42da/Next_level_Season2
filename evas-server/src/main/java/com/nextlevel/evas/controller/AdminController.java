@@ -11,6 +11,7 @@ import com.nextlevel.evas.domain.Employee;
 import com.nextlevel.evas.domain.Vacation;
 import com.nextlevel.evas.form.EmployeeIdForm;
 import com.nextlevel.evas.form.VacationApplicationForm;
+import com.nextlevel.evas.form.VacationDeletionForm;
 import com.nextlevel.evas.service.AdminService;
 
 @Controller
@@ -45,6 +46,12 @@ public class AdminController {
   @ResponseBody
   public Map<String, List<Vacation>> findByEmployeeIdList(@RequestBody EmployeeIdForm form) {
     return adminService.findByEmployeeIdList(form.getEmployeeId());
+  }
+
+  @PostMapping("admin/delete")
+  @ResponseBody
+  public int delete(@RequestBody VacationDeletionForm form) {
+    return adminService.delete(form);
   }
 
 }
