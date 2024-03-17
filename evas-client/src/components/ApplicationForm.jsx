@@ -26,6 +26,8 @@ import Edit from '@mui/icons-material/Edit';
 import holiday from "../data/holiday";
 import { dayjsLocalizer } from 'react-big-calendar';
 
+// import EmployeeList from './EmployeeList';
+
 // Localizer for the calendar
 moment.locale('ko');
 dayjs.locale('ko');
@@ -50,6 +52,9 @@ function ApplicationForm(props) {
     const [modifyOrCancel, setModifyOrCancel] = useState("modify"); // 수정 or 취소 여부
 
     const handleChange = (event) => {
+        if (event.target.value === "abs08" && props.adminComp) {
+            props.setEmployee(event.target.value);
+        }
         setVacation(event.target.value);
         setSendData({ ...sendData, code: event.target.value });
     };
@@ -86,10 +91,14 @@ function ApplicationForm(props) {
     }
 
     const submit = () => {
-        let url = 'http://localhost:8080/main/';
+        let url = 'http://localhost:8080/';
+        if (props.adminComp) url += "admin/";
+        else url += "main/";
         if (props.isModify && modifyOrCancel === "modify") url += "update";
         else if (modifyOrCancel === "cancel") url += "cancel";
-        else url += "apply";
+        else {
+            url += "apply";
+        }
 
         let idx = null;
         if (props.isModify && modifyOrCancel === "modify") idx = props.data.applicationList.filter((row) => row.idx === props.rowIdx)[0].idx;
@@ -165,6 +174,8 @@ function ApplicationForm(props) {
         <>
             {
                 props.value !== 2 && (
+                    <>
+                    {/* {props.adminComp && <EmployeeList value={props.value} />} */}
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">연차 종류</InputLabel>
                         <Select
@@ -174,6 +185,7 @@ function ApplicationForm(props) {
                             label="연차 종류"
                             onChange={handleChange}
                         >
+                            {props.adminComp && <MenuItem value={"abs08"}>전체 연차</MenuItem>}
                             <MenuItem value={"abs01"}>연차</MenuItem>
                             <MenuItem value={"abs02"}>연차)오전반차</MenuItem>
                             <MenuItem value={"abs03"}>연차)오후반차</MenuItem>
@@ -183,6 +195,7 @@ function ApplicationForm(props) {
                             <MenuItem value={"abs07"}>기타</MenuItem>
                         </Select>
                     </FormControl>
+                    </>
                 )
             }
 
