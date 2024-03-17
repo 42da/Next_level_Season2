@@ -11,10 +11,7 @@ import com.nextlevel.evas.domain.Employee;
 import com.nextlevel.evas.domain.Vacation;
 import com.nextlevel.evas.form.EmployeeIdForm;
 import com.nextlevel.evas.form.VacationApplicationForm;
-<<<<<<< HEAD
 import com.nextlevel.evas.form.VacationApprovalForm;
-=======
->>>>>>> 00b6e2b92347a9d0255e0be53eefa98845c699c8
 import com.nextlevel.evas.form.VacationDeletionForm;
 import com.nextlevel.evas.service.AdminService;
 
