@@ -12,6 +12,7 @@ import com.nextlevel.evas.domain.Employee;
 import com.nextlevel.evas.domain.Vacation;
 import com.nextlevel.evas.domain.VacationDate;
 import com.nextlevel.evas.form.VacationApplicationForm;
+import com.nextlevel.evas.form.VacationDeletionForm;
 import com.nextlevel.evas.repository.AdminRepository;
 
 @Service
@@ -86,6 +87,7 @@ public class AdminService {
   // 연차 조회 시
   public Map<String, List<Vacation>> findByEmployeeIdList(String employeeId) {
     Map<String, List<Vacation>> result = new HashMap<String, List<Vacation>>();
+
     // 사원
     if (employeeId != null) {
       result.put("applicationList", adminRepository.findByEmployeeIdApplication(employeeId));
@@ -97,6 +99,33 @@ public class AdminService {
       result.put("vacationList", adminRepository.findAllVacation());
     }
     return result;
+  }
+
+  // 연차 삭제 시
+  public int delete(VacationDeletionForm form) {
+    int result = 0;
+    if (form.getCode().equals("abs08")) {
+      result = adminRepository.deleteWholeDate(Integer.parseInt(form.getIdx()));
+    } else {
+      result = adminRepository.deleteDate(Integer.parseInt(form.getIdx()));
+    }
+
+    if (result > 0) {
+      result = 0;
+      if (form.getCode().equals("abs08")) {
+        result = adminRepository.deleteWhole(Integer.parseInt(form.getIdx()));
+      } else {
+        result = adminRepository.delete(Integer.parseInt(form.getIdx()));
+      }
+    } else {
+      return -1;
+    }
+
+    if (result > 0) {
+      return Integer.parseInt(form.getIdx());
+    } else {
+      return -1;
+    }
   }
 
   private LocalDate parseStringToDate(String str) {

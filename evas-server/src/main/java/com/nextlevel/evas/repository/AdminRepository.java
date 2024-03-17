@@ -15,12 +15,14 @@ public interface AdminRepository {
   // 전체 연차
   int insertWhole(Vacation vacation);
   int updateWhole(Vacation vacation);
+  int deleteWhole(int idx);
 
   Vacation findWholeByIdx(int idx);
 
   // 사원 연차
   int insert(Vacation vacation);
   int update(Vacation vacation);
+  int delete(int idx);
 
   Vacation findByIdx(int idx);
 
@@ -35,6 +37,6 @@ public interface AdminRepository {
 
   // 전체 연차 날짜
   int insertWholeDate(List<VacationDate> vacationDateList);
-  int deleteWholeDate(int wholeVacationIdx);
+  int deleteWholeDate(int vacationIdx);
 
 }
