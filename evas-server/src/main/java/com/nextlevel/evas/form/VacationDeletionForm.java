@@ -12,7 +12,7 @@ public class VacationDeletionForm {
   public void setIdx(String idx) {
     this.idx = idx;
   }
-  
+
   public String getCode() {
     return code;
   }
