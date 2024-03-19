@@ -70,7 +70,7 @@ function Main() {
         
         <Grid item xs={6} sx={{ display: 'flex', justifyContent: "flex-end"}}>
         {(state.isAdmin && adminComp) && (
-          <EmployeeList employee={employee} setEmployee={setEmployee} />
+          <EmployeeList employee={employee} setEmployee={setEmployee} value={value} data={data} setData={setData}/>
                     )}
             <Card sx={{ minWidth: 150, justifyContent: "flex-end", ml: 2 }} variant="outlined">
               <CardContent align="right">
