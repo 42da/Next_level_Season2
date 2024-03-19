@@ -32,21 +32,21 @@ function CustomTabPanel(props) {
 
     const [modifyOpen, setModifyOpen] = useState([]);   // 각 row 의 수정 버튼 클릭 여부
 
-    const handleChange = (event) => {
-        setEmployee(event.target.value);
-        if (props.value == 0) {
+    // const handleChange = (event) => {
+    //     setEmployee(event.target.value);
+    //     if (props.value == 0) {
 
-        } else {
-            console.log(props.value === 1 ? 'application' : 'vacation');
-            axios.post('http://localhost:8080/admin/list', {
-                employeeId: event.target.value,
-                listType: props.value === 1 ? 'application' : 'vacation',
-            }).then((response) => {
-                
-            }).catch((error) => {
-            });
-        }
-    }
+    //     } else {
+    //         console.log(props.value === 1 ? 'application' : 'vacation');
+    //         axios.post('http://localhost:8080/admin/list', {
+    //             employeeId: event.target.value,
+    //             listType: props.value === 1 ? 'application' : 'vacation',
+    //         }).then((response) => {
+
+    //         }).catch((error) => {
+    //         });
+    //     }
+    // }
 
     const deleteList = (vacationIdx) => {
         axios.post('http://localhost:8080/main/delete', {
@@ -176,9 +176,14 @@ function CustomTabPanel(props) {
                                             <TableCell align="center">{row.content}</TableCell>
                                             <TableCell align="center">{row.approvalStatus}</TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">
-                                                <IconButton onClick={() => { modify(idx) }}>
-                                                    <DoDisturbOnIcon fontSize="small" />
-                                                </IconButton>
+                                                {
+                                                    row.isWhole === "Y" && (
+                                                        <IconButton onClick={() => { modify(idx) }}>
+                                                            <DoDisturbOnIcon fontSize="small" />
+                                                        </IconButton>
+                                                    )
+                                                }
+
                                             </TableCell>
                                         </TableRow>
                                         <TableRow>

@@ -14,6 +14,16 @@ export default function EmployeeList(props) {
 
     const handleChange = (event) => {
         props.setEmployee(event.target.value);
+        if (props.value !== 0) {
+            axios.post('http://localhost:8080/admin/list', {
+                employeeId: event.target.value,
+            }).then((response) => {
+                props.setData({calendarList: props.data.calendarList, applicationList: response.data.applicationList, vacationList: response.data.vacationList});
+                console.log("employee response : ", response);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
     };
 
     useEffect(() => {
@@ -22,7 +32,6 @@ export default function EmployeeList(props) {
             //const newEmployeeList = employeeList.concat(response.data.employeeList);
             setEmployeeList([...employeeList, ...response.data.employeeList]);
             console.log("employee response : ", response);
-
         }).catch((error) => {
             console.log(error);
         });
