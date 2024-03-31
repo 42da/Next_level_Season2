@@ -28,9 +28,10 @@
   </delete>
   
   <select id="findWholeByIdx" resultType="Vacation">
-    SELECT *, 'abs08' as code, 'A' as approval_status, 'Y' AS is_whole
-    FROM whole_vacation
-    WHERE idx = #{idx}
+    SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date, 'Y' AS is_whole
+    FROM whole_vacation v JOIN whole_vacation_date vh ON v.idx = vh.vacation_idx
+    WHERE v.idx = #{idx}
+    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
   </select>
   
   <insert id="insert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
@@ -51,7 +52,7 @@
   </update>
   
   <select id="findByIdx" resultType="Vacation">
-    SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
+    SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date, 'N' AS is_whole
     FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE v.idx = #{idx}
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx

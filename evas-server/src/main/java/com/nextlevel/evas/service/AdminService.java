@@ -46,7 +46,7 @@ public class AdminService {
   }
 
   // 연차 신청, 수정 시
-  public Map<String, List<Vacation>> apply(VacationApplicationForm form) {
+  public Vacation apply(VacationApplicationForm form) {
     Vacation vacation = new Vacation();
 
     vacation.setCode(form.getCode());
@@ -161,7 +161,7 @@ public class AdminService {
     return vacationDateList;
   }
 
-  private Map<String, List<Vacation>> setVacationDate(int idx, VacationApplicationForm form, String type) {
+  private Vacation setVacationDate(int idx, VacationApplicationForm form, String type) {
     List<VacationDate> vacationDateList = createVacationDateList(idx, form.getDate());
 
     int result = 0;
@@ -183,17 +183,11 @@ public class AdminService {
     }
 
     if (result > 0) {
-      Map<String, List<Vacation>> resultList = new HashMap<String, List<Vacation>>();
-
       if (form.getCode().equals("abs08")) {
-        resultList.put("applicationList", adminRepository.findAllApplication());
-        resultList.put("vacationList", adminRepository.findAllVacation());
+        return adminRepository.findWholeByIdx(idx);
       } else {
-        resultList.put("applicationList", adminRepository.findByEmployeeIdApplication(form.getEmployeeId()));
-        resultList.put("vacationList", adminRepository.findEmployeeIdVacation(form.getEmployeeId()));
+        return adminRepository.findByIdx(idx);
       }
-
-      return resultList;
     } else {
       return null;
     }
