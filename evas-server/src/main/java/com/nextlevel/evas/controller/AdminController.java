@@ -39,7 +39,7 @@ public class AdminController {
 
   @PostMapping({"admin/apply", "admin/update"})
   @ResponseBody
-  public Map<String, List<Vacation>> apply(@RequestBody VacationApplicationForm form) {
+  public Vacation apply(@RequestBody VacationApplicationForm form) {
     return adminService.apply(form);
   }
 
