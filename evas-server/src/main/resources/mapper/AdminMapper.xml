@@ -45,6 +45,12 @@
     WHERE idx = #{idx}
   </update>
   
+  <delete id="delete" parameterType="int">
+    DELETE
+    FROM vacation
+    WHERE idx = #{idx}
+  </delete>
+  
   <update id="updateAppravalStatus">
     UPDATE vacation
     SET approval_status = #{approvalStatus}, rejection_content = #{rejectionContent}
