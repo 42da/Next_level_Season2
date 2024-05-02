@@ -53,6 +53,7 @@ public class AdminService {
     vacation.setStart(parseStringToDate(form.getStart()));
     vacation.setEnd(parseStringToDate(form.getEnd()));
     vacation.setContent(form.getContent());
+    vacation.setApprovalStatus("A");
     vacation.setEmployeeId(form.getEmployeeId());
 
     int result = 0;
