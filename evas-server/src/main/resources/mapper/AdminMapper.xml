@@ -64,7 +64,7 @@
     GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
   </select>
   
-  <select id="findByEmployeeIdApplication" resultType="Vacation">
+  <select id="findApplicationByEmployeeId" resultType="Vacation">
     SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date
     FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
@@ -74,7 +74,7 @@
     ORDER BY v.start desc
   </select>
   
-  <select id="findEmployeeIdVacation" resultType="Vacation">
+  <select id="findVacationByEmployeeId" resultType="Vacation">
     SELECT res.*
     FROM (
       (SELECT *, 'N' AS is_whole FROM vacation

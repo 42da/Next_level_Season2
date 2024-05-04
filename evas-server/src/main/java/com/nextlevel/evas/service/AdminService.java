@@ -92,8 +92,8 @@ public class AdminService {
 
     // 사원
     if (employeeId != null) {
-      result.put("applicationList", adminRepository.findByEmployeeIdApplication(employeeId));
-      result.put("vacationList", adminRepository.findEmployeeIdVacation(employeeId));
+      result.put("applicationList", adminRepository.findApplicationByEmployeeId(employeeId));
+      result.put("vacationList", adminRepository.findVacationByEmployeeId(employeeId));
 
       // 전체
     } else {

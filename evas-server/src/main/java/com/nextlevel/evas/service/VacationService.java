@@ -26,6 +26,10 @@ public class VacationService {
 
   // main 접속, 새로 고침 시
   public Map<String, List<Vacation>> findAllList(String employeeId) {
+    // 연차 사용 상태 업데이트
+    vacationRepository.updateUseStatus();
+    vacationRepository.updateWholeUseStatus();
+
     Map<String, List<Vacation>> result = new HashMap<String, List<Vacation>>();
 
     result.put("applicationList", vacationRepository.findAllApplicationByEmployeeId(employeeId));
