@@ -53,6 +53,7 @@ public class AdminService {
     vacation.setStart(parseStringToDate(form.getStart()));
     vacation.setEnd(parseStringToDate(form.getEnd()));
     vacation.setContent(form.getContent());
+    vacation.setApprovalStatus("A");
     vacation.setEmployeeId(form.getEmployeeId());
 
     int result = 0;
@@ -91,8 +92,8 @@ public class AdminService {
 
     // 사원
     if (employeeId != null) {
-      result.put("applicationList", adminRepository.findByEmployeeIdApplication(employeeId));
-      result.put("vacationList", adminRepository.findEmployeeIdVacation(employeeId));
+      result.put("applicationList", adminRepository.findApplicationByEmployeeId(employeeId));
+      result.put("vacationList", adminRepository.findVacationByEmployeeId(employeeId));
 
       // 전체
     } else {

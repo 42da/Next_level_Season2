@@ -25,7 +25,7 @@ public class AdminController {
     this.adminService = adminService;
   }
 
-  @PostMapping("employee")
+  @PostMapping("admin/employee")
   @ResponseBody
   public Map<String, List<Employee>> findAllEmployeeList() {
     return adminService.findAllEmployeeList();
