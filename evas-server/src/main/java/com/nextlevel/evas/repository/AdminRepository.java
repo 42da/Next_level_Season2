@@ -29,8 +29,9 @@ public interface AdminRepository {
 
   Vacation findByIdx(int idx);
 
-  List<Vacation> findByEmployeeIdApplication(String employeeId);
-  List<Vacation> findEmployeeIdVacation(String employeeId);
+  List<Vacation> findApplicationByEmployeeId(String employeeId);
+  List<Vacation> findVacationByEmployeeId(String employeeId);
+
   List<Vacation> findAllApplication();
   List<Vacation> findAllVacation();
 
