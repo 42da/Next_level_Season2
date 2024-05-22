@@ -24,13 +24,13 @@
   <update id="updateUseStatus">
     UPDATE vacation
     SET use_status = 'U'
-    WHERE DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) &gt;= 0;
+    WHERE DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) &lt;= 0;
   </update>
   
   <update id="updateWholeUseStatus">
     UPDATE whole_vacation
     SET use_status = 'U'
-    WHERE DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) &gt;= 0;
+    WHERE DATEDIFF(start, DATE_FORMAT(now(), '%Y-%m-%d')) &lt;= 0;
   </update>
   
   <update id="updateCancellationContent">
