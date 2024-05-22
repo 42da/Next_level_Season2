@@ -16,6 +16,9 @@ public class Employee {
 
   private Boolean isAdmin;
 
+  private String authority;
+  private String accessToken;
+
   public String getLoginId() {
     return loginId;
   }
@@ -78,6 +81,22 @@ public class Employee {
 
   public void setIsAdmin(Boolean isAdmin) {
     this.isAdmin = isAdmin;
+  }
+
+  public String getAuthority() {
+    return authority;
+  }
+
+  public void setAuthority(String authority) {
+    this.authority = authority;
+  }
+
+  public String getAccessToken() {
+    return accessToken;
+  }
+
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
   }
 
 }

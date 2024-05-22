@@ -3,6 +3,7 @@ package com.nextlevel.evas.controller;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,24 +28,28 @@ public class AdminController {
 
   @PostMapping("admin/employee")
   @ResponseBody
+  @PreAuthorize("hasAnyRole('ADMIN')")
   public Map<String, List<Employee>> findAllEmployeeList() {
     return adminService.findAllEmployeeList();
   }
 
   @PostMapping("admin")
   @ResponseBody
+  @PreAuthorize("hasAnyRole('ADMIN')")
   public Map<String, List<Vacation>> findAllList() {
     return adminService.findAllList();
   }
 
   @PostMapping({"admin/apply", "admin/update"})
   @ResponseBody
+  @PreAuthorize("hasAnyRole('ADMIN')")
   public Vacation apply(@RequestBody VacationApplicationForm form) {
     return adminService.apply(form);
   }
 
   @PostMapping("admin/list")
   @ResponseBody
+  @PreAuthorize("hasAnyRole('ADMIN')")
   public Map<String, List<Vacation>> findByEmployeeIdList(@RequestBody EmployeeIdForm form) {
     return adminService.findByEmployeeIdList(form.getEmployeeId());
   }
@@ -54,12 +59,14 @@ public class AdminController {
   // ‘삭제’로 처리
   @PostMapping("admin/cancel")
   @ResponseBody
+  @PreAuthorize("hasAnyRole('ADMIN')")
   public int delete(@RequestBody VacationDeletionForm form) {
     return adminService.delete(form);
   }
 
   @PostMapping("admin/approve")
   @ResponseBody
+  @PreAuthorize("hasAnyRole('ADMIN')")
   public Vacation approve(@RequestBody VacationApprovalForm form) {
     return adminService.approve(form);
   }

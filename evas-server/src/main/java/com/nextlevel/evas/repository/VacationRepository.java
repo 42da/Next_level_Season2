@@ -15,7 +15,6 @@ public interface VacationRepository {
 
   int updateUseStatus();
   int updateWholeUseStatus();
-
   int updateCancellationContent(@Param("idx") int idx, @Param("cancellationContent") String cancellationContent);
 
   Vacation findByIdx(int idx);

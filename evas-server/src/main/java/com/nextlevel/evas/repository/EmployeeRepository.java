@@ -12,4 +12,6 @@ public interface EmployeeRepository {
 
   float findUseVacationCountByEmployeeId(String employeeId);
 
+  Employee findWithAuthoritiesByLoginId(String loginId);
+
 }

@@ -5,7 +5,7 @@
 
 <mapper namespace="com.nextlevel.evas.repository.EmployeeRepository">
   <select id="findByLoginId" resultType="Employee">
-    select employee_id, name, reset_vacation_date, total_vacation_count, is_admin
+    select employee_id, name, reset_vacation_date, total_vacation_count, is_admin, authority
     from employee
     where login_id = #{loginId} and password = #{password}
   </select>
@@ -21,5 +21,11 @@
       from whole_vacation
       where use_status = 'U')
     ) as res;
+  </select>
+  
+  <select id="findWithAuthoritiesByLoginId" resultType="Employee">
+    select *
+    from employee
+    where login_id = #{loginId}
   </select>
 </mapper>
