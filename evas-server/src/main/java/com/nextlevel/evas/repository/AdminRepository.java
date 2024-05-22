@@ -31,7 +31,6 @@ public interface AdminRepository {
 
   List<Vacation> findApplicationByEmployeeId(String employeeId);
   List<Vacation> findVacationByEmployeeId(String employeeId);
-
   List<Vacation> findAllApplication();
   List<Vacation> findAllVacation();
 
