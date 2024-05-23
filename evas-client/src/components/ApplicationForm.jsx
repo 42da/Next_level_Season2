@@ -21,10 +21,12 @@ import SendIcon from '@mui/icons-material/Send';
 import ResetTv from '@mui/icons-material/ResetTv';
 
 import axios from 'axios';
+
 import Edit from '@mui/icons-material/Edit';
 
 import holiday from "../data/holiday";
 import { dayjsLocalizer } from 'react-big-calendar';
+import { instance } from '../interceptors/axios';
 
 // import EmployeeList from './EmployeeList';
 
@@ -50,18 +52,34 @@ function ApplicationForm(props) {
         employeeId: props.employeeId,
     });
     const [modifyOrCancel, setModifyOrCancel] = useState("modify"); // 수정 or 취소 여부
+    const [apprOrRej, setApprOrRej] = useState("A"); // 승인 or 거절 여부
 
-    const handleChange = (event) => {
-        if (event.target.value === "abs08" && props.adminComp) {
-            props.setEmployee(event.target.value);
-        }
-        setVacation(event.target.value);
-        setSendData({ ...sendData, code: event.target.value });
+    const handleChange = (event, type) => {
+        switch (type) {
+            case 'vacation':
+                if (event.target.value === "abs08" && props.adminComp) {
+                    props.setEmployee(event.target.value);
+                }
+                setVacation(event.target.value);
+                setSendData({ ...sendData, code: event.target.value });
+                break;
+            case 'appr':
+                setApprOrRej(event.target.value);
+                if (event.target.value === "R") {
+                    
+                }
+                break;
+            }
+                
     };
     const handleChangeReason = (event) => {
         // 수정 시 입력 안됨.(value 를 props 로 받아서 고정되는듯?)
         setVacationReason(event.target.value);
-        setSendData({ ...sendData, content: event.target.value });
+        if (props.value === 1 && props.adminComp) {
+            setSendData({ ...sendData, rejectionContent: event.target.value });
+        } else {
+            setSendData({ ...sendData, content: event.target.value });
+        }
     };
     const handleChangeDate = (value, startOrEnd) => {
         const formattedDate = dayjs(value).format("YYYY-MM-DD");
@@ -94,6 +112,7 @@ function ApplicationForm(props) {
         let url = 'http://localhost:8080/';
         if (props.adminComp) url += "admin/";
         else url += "main/";
+        
         if (props.isModify && modifyOrCancel === "modify") url += "update";
         else if (modifyOrCancel === "cancel") url += "cancel";
         else {
@@ -102,16 +121,21 @@ function ApplicationForm(props) {
 
         let idx = null;
         if (props.isModify && modifyOrCancel === "modify") idx = props.data.applicationList.filter((row) => row.idx === props.rowIdx)[0].idx;
-        else if (modifyOrCancel === "cancel") idx = props.data.vacationList.filter((row) => row.idx === props.rowIdx)[0].idx;
+        else if (modifyOrCancel === "cancel") {
+            idx = props.data.vacationList.filter((row) => row.idx === props.rowIdx)[0].idx;
+            sendData.code = props.data.vacationList.filter((row) => row.idx === props.rowIdx)[0].code;
+        }
         // 신청, 수정
-        axios.post(url, {
+        instance.post(url, {
             idx: idx,
             code: sendData.code,
             start: sendData.start,
             end: sendData.end,
             content: sendData.content,
             date: getWeekDays(sendData.start, sendData.end),
-            employeeId: props.employeeId,
+            employeeId: props.adminComp ? props.employee : props.employeeId,
+            cancellationContent: modifyOrCancel === "cancel" ? sendData.content : "",
+            rejectionContent: (props.value === 1 && props.adminComp) ? sendData.content : "",
         }).then((response) => {
             const responseData = response.data;
             const newData = {
@@ -124,28 +148,59 @@ function ApplicationForm(props) {
                 cancellationContent: responseData.cancellationContent,
                 employeeId: responseData.employeeId,
                 date: responseData.date,
-                rejection: responseData.rejection,
+                rejectionContent: responseData.rejectionContent,
                 type: responseData.type,
                 useStatus: responseData.useStatus
             };
             if (props.isModify) {
                 console.log("modify response : ", responseData);
-                let modifiedList = props.data.applicationList;
-                modifiedList.splice(props.idx, 1, responseData);
+                let modifiedAppList = props.data.applicationList;
+                let modifiedVacList = props.data.vacationList;
+                if (modifyOrCancel === "cancel") {
+                    if (!props.adminComp) {
+                        modifiedAppList.push(responseData);
+                    }
+                } else {
+                    if (props.adminComp) {
+                        modifiedAppList.splice(props.idx, 1);
+                        modifiedVacList.push(responseData);
+                    } else {
+                        modifiedAppList.splice(props.idx, 1, responseData);
+                    }
+                }
                 props.modify(props.idx);
-                
-                props.setData({
-                    vacationList: [...props.data.vacationList],
-                    calendarList: [...props.data.calendarList.filter((row) => row.idx !== responseData.idx), newData],
-                    applicationList: modifiedList
-                });
+                if (modifyOrCancel === "cancel") {
+                    props.setData({
+                        vacationList: [...props.data.vacationList.filter((row) => row.idx !== (typeof responseData === 'number' ? responseData : responseData.idx))],
+                        calendarList: [...props.data.calendarList.filter((row) => row.idx !== (typeof responseData === 'number' ? responseData : responseData.idx))],
+                        applicationList: modifiedAppList
+                    });
+                    if (!props.adminComp) props.setValue(1);
+                } else {
+                    props.setData({
+                        vacationList: modifiedVacList,
+                        calendarList: [...props.data.calendarList.filter((row) => row.idx !== responseData.idx), responseData],
+                        applicationList: modifiedAppList
+                    });
+                }
             } else {
                 console.log("apply response : ", responseData);
-                props.setValue(1);
-                props.setData({
-                    vacationList: [...props.data.vacationList],
-                    calendarList: [...props.data.calendarList, newData], applicationList: [...props.data.applicationList, newData]
-                });
+                if (props.adminComp) {
+                    props.setValue(2);
+                    props.setData({
+                        vacationList: [...props.data.vacationList, responseData],
+                        calendarList: [...props.data.calendarList, responseData], 
+                        applicationList: [...props.data.applicationList]
+                    });
+                } else {
+                    props.setValue(1);
+                    props.setData({
+                        vacationList: [...props.data.vacationList],
+                        calendarList: [...props.data.calendarList, responseData], 
+                        applicationList: [...props.data.applicationList, responseData]
+                    });
+                }
+                
             }
         }).catch((error) => {
             console.log(error);
@@ -173,7 +228,21 @@ function ApplicationForm(props) {
     return (
         <>
             {
-                props.value !== 2 && (
+                (props.adminComp && props.value == 1) ? (<>
+                <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">승인 및 거절</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={apprOrRej}
+                            label="승인 및 거절"
+                            onChange={(e) => {handleChange(e, 'appr')}}
+                        >
+                            <MenuItem value={"A"}>승인</MenuItem>
+                            <MenuItem value={"R"}>거절</MenuItem>
+                        </Select>
+                    </FormControl>
+                </>) : props.value !== 2 && (
                     <>
                     {/* {props.adminComp && <EmployeeList value={props.value} />} */}
                     <FormControl fullWidth>
@@ -183,7 +252,7 @@ function ApplicationForm(props) {
                             id="demo-simple-select"
                             value={vacation}
                             label="연차 종류"
-                            onChange={handleChange}
+                            onChange={(e) => {handleChange(e, 'vacation')}}
                         >
                             {props.adminComp && <MenuItem value={"abs08"}>전체 연차</MenuItem>}
                             <MenuItem value={"abs01"}>연차</MenuItem>
@@ -198,17 +267,21 @@ function ApplicationForm(props) {
                     </>
                 )
             }
-
-            <TextField
+            {
+                !(apprOrRej === "A" && props.adminComp && props.value == 1 ) && (
+                    <TextField
                 id="outlined-basic"
-                label={props.value === 2 ? "취소 사유" : "연차 사유"}
+                label={props.value === 2 ? "취소 사유" : ((props.value === 1 && props.adminComp )? "거절 사유" : "연차 사유")}
                 variant="outlined"
                 value={vacationReason}
                 onChange={handleChangeReason}
                 sx={{ mt: props.value === 2 ? 0 : 3, width: '100%' }}
             />
+                ) // 거절 시 사유 입력란 추가
+            }
+            
             {
-                props.value !== 2 && (
+                !(props.value === 2 || (props.value === 1 && props.adminComp))  && (
                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                         {/* 주말 비활성화(shouldDisableDate) */}
                         <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ mt: 3 }}>
@@ -243,7 +316,7 @@ function ApplicationForm(props) {
                 {
                     props.isModify ? (
                         <Button onClick={() => { submit("update") }} variant="contained" startIcon={<Edit />}>
-                            {modifyOrCancel === "modify" ? "수정" : "취소"}
+                            {modifyOrCancel === "modify" ? (props.adminComp ? "확인" : "수정") : "취소"}
                         </Button>
                     ) : (
                         <>

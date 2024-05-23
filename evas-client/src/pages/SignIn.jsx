@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useContext} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 import axios from 'axios';
 
 function Copyright(props) {
@@ -20,7 +21,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        NLEVAS
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -34,12 +35,23 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     
-    axios.post('http://localhost:8080/login', {
+    try {
+      const response = await login(data.get('id'), data.get('passwd'));
+      // 로그인 성공
+      navigate('/main', {state: {employeeId: response.data.employeeId,
+        resetVacationDate: response.data.resetVacationDate,
+        isAdmin: response.data.isAdmin, totalVacationCount : response.data.totalVacationCount, useVacationCount: response.data.useVacationCount} });
+    } catch (error) {
+      console.log("login error : ", error);
+    }
+/*
+    axios.post('/login', {
       loginId: data.get('id'),
       password: data.get('passwd'),
     }).then((response) => {
@@ -53,7 +65,7 @@ export default function SignIn() {
     }).catch((error) => {
       console.log(error);
     });
-    
+    */
     //navigate('/main');
   };
 
@@ -81,8 +93,8 @@ export default function SignIn() {
               required
               fullWidth
               id="id"
-              label="id"
               name="id"
+              label="ID"
               autoComplete="id"
               autoFocus
             />
@@ -90,16 +102,16 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
+              id="passwd"
               name="passwd"
               label="Passwd"
-              type="passwd"
-              id="passwd"
+              type="password"
               autoComplete="current-passwd"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
@@ -108,7 +120,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
@@ -119,7 +131,7 @@ export default function SignIn() {
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

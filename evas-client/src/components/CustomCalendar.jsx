@@ -9,6 +9,7 @@ import 'dayjs/locale/ko';
 
 import holiday from '../data/holiday';
 import { date } from 'date-arithmetic';
+import employeeList from '../data/employee';
 
 // Localizer for the calendar
 moment.locale('ko');
@@ -77,7 +78,7 @@ const CustomCalendar = (props) => {
       return {
         start: new Date(item.start), //new Date("2023-11-01"), // date 불러오기
         end: new Date(item.end), //end: new Date("2023-11-02"),   // 언제까지 불러올지
-        title: item.employeeId, //title: 'Some title', // employeeId
+        title: employeeList[item.employeeId], //title: 'Some title', // employeeId
       }
     }));
   }, [props.data]);

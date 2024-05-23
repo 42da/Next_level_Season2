@@ -16,12 +16,15 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
 import EditIcon from '@mui/icons-material/Edit';
+import ApprovalIcon from '@mui/icons-material/Approval';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
+import Cancel from '@mui/icons-material/Cancel';
 
 import ApplicationForm from "./ApplicationForm";
 import { IconButton } from "@mui/material";
 
+import {absCode, approvalStatus, useStatus} from "../data/abscode";
+import { instance } from "../interceptors/axios";
 // import EmployeeList from "./EmployeeList";
 
 dayjs.locale('ko');
@@ -49,7 +52,7 @@ function CustomTabPanel(props) {
     // }
 
     const deleteList = (vacationIdx) => {
-        axios.post('http://localhost:8080/main/delete', {
+        instance.post('/main/delete', {
             idx: vacationIdx,
         }).then((response) => {
             props.setData({ vacationList: [...props.data.vacationList], calendarList: [...props.data.calendarList], applicationList: [...props.data.applicationList.filter((row) => row.idx !== response.data)] });
@@ -80,11 +83,9 @@ function CustomTabPanel(props) {
             aria-labelledby={`simple-tab-${props.index}`}
         >
             {props.value === 0 && (
-                <>
-                    <Box sx={{ pt: 3 }}>
-                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={false} isAdmin={props.isAdmin} adminComp={props.adminComp} setEmployee={props.setEmployee} />
-                    </Box>
-                </>
+                <Box sx={{ pt: 3 }}>
+                    <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} setValue={props.setValue} setData={props.setData} data={props.data} isModify={false} isAdmin={props.isAdmin} adminComp={props.adminComp} employee={props.employee} setEmployee={props.setEmployee} />
+                </Box>
             )}
             {props.value === 1 && (
                 <Box sx={{ pt: 3 }}>
@@ -99,7 +100,7 @@ function CustomTabPanel(props) {
                                     <TableCell sx={{ width: '25%' }} align="center">기간</TableCell>
                                     <TableCell sx={{ width: '25%' }} align="center">사유</TableCell>
                                     <TableCell sx={{ width: '10%' }} align="center">상태</TableCell>
-                                    <TableCell sx={{ width: '20%' }} align="center">수정 및 삭제</TableCell>
+                                    <TableCell sx={{ width: '20%' }} align="center">{props.adminComp ? "승인 및 거절" : "수정 및 삭제"}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -108,18 +109,22 @@ function CustomTabPanel(props) {
                                         <TableRow
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                             <TableCell sx={{ minWidth: '20%' }} align="center" scope="row">
-                                                {row.code}
+                                                {absCode[row.code]}
                                             </TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">{row.start} ~ {row.end}</TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">{row.content}</TableCell>
-                                            <TableCell sx={{ minWidth: '20%' }} align="center">{row.approvalStatus}</TableCell>
+                                            <TableCell sx={{ minWidth: '20%' }} align="center">{approvalStatus[row.approvalStatus]}</TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">
                                                 <IconButton onClick={() => { modify(idx) }}>
-                                                    <EditIcon fontSize="small" />
+                                                    {props.adminComp ? (
+                                                        <ApprovalIcon fontSize="small" />
+                                                    ) : (<EditIcon fontSize="small" />)}
+                                                    
                                                 </IconButton>
-                                                <IconButton onClick={() => { deleteList(row.idx) }}>
+                                                {!props.adminComp && (<IconButton onClick={() => { deleteList(row.idx) }}>
                                                     <DeleteIcon fontSize="small" />
-                                                </IconButton>
+                                                </IconButton>)}
+                                                
                                             </TableCell>
                                         </TableRow>
                                         <TableRow>
@@ -130,7 +135,7 @@ function CustomTabPanel(props) {
                                                             <TableRow>
                                                                 <TableCell align="left" scope="row">
                                                                     <Box sx={{ pt: 2, }}>
-                                                                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} value={props.value} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify} />
+                                                                        <ApplicationForm date={date} setDate={setDate} employeeId={props.employeeId} value={props.value} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify} adminComp={props.adminComp}/>
                                                                     </Box>
                                                                 </TableCell>
                                                             </TableRow>
@@ -151,7 +156,7 @@ function CustomTabPanel(props) {
                     {/* {(props.isAdmin && props.adminComp) && (
                         <EmployeeList value={props.value} onChange={handleChange} employee={employee} />
                     )} */}
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} sx={{maxHeight: 600}}>
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
@@ -170,16 +175,16 @@ function CustomTabPanel(props) {
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
                                             <TableCell align="center" scope="row">
-                                                {row.code}
+                                                {absCode[row.code]}
                                             </TableCell>
                                             <TableCell align="center">{row.start} ~ {row.end}</TableCell>
                                             <TableCell align="center">{row.content}</TableCell>
-                                            <TableCell align="center">{row.approvalStatus}</TableCell>
+                                            <TableCell align="center">{useStatus[row.useStatus]}</TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">
                                                 {
-                                                    row.isWhole === "Y" && (
+                                                    (props.adminComp || row.isWhole !== "Y") && (
                                                         <IconButton onClick={() => { modify(idx) }}>
-                                                            <DoDisturbOnIcon fontSize="small" />
+                                                            <Cancel fontSize="small" />
                                                         </IconButton>
                                                     )
                                                 }
@@ -194,7 +199,7 @@ function CustomTabPanel(props) {
                                                             <TableRow>
                                                                 <TableCell align="left" scope="row">
                                                                     <Box sx={{ pt: 2, }}>
-                                                                        <ApplicationForm employeeId={props.employeeId} value={props.value} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify} />
+                                                                        <ApplicationForm employeeId={props.employeeId} value={props.value} setValue={props.setValue} setData={props.setData} data={props.data} isModify={true} rowIdx={row.idx} idx={idx} modify={modify} adminComp={props.adminComp} />
                                                                     </Box>
                                                                 </TableCell>
                                                             </TableRow>

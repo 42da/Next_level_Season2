@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { instance } from '../interceptors/axios';
 
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
@@ -20,7 +21,8 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 
 const drawerWidth = 240;
-let navItems = ['Sign Out', 'About', 'Contact'];
+//let navItems = ['Sign Out', 'About', 'Contact'];
+let navItems = ['Sign Out'];
 
 function DrawerAppBar(props) {
   const { window } = props;
@@ -41,7 +43,7 @@ function DrawerAppBar(props) {
   const handleChangeToAdminOrUser = () => {
     props.adminComp ? navItems[0] = 'Change To Admin' : navItems[0] = 'Change To User';
     props.setAdminComp(!props.adminComp);
-    axios.post('http://localhost:8080/admin', {
+    instance.post('/admin', {
     }).then((response) => {
       console.log("changeToAdminOrUser response : ", response);
     }).catch((error) => {
@@ -65,7 +67,7 @@ function DrawerAppBar(props) {
   }
   useEffect(() => {
     if (props.isAdmin) {
-      if (navItems.length === 3) navItems.splice(0, 0, "Change To Admin");
+      if (navItems.length === 1) navItems.splice(0, 0, "Change To Admin");
       else if (navItems[0] == "Change To User") navItems[0] = "Change To Admin";
     }
   }, []);

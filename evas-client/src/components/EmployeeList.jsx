@@ -7,16 +7,17 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import axios from 'axios';
+import { instance } from '../interceptors/axios';
 
 export default function EmployeeList(props) {
-    const [employeeList, setEmployeeList] = useState([{employeeId: 'abs08', name: '전체'}]);
+    const [employeeList, setEmployeeList] = useState([{employeeId: null, name: '전체'}]);
     //const [employee, setEmployee] = useState('');
 
     const handleChange = (event) => {
         props.setEmployee(event.target.value);
         if (props.value !== 0) {
-            axios.post('http://localhost:8080/admin/list', {
-                employeeId: event.target.value,
+            instance.post('/admin/list', {
+                employeeId: event.target.value === "전체" ? null : event.target.value,
             }).then((response) => {
                 props.setData({calendarList: props.data.calendarList, applicationList: response.data.applicationList, vacationList: response.data.vacationList});
                 console.log("employee response : ", response);
@@ -27,7 +28,8 @@ export default function EmployeeList(props) {
     };
 
     useEffect(() => {
-        axios.post('http://localhost:8080/employee', {
+        instance.post('/employee', {
+            
         }).then((response) => {
             //const newEmployeeList = employeeList.concat(response.data.employeeList);
             setEmployeeList([...employeeList, ...response.data.employeeList]);
@@ -50,7 +52,7 @@ export default function EmployeeList(props) {
                 >
                     {/* {props.data.applicationList.map((row, i) => (<MenuItem key={i} value={row.employeeId}>{row.employeeId} 이름</MenuItem>))} */}
                     {employeeList.map((row, i) => (
-                        
+                            row.employeeId === null ? <MenuItem key={i} value="전체">전체</MenuItem> :
                             <MenuItem key={i} value={row.employeeId}>{row.employeeId} {row.name}</MenuItem>
                         )
                     )}
