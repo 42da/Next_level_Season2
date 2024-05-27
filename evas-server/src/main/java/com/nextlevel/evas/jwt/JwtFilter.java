@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class JwtFilter extends GenericFilterBean {
 
   public static final String AUTHORIZATION_HEADER = "Authorization";
+  public static final String REFRESH_TOKEN_HEADER = "Refresh_Token";
   private TokenProvider tokenProvider;
 
   private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);

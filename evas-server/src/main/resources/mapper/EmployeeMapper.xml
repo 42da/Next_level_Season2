@@ -23,7 +23,7 @@
     ) as res;
   </select>
   
-  <select id="findWithAuthoritiesByLoginId" resultType="Employee">
+  <select id="findAuthorityByLoginId" resultType="Employee">
     select *
     from employee
     where login_id = #{loginId}

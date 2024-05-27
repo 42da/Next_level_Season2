@@ -35,6 +35,7 @@ public class TokenProvider implements InitializingBean {
   private static final String AUTHORITIES_KEY = "auth";
   private final String secret;
   private final long tokenValidityInMilliseconds;
+  private final long refreshTokenValidityInMilliseconds;
   private Key key;
 
   private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
@@ -42,9 +43,13 @@ public class TokenProvider implements InitializingBean {
   // @Value("${키}") : 빈 생성 시점에 application.properties에 정의되어 있는 값 주입
   public TokenProvider(
       @Value("${jwt.secret}") String secret,
-      @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+      @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds,
+      @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInMilliseconds) {
     this.secret = secret;
-    this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+    //    this.tokenValidityInMilliseconds = tokenValidityInMilliseconds * 1000;
+    this.tokenValidityInMilliseconds = 1000; // refresh 토큰 테스트용
+    this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds * 1000;
+
   }
 
   // 의존 관계가 끝나면 호출
@@ -70,7 +75,7 @@ public class TokenProvider implements InitializingBean {
    * 참고 : https://mangkyu.tistory.com/112
    * */
 
-  // 토큰 생성
+  // access 토큰 생성
   public String createToken(Authentication authentication) {
     // 권한을 가지고 옴
     String authorities = authentication.getAuthorities().stream()
@@ -80,6 +85,24 @@ public class TokenProvider implements InitializingBean {
     // 권한 정보를 사용하여 토큰 생성
     long now = (new Date()).getTime();
     Date validity = new Date(now + this.tokenValidityInMilliseconds);
+
+    return Jwts.builder()                           // JwtsBuilder 생성
+        .setSubject(authentication.getName())       // 토큰 주제 (사용자 이름)
+        .claim(AUTHORITIES_KEY, authorities)        // 토큰 정보 (auth, 사용자 권한)
+        .signWith(key, SignatureAlgorithm.HS512)    // 토큰 서명 (key를 HS512 알고리즘으로)
+        .setExpiration(validity)                    // 토큰 만료 시간
+        .compact();                                 // 토큰 생성
+  }
+
+  // refresh 토큰 생성
+  public String createRefreshToken(Authentication authentication) {
+    // 권한을 가지고 옴
+    String authorities = authentication.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.joining(","));
+
+    long now = (new Date()).getTime();
+    Date validity = new Date(now + this.refreshTokenValidityInMilliseconds);
 
     return Jwts.builder()                           // JwtsBuilder 생성
         .setSubject(authentication.getName())       // 토큰 주제 (사용자 이름)

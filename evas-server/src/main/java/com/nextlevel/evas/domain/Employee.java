@@ -18,6 +18,7 @@ public class Employee {
 
   private String authority;
   private String accessToken;
+  private String refreshToken;
 
   public String getLoginId() {
     return loginId;
@@ -97,6 +98,14 @@ public class Employee {
 
   public void setAccessToken(String accessToken) {
     this.accessToken = accessToken;
+  }
+
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
   }
 
 }
