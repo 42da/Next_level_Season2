@@ -182,7 +182,7 @@ function CustomTabPanel(props) {
                                             <TableCell align="center">{useStatus[row.useStatus]}</TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">
                                                 {
-                                                    (props.adminComp || row.isWhole !== "Y") && (
+                                                    (row.useStatus != "U" && (props.adminComp || row.isWhole !== "Y")) && (
                                                         <IconButton onClick={() => { modify(idx) }}>
                                                             <Cancel fontSize="small" />
                                                         </IconButton>

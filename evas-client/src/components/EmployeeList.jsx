@@ -28,7 +28,7 @@ export default function EmployeeList(props) {
     };
 
     useEffect(() => {
-        instance.post('/employee', {
+        instance.post('admin/employee', {
             
         }).then((response) => {
             //const newEmployeeList = employeeList.concat(response.data.employeeList);

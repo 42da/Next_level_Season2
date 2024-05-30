@@ -19,6 +19,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import AuthServices from '../services/authServices';
 
 const drawerWidth = 240;
 //let navItems = ['Sign Out', 'About', 'Contact'];
@@ -37,7 +38,18 @@ function DrawerAppBar(props) {
   };
 
   const handleSignOut = () => {
+    console.log(AuthServices.API_URL);
+    axios.post(AuthServices.API_URL + "/logout", {
+      loginId: props.loginId,
+    }).then((response) => {
+      console.log("logout response : ", response);
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     navigate('/');
+    }).catch((error) => {
+      console.log(error);
+    });
+    
   }
 
   const handleChangeToAdminOrUser = () => {
