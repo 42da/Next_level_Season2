@@ -43,12 +43,12 @@ function DrawerAppBar(props) {
       loginId: props.loginId,
     }).then((response) => {
       console.log("logout response : ", response);
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-    navigate('/');
     }).catch((error) => {
       console.log(error);
     });
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    navigate('/');
     
   }
 
