@@ -44,9 +44,12 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
     .authorizeHttpRequests((authz) -> authz
-        .requestMatchers("/login").permitAll()  // 로그인 요청 시 토큰이 없기 때문에 허용
+        .requestMatchers("/login", "/logout").permitAll()  // 로그인 요청 시 토큰이 없기 때문에 허용
         .anyRequest().authenticated()           // 모든 요청에 대해 인증
         )
+
+    // 로그아웃 처리 비활성화
+    .logout(AbstractHttpConfigurer::disable)
 
     // 익셉션 핸들링
     .exceptionHandling(exceptionHandling -> exceptionHandling

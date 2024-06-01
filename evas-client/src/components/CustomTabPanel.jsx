@@ -96,10 +96,10 @@ function CustomTabPanel(props) {
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell sx={{ width: '15%' }} align="center">연차 종류</TableCell>
-                                    <TableCell sx={{ width: '25%' }} align="center">기간</TableCell>
+                                    <TableCell sx={{ width: '20%' }} align="center">연차 종류</TableCell>
+                                    <TableCell sx={{ width: '20%' }} align="center">기간</TableCell>
                                     <TableCell sx={{ width: '25%' }} align="center">사유</TableCell>
-                                    <TableCell sx={{ width: '10%' }} align="center">상태</TableCell>
+                                    <TableCell sx={{ width: '15%' }} align="center">상태</TableCell>
                                     <TableCell sx={{ width: '20%' }} align="center">{props.adminComp ? "승인 및 거절" : "수정 및 삭제"}</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -112,8 +112,8 @@ function CustomTabPanel(props) {
                                                 {absCode[row.code]}
                                             </TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">{row.start} ~ {row.end}</TableCell>
-                                            <TableCell sx={{ minWidth: '20%' }} align="center">{row.content}</TableCell>
-                                            <TableCell sx={{ minWidth: '20%' }} align="center">{approvalStatus[row.approvalStatus]}</TableCell>
+                                            <TableCell sx={{ minWidth: '25%' }} align="center">{row.content}</TableCell>
+                                            <TableCell sx={{ minWidth: '15%' }} align="center">{approvalStatus[row.approvalStatus]}</TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">
                                                 <IconButton onClick={() => { modify(idx) }}>
                                                     {props.adminComp ? (
@@ -160,10 +160,10 @@ function CustomTabPanel(props) {
                         <Table sx={{ width: '100%' }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell sx={{ width: '15%' }} align="center">연차 종류</TableCell>
-                                    <TableCell sx={{ width: '25%' }} align="center">기간</TableCell>
+                                    <TableCell sx={{ width: '20%' }} align="center">연차 종류</TableCell>
+                                    <TableCell sx={{ width: '20%' }} align="center">기간</TableCell>
                                     <TableCell sx={{ width: '25%' }} align="center">사유</TableCell>
-                                    <TableCell sx={{ width: '10%' }} align="center">상태</TableCell>
+                                    <TableCell sx={{ width: '15%' }} align="center">상태</TableCell>
                                     <TableCell sx={{ width: '20%' }} align="center">취소</TableCell>
                                 </TableRow>
                             </TableHead>

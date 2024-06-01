@@ -44,7 +44,7 @@ export default function SignIn() {
     try {
       const response = await login(data.get('id'), data.get('passwd'));
       // 로그인 성공
-      navigate('/main', {state: {employeeId: response.data.employeeId,
+      navigate('/main', {state: {employeeId: response.data.employeeId, name: response.data.name,
         resetVacationDate: response.data.resetVacationDate,
         isAdmin: response.data.isAdmin, totalVacationCount : response.data.totalVacationCount, useVacationCount: response.data.useVacationCount} });
     } catch (error) {
@@ -104,7 +104,7 @@ export default function SignIn() {
               fullWidth
               id="passwd"
               name="passwd"
-              label="Passwd"
+              label="Password"
               type="password"
               autoComplete="current-passwd"
             />

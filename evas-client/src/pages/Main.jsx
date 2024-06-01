@@ -121,7 +121,7 @@ function Main() {
           </>
         </Grid>
         <Grid item xs={6}>
-          <CustomCalendar data={data.calendarList} employeeId={state.employeeId} />
+          <CustomCalendar data={data.calendarList} name={state.name} />
         </Grid>
       </Grid>
 

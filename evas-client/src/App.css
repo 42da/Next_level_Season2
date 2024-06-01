@@ -1,0 +1,22 @@
+* {
+    white-space: pre-line;
+}
+
+.css-15o2b9f-MuiPaper-root-MuiCard-root {
+    margin-top: 20px;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+    font-size: large;
+    text-align: left;
+}
+
+.rbc-off-range-bg {
+    background: white;
+}
+
+.rbc-event-content {
+    font-size: small;
+    font-weight: bold;
+    text-align: center;
+}

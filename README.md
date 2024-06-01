@@ -25,6 +25,10 @@
 - 로그인
     - Spring Security, JWT 이용
 
+<img src=./image/login.PNG>
+
+- 로그아웃
+
 <br>
 
 - 개인 / 전체 연차 신청

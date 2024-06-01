@@ -1,6 +1,7 @@
 package com.nextlevel.evas.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +10,8 @@ import com.nextlevel.evas.domain.Employee;
 import com.nextlevel.evas.form.LoginForm;
 import com.nextlevel.evas.form.LoginIdForm;
 import com.nextlevel.evas.service.EmployeeService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class EmployeeController {
@@ -30,8 +33,11 @@ public class EmployeeController {
   }
 
   @PostMapping("logout")
-  public void logout(@RequestBody LoginIdForm form) {
-    employeeService.logout(form.getLoginId());
+  public void logout(@RequestBody LoginIdForm form, HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    employeeService.logout(form.getLoginId(), request, response, authentication);
+
+    // 응답 상태 코드를 200으로 설정
+    response.setStatus(HttpServletResponse.SC_OK);
   }
 
 }

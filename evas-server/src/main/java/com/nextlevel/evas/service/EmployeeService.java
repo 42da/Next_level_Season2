@@ -11,12 +11,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import com.nextlevel.evas.domain.Employee;
 import com.nextlevel.evas.jwt.JwtFilter;
 import com.nextlevel.evas.jwt.TokenProvider;
 import com.nextlevel.evas.repository.EmployeeRepository;
 import com.nextlevel.evas.repository.RefreshTokenRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class EmployeeService implements UserDetailsService {
@@ -67,8 +70,12 @@ public class EmployeeService implements UserDetailsService {
     return null;
   }
 
-  public void logout(String loginId) {
+  public void logout(String loginId, HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
     refreshTokenRepository.delete(loginId);
+
+    if (authentication != null) {
+      new SecurityContextLogoutHandler().logout(request, response, authentication);
+    }
   }
 
   @Override

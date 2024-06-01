@@ -151,12 +151,12 @@ function DrawerAppBar(props) {
           {drawer}
         </Drawer>
       </nav>
-      <Box component="main" sx={{ p: 1 }}>
+      {/* <Box component="main" sx={{ p: 1 }}>
         <Toolbar />
         <Typography>
 
         </Typography>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

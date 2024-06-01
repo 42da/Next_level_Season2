@@ -10,6 +10,7 @@ import 'dayjs/locale/ko';
 import holiday from '../data/holiday';
 import { date } from 'date-arithmetic';
 import employeeList from '../data/employee';
+import { alignProperty } from '@mui/material/styles/cssUtils';
 
 // Localizer for the calendar
 moment.locale('ko');
@@ -98,7 +99,7 @@ const CustomCalendar = (props) => {
   // Custom event style getter
   const eventStyleGetter = (event, start, end, isSelected) => {
     let style = {
-      backgroundColor: event.title === props.employeeId ? 'rgba(255, 0, 0, 0.1)' : 'lightblue',
+      backgroundColor: event.title === '전체' ? 'rgba(255, 0, 0, 0.1)' : 'lightblue',
       borderRadius: '0px',
       opacity: 0.8,
       color: 'black',
@@ -115,7 +116,7 @@ const CustomCalendar = (props) => {
     return React.cloneElement(React.Children.only(children), {
       style: {
         ...children.props.style,
-        backgroundColor: isWeekend ? 'rgba(255, 0, 0, 0.1)' : undefined,
+        backgroundColor: isWeekend ? 'rgba(102, 102, 102, 0.1)' : undefined,
       },
     });
   };
@@ -123,7 +124,7 @@ const CustomCalendar = (props) => {
     (date) => {return ({
       ...((((dayjs(date).day() === 0 || dayjs(date).day() === 6) && dayjs(date).isSame(currDate, "month")) || checkHoliday(date)) && {
         style: {
-          backgroundColor: 'rgba(255, 0, 0, 0.1)',
+          backgroundColor: 'rgba(102, 102, 102, 0.1)',
         }
       }),
     })},
@@ -142,7 +143,7 @@ const CustomCalendar = (props) => {
         dayPropGetter={dayPropGetter}
         popup // +숫자 클릭시 팝업으로 띄워줌. 아니면 week 로 감.
         selectable  // 각 날짜 cell 선택 가능
-        onSelectSlot={handleSelect}
+        // onSelectSlot={handleSelect}
         views={['month']}
         onRangeChange={onRangeChange}
       />

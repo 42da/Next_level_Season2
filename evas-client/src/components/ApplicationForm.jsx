@@ -291,7 +291,7 @@ function ApplicationForm(props) {
                                     return (
                                         <DatePicker
                                             key={item}
-                                            label={item + " Date"}
+                                            label={item.charAt(0).toUpperCase() + item.slice(1) + " Date"}
                                             name={item}
                                             /*
                                                 주말 및 공휴일 비활성화 (Array.includes -> Array.some 으로 변경)
