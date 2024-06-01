@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Grid } from '@mui/material';
@@ -32,7 +32,10 @@ function Main() {
   });
 
   const { state } = useLocation();
-
+  const navigate = useNavigate();
+  if (!state) {
+    window.location.href = '/';
+  }
   const [employee, setEmployee] = useState('');
 
   const handleChange = (event, newValue) => {

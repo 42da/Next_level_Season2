@@ -27,6 +27,7 @@ import Edit from '@mui/icons-material/Edit';
 import holiday from "../data/holiday";
 import { dayjsLocalizer } from 'react-big-calendar';
 import { instance } from '../interceptors/axios';
+import AuthServices from '../services/authServices';
 
 // import EmployeeList from './EmployeeList';
 
@@ -109,7 +110,7 @@ function ApplicationForm(props) {
     }
 
     const submit = () => {
-        let url = 'http://localhost:8080/';
+        let url = AuthServices.API_URL + '/';
         if (props.adminComp) url += "admin/";
         else url += "main/";
         

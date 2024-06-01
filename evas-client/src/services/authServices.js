@@ -45,8 +45,12 @@ const getCurrentUser = () => {  // 로컬 스토리지에서 현재 사용자 �
 
 const refreshToken = () => {  // 로컬 스토리지에 저장된 refreshToken을 사용하여 새로운 accessToken을 발급
   return axios.post(`${API_URL}/refresh-token`, {
-    token: localStorage.getItem('refreshToken'),
-  }).then(response => {
+    refreshToken: localStorage.getItem('refreshToken'),
+  }, {
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('refreshToken'),
+    },
+}).then(response => {
     if (response.data.accessToken) {
       localStorage.setItem('accessToken', response.data.accessToken);
     }
