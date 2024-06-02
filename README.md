@@ -22,22 +22,39 @@
 <br>
 
 ## 구현 기능
-- 로그인
+- 로그인, 로그아웃
     - Spring Security, JWT 이용
 
-<img src=./image/login.PNG>
+<img src="./image/login.PNG">
 
-- 로그아웃
+<br><br>
 
-<br>
+<b>사용자</b>
 
-- 개인 / 전체 연차 신청
-- 개인 / 전체 연차 목록
-- 개인 / 전체 연차 수정
-- 개인 / 전체 연차 삭제
-- 개인 / 전체 연차 취소
+- 연차 신청
+<img src="./image/employee_apply.PNG">
 
-<br>
+- 연차 목록
+<img src="./image/employee_application_list.PNG">
+
+- 연차 수정, 삭제
+<img src="./image/employee_update.PNG">
+
+- 연차 취소
+<img src="./image/employee_cancel.PNG">
+
+<br><br>
+
+<b>관리자</b>
+
+- 전체, 사원 연차 신청
+<img src="./image/admin_apply.PNG">
+
+- 전체, 사원 연차 목록
+<img src="./image/admin_vacation_list.PNG">
 
 - 연차 승인
+<img src="./image/admin_approve.PNG">
+
 - 연차 거절
+<img src="./image/admin_reject.PNG">
