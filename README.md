@@ -58,3 +58,8 @@
 
 - 연차 거절
 <img src="./image/admin_reject.PNG">
+
+<br>
+
+## 데이터베이스 모델링
+<img src="./image/erd.PNG">

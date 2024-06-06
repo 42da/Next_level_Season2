@@ -72,7 +72,7 @@
     FROM (
       (SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date, 'N' as is_whole
       FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
-      WHERE approval_status = 'A'
+      WHERE approval_status in ('W', 'A')
         and date between DATE_FORMAT(DATE_ADD(now(), interval -6 MONTH), '%Y-%m-01')
         and LAST_DAY(DATE_FORMAT(DATE_ADD(now(), interval 6 MONTH), '%Y-%m-%d'))
       GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
