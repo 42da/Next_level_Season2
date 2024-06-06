@@ -43,6 +43,8 @@ function ApplicationForm(props) {
     // props 로 받아서 뿌려주는 것으로 변경
     const [vacation, setVacation] = useState('');
     const [vacationReason, setVacationReason] = useState('');
+    const [rejectReason, setRejectReason] = useState('');
+    const [cancelReason, setCancelReason] = useState('');
     const [sendData, setSendData] = useState({
         idx: "",
         code: "",
@@ -67,20 +69,35 @@ function ApplicationForm(props) {
             case 'appr':
                 setApprOrRej(event.target.value);
                 if (event.target.value === "R") {
-                    
+
                 }
                 break;
-            }
-                
-    };
-    const handleChangeReason = (event) => {
-        // 수정 시 입력 안됨.(value 를 props 로 받아서 고정되는듯?)
-        setVacationReason(event.target.value);
-        if (props.value === 1 && props.adminComp) {
-            setSendData({ ...sendData, rejectionContent: event.target.value });
-        } else {
-            setSendData({ ...sendData, content: event.target.value });
         }
+
+    };
+    const handleChangeReason = (event, type) => {
+        // 수정 시 입력 안됨.(value 를 props 로 받아서 고정되는듯?)
+
+        switch (type) {
+            case 'V':
+                setVacationReason(event.target.value);
+                setSendData({ ...sendData, content: event.target.value });
+                break;
+            case 'R':
+                setRejectReason(event.target.value);
+                setSendData({ ...sendData, rejectionContent: event.target.value });
+                break;
+            case 'C':
+                setCancelReason(event.target.value);
+                setSendData({ ...sendData, cancellationContent: event.target.value });
+                break;
+        }
+        // setVacationReason(event.target.value);
+        // if (props.value === 1 && props.adminComp) {
+        //     setSendData({ ...sendData, rejectionContent: event.target.value });
+        // } else {
+        //     setSendData({ ...sendData, content: event.target.value });
+        // }
     };
     const handleChangeDate = (value, startOrEnd) => {
         const formattedDate = dayjs(value).format("YYYY-MM-DD");
@@ -113,8 +130,8 @@ function ApplicationForm(props) {
         let url = AuthServices.API_URL + '/';
         if (props.adminComp) url += "admin/";
         else url += "main/";
-        
-        if (props.isModify && modifyOrCancel === "modify") url += "update";
+        if (props.isModify && modifyOrCancel === "modify" && props.adminComp) url += "approve";
+        else if (props.isModify && modifyOrCancel === "modify") url += "update";
         else if (modifyOrCancel === "cancel") url += "cancel";
         else {
             url += "apply";
@@ -190,7 +207,7 @@ function ApplicationForm(props) {
                     props.setValue(2);
                     props.setData({
                         vacationList: [...props.data.vacationList, responseData],
-                        calendarList: [...props.data.calendarList, responseData], 
+                        calendarList: [...props.data.calendarList, responseData],
                         applicationList: [...props.data.applicationList]
                     });
                 } else {
@@ -201,7 +218,6 @@ function ApplicationForm(props) {
                         applicationList: [...props.data.applicationList, responseData]
                     });
                 }
-                
             }
         }).catch((error) => {
             console.log(error);
@@ -209,13 +225,14 @@ function ApplicationForm(props) {
     }
 
     useEffect(() => {
-        if (props.value !== 2) {
+        if (props.value !== 2) {    // reject, cancel 도 고려 필요
             if (reset) {
                 setVacation('');
                 setVacationReason('');
                 setReset(false);
+                props.setDate(dayjs(), dayjs());
             }
-            
+
             if (props.isModify) {
                 const info = getInfoByIdx(props.rowIdx);
                 setVacation(info.code);
@@ -230,24 +247,8 @@ function ApplicationForm(props) {
         <>
             {
                 (props.adminComp && props.value == 1) ? (<>
-                <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">승인 및 거절</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={apprOrRej}
-                            label="승인 및 거절"
-                            onChange={(e) => {handleChange(e, 'appr')}}
-                        >
-                            <MenuItem value={"A"}>승인</MenuItem>
-                            <MenuItem value={"R"}>거절</MenuItem>
-                        </Select>
-                    </FormControl>
-                </>) : props.value !== 2 && (
-                    <>
-                    {/* {props.adminComp && <EmployeeList value={props.value} />} */}
                     <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">연차 종류</InputLabel>
+                        <InputLabel id="demo-simple-select-label">승인 및 거절</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -255,34 +256,50 @@ function ApplicationForm(props) {
                             label="연차 종류"
                             onChange={(e) => {handleChange(e, 'vacation')}}
                         >
-                            {props.adminComp && <MenuItem value={"abs08"}>전체 연차</MenuItem>}
-                            <MenuItem value={"abs01"}>연차</MenuItem>
-                            <MenuItem value={"abs02"}>연차)오전반차</MenuItem>
-                            <MenuItem value={"abs03"}>연차)오후반차</MenuItem>
-                            <MenuItem value={"abs04"}>대체휴가</MenuItem>
-                            <MenuItem value={"abs05"}>경조휴가</MenuItem>
-                            <MenuItem value={"abs06"}>출산육아휴가</MenuItem>
-                            <MenuItem value={"abs07"}>기타</MenuItem>
+                            <MenuItem value={"A"}>승인</MenuItem>
+                            <MenuItem value={"R"}>거절</MenuItem>
                         </Select>
                     </FormControl>
+                </>) : props.value !== 2 && (
+                    <>
+                        {/* {props.adminComp && <EmployeeList value={props.value} />} */}
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">연차 종류</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={vacation}
+                                label="연차 종류"
+                                onChange={(e) => { handleChange(e, 'vacation') }}
+                            >
+                                {props.adminComp && <MenuItem value={"abs08"}>전체 연차</MenuItem>}
+                                <MenuItem value={"abs01"}>연차</MenuItem>
+                                <MenuItem value={"abs02"}>연차)오전반차</MenuItem>
+                                <MenuItem value={"abs03"}>연차)오후반차</MenuItem>
+                                <MenuItem value={"abs04"}>대체휴가</MenuItem>
+                                <MenuItem value={"abs05"}>경조휴가</MenuItem>
+                                <MenuItem value={"abs06"}>출산육아휴가</MenuItem>
+                                <MenuItem value={"abs07"}>기타</MenuItem>
+                            </Select>
+                        </FormControl>
                     </>
                 )
             }
             {
-                !(apprOrRej === "A" && props.adminComp && props.value == 1 ) && (
+                !(apprOrRej === "A" && props.adminComp && props.value == 1) && (
                     <TextField
-                id="outlined-basic"
-                label={props.value === 2 ? "취소 사유" : ((props.value === 1 && props.adminComp )? "거절 사유" : "연차 사유")}
-                variant="outlined"
-                value={vacationReason}
-                onChange={handleChangeReason}
-                sx={{ mt: props.value === 2 ? 0 : 3, width: '100%' }}
-            />
+                        id="outlined-basic"
+                        label={props.value === 2 ? "취소 사유" : ((props.value === 1 && props.adminComp) ? "거절 사유" : "연차 사유")}
+                        variant="outlined"
+                        value={props.value === 2 ? cancelReason : ((props.value === 1 && props.adminComp) ? rejectReason : vacationReason)}
+                        onChange={(e) => handleChangeReason(e, props.value === 2 ? "C" : ((props.value === 1 && props.adminComp) ? "R" : "V"))}
+                        sx={{ mt: props.value === 2 ? 0 : 3, width: '100%' }}
+                    />
                 ) // 거절 시 사유 입력란 추가
             }
-            
+
             {
-                !(props.value === 2 || (props.value === 1 && props.adminComp))  && (
+                !(props.value === 2 || (props.value === 1 && props.adminComp)) && (
                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                         {/* 주말 비활성화(shouldDisableDate) */}
                         <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ mt: 3 }}>

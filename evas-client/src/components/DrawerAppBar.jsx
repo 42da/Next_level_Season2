@@ -46,6 +46,7 @@ function DrawerAppBar(props) {
     }).catch((error) => {
       console.log(error);
     });
+    navItems = ['Sign Out'];  // reset navItems : 관리자 로그인 > 로그아웃 > 비 관리자 로그인 > change to admin 유지 되어있어서 초기화
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     navigate('/');

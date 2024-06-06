@@ -55,7 +55,9 @@ function CustomTabPanel(props) {
         instance.post('/main/delete', {
             idx: vacationIdx,
         }).then((response) => {
-            props.setData({ vacationList: [...props.data.vacationList], calendarList: [...props.data.calendarList], applicationList: [...props.data.applicationList.filter((row) => row.idx !== response.data)] });
+            props.setData({ vacationList: [...props.data.vacationList], 
+                calendarList: [...props.data.calendarList.filter((row) => row.idx !== response.data)], 
+                applicationList: [...props.data.applicationList.filter((row) => row.idx !== response.data)] });
             console.log("delete response : ", response);
         }).catch((error) => {
             console.log(error);
@@ -116,12 +118,14 @@ function CustomTabPanel(props) {
                                             <TableCell sx={{ minWidth: '15%' }} align="center">{approvalStatus[row.approvalStatus]}</TableCell>
                                             <TableCell sx={{ minWidth: '20%' }} align="center">
                                                 <IconButton onClick={() => { modify(idx) }}>
-                                                    {props.adminComp ? (
+
+                                                    {row.approvalStatus != "C" ? props.adminComp ? (
                                                         <ApprovalIcon fontSize="small" />
-                                                    ) : (<EditIcon fontSize="small" />)}
+                                                    ) : (<EditIcon fontSize="small" />) : null}
                                                     
                                                 </IconButton>
-                                                {!props.adminComp && (<IconButton onClick={() => { deleteList(row.idx) }}>
+                                                {!props.adminComp && row.approvalStatus != "C" && (<IconButton onClick={() => { deleteList(row.idx) }}>
+
                                                     <DeleteIcon fontSize="small" />
                                                 </IconButton>)}
                                                 
