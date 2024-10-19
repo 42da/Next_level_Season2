@@ -1,4 +1,5 @@
-# EVAS<br><span style="font-size: 1.3rem">Electronic Vacation Approval System, 연차 전자 결재 시스템</span>
+# EVAS
+## Electronic Vacation Approval System, 연차 전자 결재 시스템
 연차를 전자 결재로 승인받아 보세요!
 
 > 이 프로젝트는 연차를 신청할 때의 불편함을 개선하기 위해 시작되었습니다.<br>
@@ -6,7 +7,7 @@
 
 <br>
 
-## 팀원 소개
+### 팀원 소개
 |이서은|정기평|
 |-|-|
 |Back-End|Front-End|
@@ -14,7 +15,7 @@
 
 <br>
 
-## 사용 기술
+### 사용 기술
 ||Back-End|Front-End|
 |-|-|-|
 |**Language**|Java|JavaScript|
@@ -24,15 +25,15 @@
 
 <br>
 
-## 구현 기능
-- <b style="font-size: 1.2em;">로그인, 로그아웃</b>
+### 구현 기능
+- **로그인, 로그아웃**
     - Spring Security, JWT 이용
 
 <img src="./image/login.PNG">
 
 <br>
 
-- <b style="font-size: 1.2em;">사용자</b>
+- **사용자**
 
 |||
 |-|-|
@@ -43,7 +44,7 @@
 
 <br>
 
-- <b style="font-size: 1.2em;">관리자</b>
+- **관리자**
 
 |||
 |-|-|
@@ -93,5 +94,5 @@
 
 <br>
 
-## 데이터베이스 모델링
+### 데이터베이스 모델링
 <img src="./image/erd.PNG">
