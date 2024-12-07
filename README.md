@@ -1,9 +1,8 @@
 # EVAS
-## Electronic Vacation Approval System, 연차 전자 결재 시스템
-연차를 전자 결재로 승인받아 보세요!
+<b>EVAS(Electronic Vacation Approval System, 연차 전자 결재 시스템)</b>는 연차를 신청할 때의 불편함을 개선하기 위해 시작되었습니다.<br>
+기존 회사에서 연차를 신청하려면 서면으로 담당자의 서명을 받아야 했으며, 담당자가 부재중일 경우 신청 절차가 지연되는 문제가 발생했습니다.<br>
+이를 개선하기 위해 연차 신청 과정을 디지털화하고 효율성을 높이기 위한 연차 전자 결재 시스템을 개발했습니다.
 
-> 이 프로젝트는 연차를 신청할 때의 불편함을 개선하기 위해 시작되었습니다.<br>
-이전 회사에서 연차를 사용하려면 종이 서류에 담당자의 서명을 직접 받아야 했습니다. 만약, 담당자가 부재중인 경우 서명을 받기 어려운 문제가 있었습니다. 이를 해결하고자 연차 전자 결재 시스템을 개발하게 되었습니다.
 
 <br>
 
@@ -25,74 +24,52 @@
 
 <br>
 
+### 기능 명세
+[기능 명세서](./functional_specification.md)
+
+<br>
+
 ### 구현 기능
 - **로그인, 로그아웃**
-    - Spring Security, JWT 이용
+    - Spring Security와 JWT를 사용하여 토큰 기반 인증 구현
+    - 사용자, 관리자 권한 부여
 
-<img src="./image/login.PNG">
+<img src="./image/login.PNG" style="border: solid 1px">
+
+<br>
+
+- **메인**
+    - 화면에서 전체 연차와 남은 연차를 한눈에 확인 가능하도록 구성 (남은 연차/전체 연차)
+    - 화면 왼쪽에 연차 CRUD 기능을 제공하는 컴포넌트를 배치하고, 오른쪽에는 연차 현황을 시각적으로 확인할 수 있는 캘린더 배치
+
+<img src="./image/employee_apply.PNG" style="border: solid 1px">
 
 <br>
 
 - **사용자**
+    - 연차 신청, 조회(목록), 수정, 삭제, 취소
 
 |||
 |-|-|
-|▽ 연차 신청|▽ 연차 목록|
-|<img src="./image/employee_apply.PNG">|<img src="./image/employee_application_list.PNG">|
+|▽ 연차 신청|▽ 연차 조회(목록)|
+|<img src="./image/l_employee_apply.PNG">|<img src="./image/l_employee_application_list.PNG">|
 |▽ 연차 수정, 삭제|▽ 연차 취소|
-|<img src="./image/employee_update.PNG">|<img src="./image/employee_cancel.PNG">|
+|<img src="./image/l_employee_update.PNG">|<img src="./image/l_employee_cancel.PNG">|
 
 <br>
 
 - **관리자**
+    - 회사 전체 연차 신청, 조회(목록), 승인, 거절
+    - 각 사원 연차 신청, 조회(목록)
 
 |||
 |-|-|
-|▽ 전체, 사원 연차 신청|▽ 전체, 사원 연차 목록|
-|<img src="./image/admin_apply.PNG">|<img src="./image/admin_vacation_list.PNG">|
+|▽ 연차 신청|▽ 연차 조회(목록)|
+|<img src="./image/l_admin_apply.PNG">|<img src="./image/l_admin_vacation_list.PNG">|
 |▽ 연차 승인|▽ 연차 거절|
-|<img src="./image/admin_approve.PNG">|<img src="./image/admin_reject.PNG">|
-
-<!-- <br>
-
-- <b>로그인, 로그아웃</b>
-    - Spring Security, JWT 이용
-
-<img src="./image/login.PNG">
-
-<br><br>
-
-<b>사용자</b>
-
-- 연차 신청
-<img src="./image/employee_apply.PNG">
-
-- 연차 목록
-<img src="./image/employee_application_list.PNG">
-
-- 연차 수정, 삭제
-<img src="./image/employee_update.PNG">
-
-- 연차 취소
-<img src="./image/employee_cancel.PNG">
-
-<br><br>
-
-<b>관리자</b>
-
-- 전체, 사원 연차 신청
-<img src="./image/admin_apply.PNG">
-
-- 전체, 사원 연차 목록
-<img src="./image/admin_vacation_list.PNG">
-
-- 연차 승인
-<img src="./image/admin_approve.PNG">
-
-- 연차 거절
-<img src="./image/admin_reject.PNG"> -->
+|<img src="./image/l_admin_approve.PNG">|<img src="./image/l_admin_reject.PNG">|
 
 <br>
 
 ### 데이터베이스 모델링
-<img src="./image/erd.PNG">
+<img src="./image/erd.PNG" style="border: solid 1px">
