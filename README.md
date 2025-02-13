@@ -1,5 +1,5 @@
 # EVAS
-<b>EVAS (Electronic Vacation Approval System, 연차 전자 결재 시스템)</b>은 기존 연차 신청 절차에서 발생하는 문제를 해결하기 위한 아이디어로 시작된 프로젝트입니다.<br>
+<b>EVAS(Electronic Vacation Approval System, 연차 전자 결재 시스템)</b>은 기존 연차 신청 절차에서 발생하는 문제를 해결하기 위한 아이디어로 시작된 프로젝트입니다.<br>
 기존 회사에서는 연차 신청 시 서면으로 담당자의 서명을 받아야 했으며 담당자가 부재중일 경우 신청 절차가 지연되는 문제가 있었습니다. 이러한 문제를 해결할 수 있는 방안을 고민하며 연차 신청 과정을 디지털화하는 웹 기반 전자 결재 시스템을 직접 설계하고 개발하였습니다.
 
 <br>
@@ -9,6 +9,11 @@
 |-|-|
 |Back-End|Front-End|
 |[GitHub](https://github.com/leeseoeun)|[GitHub](https://github.com/42da)|
+
+<br>
+
+### 데이터베이스 모델링
+<img src="./image/erd.PNG" style="border: solid 1px">
 
 <br>
 
@@ -66,8 +71,3 @@
 |<img src="./image/l_admin_apply.PNG">|<img src="./image/l_admin_vacation_list.PNG">|
 |▽ 연차 승인|▽ 연차 거절|
 |<img src="./image/l_admin_approve.PNG">|<img src="./image/l_admin_reject.PNG">|
-
-<br>
-
-### 데이터베이스 모델링
-<img src="./image/erd.PNG" style="border: solid 1px">
