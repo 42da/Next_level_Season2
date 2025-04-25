@@ -31,7 +31,7 @@
     SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date, 'Y' AS is_whole
     FROM whole_vacation v JOIN whole_vacation_date vh ON v.idx = vh.vacation_idx
     WHERE v.idx = #{idx}
-    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+    GROUP BY v.idx, v.code, v.start, v.end, v.content, v.approval_status, v.use_status, v.employee_id, v.rejection_content, v.cancellation_content, vh.vacation_idx
   </select>
   
   <insert id="insert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="idx">
@@ -61,7 +61,7 @@
     SELECT v.*, GROUP_CONCAT(vh.date ORDER BY vh.date SEPARATOR ',') AS date, 'N' AS is_whole
     FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE v.idx = #{idx}
-    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+    GROUP BY v.idx, v.code, v.start, v.end, v.content, v.approval_status, v.use_status, v.employee_id, v.rejection_content, v.cancellation_content, vh.vacation_idx
   </select>
   
   <select id="findApplicationByEmployeeId" resultType="Vacation">
@@ -70,7 +70,7 @@
     WHERE date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
       and approval_status in ('W', 'R', 'C')
       and employee_id = #{employeeId}
-    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+    GROUP BY v.idx, v.code, v.start, v.end, v.content, v.approval_status, v.use_status, v.employee_id, v.rejection_content, v.cancellation_content, vh.vacation_idx
     ORDER BY v.start desc
   </select>
   
@@ -91,7 +91,7 @@
     FROM vacation v JOIN vacation_date vh ON v.idx = vh.vacation_idx
     WHERE date between DATE_FORMAT(now(), '%Y-%m-01') and LAST_DAY(DATE_FORMAT(vh.date, '%Y-%m-%d'))
       and approval_status in ('W', 'R', 'C')
-    GROUP BY v.idx, v.content, v.start, v.end, vh.vacation_idx
+    GROUP BY v.idx, v.code, v.start, v.end, v.content, v.approval_status, v.use_status, v.employee_id, v.rejection_content, v.cancellation_content, vh.vacation_idx
     ORDER BY v.start desc
   </select>
   
