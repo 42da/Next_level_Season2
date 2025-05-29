@@ -4,10 +4,11 @@
 <br>
 
 ## 팀원
-|  |  |  |  |
-| --- | --- | --- | --- |
-| **이서은** | **Back-End** | [**🔗 GitHub**](https://github.com/leeseoeun) | 백엔드 전반에 대한 이해도를 높이기 위하여 해당 프로젝트에서 백엔드 개발을 담당하였습니다. |
-| 정기평 | Front-End | [🔗 GitHub](https://github.com/42da) |  |
+|  |  |  |
+| --- | --- | --- |
+| **이서은** | **Back-End** | [**🔗 GitHub**](https://github.com/leeseoeun) |
+| 정기평 | Front-End | [🔗 GitHub](https://github.com/42da) |
+- 백엔드 전반에 대한 이해도를 높이기 위하여 해당 프로젝트에서 백엔드 개발을 담당하였습니다.
 
 <br>
 
@@ -29,7 +30,7 @@
 
 <br>
 
-## [🔗 기능 명세](./functional_specification.md)
+## [`🔗 기능 명세`](./functional_specification.md)
 
 <br>
 
@@ -100,8 +101,8 @@
 <br>
 
 - 서버 부하와 응답 속도를 고려하여 현재 달 기준 ±6개월 내 승인된 연차만 조회하도록 캘린더 API를 설계 및 구현하였습니다.
-    - 중복 발생 가능성이 없고, 단순 결합이라는 상황과 성능 저하를 고려하여 UNION ALL을 사용해 개인 연차와 전체 연차를 하나의 결과로 결합
-    - GROUP_CONCAT을 사용하여 연차 기간의 날짜들을 쉼표로 연결하고, 개인/전체 연차를 구분할 수 있도록 필드를 추가하여 프론트엔드 요구 사항에 맞는 응답 구조 제공
+    - 중복 발생 가능성이 없고, 단순 결합이라는 상황과 성능 저하를 고려하여 `UNION ALL`을 사용해 개인 연차와 전체 연차를 하나의 결과로 결합
+    - `GROUP_CONCAT`을 사용하여 연차 기간의 날짜들을 쉼표로 연결하고, 개인/전체 연차를 구분할 수 있도록 필드를 추가하여 프론트엔드 요구 사항에 맞는 응답 구조 제공
         - **VacationMapper.xml**
             ```sql
             <select id="findAllCalendar" resultType="Vacation" >
